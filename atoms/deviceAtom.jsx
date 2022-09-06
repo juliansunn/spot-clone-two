@@ -1,12 +1,10 @@
-import { atom } from "recoil";
+import { atom, selector } from "recoil";
+import spotifyApi from "../lib/spotify";
+
 
 export const currentDeviceState = atom({
     key: "currentDeviceState",
-    default: {
-        id: null,
-        name: null,
-        type: null
-    },
+    default: {},
 });
 
 export const myDevicesState = atom({

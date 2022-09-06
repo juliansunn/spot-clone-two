@@ -1,7 +1,7 @@
 import { ReplyIcon, SwitchHorizontalIcon, VolumeUpIcon, VolumeOffIcon } from "@heroicons/react/outline";
-import { RewindIcon, PlayIcon, FastForwardIcon, PauseIcon, DeviceMobileIcon } from "@heroicons/react/solid";
+import { RewindIcon, PlayIcon, FastForwardIcon, PauseIcon, DeviceMobileIcon, DesktopComputerIcon } from "@heroicons/react/solid";
 import ReactModal from "react-modal";
-import { debounce, set } from "lodash";
+import { debounce, set, times } from "lodash";
 import { useSession } from "next-auth/react";
 import { useCallback, useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
@@ -22,13 +22,6 @@ function Player() {
     const [volume, setVolume] = useState(50);
     const [muted, setMuted] = useState(false);
     const [modalIsOpen, setIsOpen] = useState(false);
-
-    // function openModal() {
-    //     setIsOpen(true);
-    // }
-    // function closeModal() {
-    //     setIsOpen(false);
-    // }
 
 
     const toggleDeviceModal = () => {
@@ -51,26 +44,27 @@ function Player() {
 
     const getCurrentDevices = () => {
         spotifyApi.getMyDevices().then((data) => {
-            setMyDevices(data.body.devices);
+            const devices = data.body.devices;
+            const deviceToActivate = devices[0]
+            setMyDevices(devices);
+            spotifyApi.transferMyPlayback([deviceToActivate?.id]).then((data) => {
+                setCurrentDevice(
+                    deviceToActivate
+                )
+            })
+
         }).catch((e) => { console.log("There was an error getting your devices: ", e) })
     }
 
     const activateDevice = ({ device }) => {
-        console.log("Here is the device to be activated: ", device)
         spotifyApi.transferMyPlayback([device?.id]).then((data) => {
-            console.log("Transfer playback data: ", data);
-            setCurrentDevice({
-                id: device.id,
-                name: device.name,
-                type: device.type
-            })
+            setCurrentDevice(device)
         })
     }
 
     const muteOrUnMute = () => {
         if (!muted) {
             setMuted(true);
-
             // setVolume(0);
             spotifyApi.setVolume(0)
         } else {
@@ -106,15 +100,24 @@ function Player() {
         []
     )
 
+
     useEffect(() => {
         if (spotifyApi.getAccessToken() && !currentTrackId) {
             fetchCurrentSong();
             getCurrentDevices();
-            setCurrentDevice(myDevices?.[0].id, myDevices?.[0].name);
-            setVolume(50);
+
         }
     }, [currentTrackId, spotifyApi, session])
-    console.log("my device: ", currentDevice)
+
+    useEffect(() => {
+        console.log(myDevices, currentDevice)
+        setVolume(50);
+    }, [myDevices])
+
+    const nextSong = () => {
+        spotifyApi.skipToNext()
+    }
+    console.log("current track id -->", currentTrackId)
     return (
         <div className="h-24 bg-gradient-to-b from-black to-gray-900 text-white grid grid-cols-3 text-xs md:text-base px-2 md:px-8">
             {/* left side */}
@@ -128,33 +131,40 @@ function Player() {
             <div className="flex items-center justify-evenly">
                 <SwitchHorizontalIcon className="button" />
                 <RewindIcon
-                    // onClick={() => spotifyApi.skipToPrevious()} -- maybe not working...
+                    onClick={nextSong}
                     className="button" />
                 {
                     isPlaying ? (<PauseIcon onClick={handlePlayPause} className="button w-10 h-10" />)
                         : (<PlayIcon onClick={handlePlayPause} className="button w-10 h-10" />)
                 }
-                <FastForwardIcon className="button" />
+                <FastForwardIcon
+                    onClick={nextSong}
+                    className="button" />
                 <ReplyIcon className="button" />
             </div>
             {/* Right */}
             <div className="flex items-center space-x-3 md:space-x-4 justify-end pr-5">
                 <DeviceMobileIcon className="button" onClick={toggleDeviceModal} />
-                {/* <DeviceModal devices={myDevices} /> */}
                 <ReactModal
+                    ariaHideApp={false}
+                    contentLabel="Change Playback Device"
                     className="h-30 w-30 bg-black absolute bottom-20 right-40 p-5 rounded"
                     onRequestClose={toggleDeviceModal}
                     isOpen={modalIsOpen}>
-                    <h4 className="text-white pb-3">Current Device: {currentDevice ? currentDevice.name : "No Active Device"}</h4>
+                    <div className="flex  space-x-2">
+                        <DesktopComputerIcon className="button fill-white" />
+                        <h4 className="text-white pb-3">Current Device: {currentDevice ? currentDevice.name : "No Active Device"}</h4>
+                    </div>
                     <hr className='border-t-[0.1px] border-gray-900' />
                     <div>
                         {myDevices?.map((device) => (
-                            <div className="p-2">
-                                <p
-                                    onClick={() => activateDevice({ device })}
-                                    className="text-gray-500 hover:text-white cursor-pointer"
-                                    key={device.id}>{device.name}
-                                </p>
+                            <div
+                                key={device.id}
+                                onClick={() => activateDevice({ device })}
+                                className="flex text-gray-500 hover:text-white cursor-pointer justify-evenly items-center p-2">
+                                <p>{device.name}</p>
+                                <p>|</p>
+                                <p>{device.type}</p>
                             </div>
                         ))}
                     </div>
