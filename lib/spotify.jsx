@@ -1,17 +1,17 @@
 import SpotifyWebApi from "spotify-web-api-node";
 
 const scopes = [
+  "user-modify-playback-state",
+  "user-read-playback-state",
   "user-read-email",
   "user-read-private",
-  "user-library-read",
   "playlist-read-private",
-  "playlist-read-collaborative",
-  "streaming",
-  "user-top-read",
-  "user-library-modify",
-  "user-read-playback-state",
+  "user-library-read",
+  // "user-library-modify",
   "user-read-currently-playing",
   "user-read-recently-played",
+  "playlist-read-collaborative",
+  "user-top-read",
   "user-follow-read",
 ].join(",");
 

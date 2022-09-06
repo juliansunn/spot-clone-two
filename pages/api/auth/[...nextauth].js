@@ -4,10 +4,11 @@ import spotifyApi, { LOGIN_URL } from "../../../lib/spotify";
 
 async function refreshAccessToken(token) {
   try {
+    console.log("login URL used: ", LOGIN_URL);
     spotifyApi.setAccessToken(token.accessToken);
     spotifyApi.setRefreshToken(token.refreshToken);
 
-    const { body } = await spotifyApi.refreshAccessToken();
+    const { body: refreshedToken } = await spotifyApi.refreshAccessToken();
     console.log("REFRESHED TOKEN IS", refreshedToken);
 
     return {
@@ -51,10 +52,11 @@ export default NextAuth({
         };
       }
       // return previous token if the access token has note yet expired
-      if (Date.now() < token.accessTokenExpires) {
-        console.log("EXISTING TOKEN IS VALID!");
-        return token;
-      }
+      // this code seems broken for some reason
+      // if (Date.now() < token.accessTokenExpires) {
+      //   console.log("EXISTING TOKEN IS VALID!");
+      //   return token;
+      // }
       // access token has expired, so we need to refresh it...
       return await refreshAccessToken(token);
     },
