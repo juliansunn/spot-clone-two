@@ -3,24 +3,14 @@ import Sidebar from "../components/Sidebar";
 import Center from "../components/Center";
 import { getSession } from "next-auth/react";
 import Player from "../components/Player";
+import Layout from "../components/Layout";
 
 
 export default function Home() {
   return (
-    <div className="bg-black h-screen overflow-hidden ">
-      <Head>
-        <title>Spotify 2.0</title>
-      </Head>
-      <main className="flex">
-        <Sidebar />
-        <Center />
-        {/* Center */}
-      </main>
-      <div className="sticky bottom-0">
-        <Player />
-      </div>
-
-    </div>
+    <Layout>
+      <Center />
+    </Layout>
   );
 }
 

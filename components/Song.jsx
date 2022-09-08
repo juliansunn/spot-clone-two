@@ -1,28 +1,30 @@
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { currentTrackIdState, isPlayingState } from "../atoms/songAtom";
 import useSpotify from "../hooks/useSpotify"
-import spotifyApi, { LOGIN_URL } from "../lib/spotify"
-import { useSession } from "next-auth/react"
 import { millisToMinutesAndSeconds } from "../lib/time";
+import { playlistTrackUrisState } from "../atoms/playlistAtom";
 
 function Song({ track, order }) {
-    const { data: session } = useSession();
     const spotifyApi = useSpotify();
-    const [currentTrackId, setCurrentTrackId] = useRecoilState(currentTrackIdState);
-    const [isPlaying, setIsPlaying] = useRecoilState(isPlayingState);
+    const setCurrentTrackId = useSetRecoilState(currentTrackIdState);
+    const setIsPlaying = useSetRecoilState(isPlayingState);
+    const playlistTrackUris = useRecoilValue(playlistTrackUrisState);
 
     const playSong = () => {
         setCurrentTrackId(track.track.id);
         setIsPlaying(true);
         spotifyApi.play({
-            uris: [track.track.uri],
+            uris: playlistTrackUris,
+            offset: { position: order },
         })
-
     }
 
 
     return (
-        <div className="grid grid-cols-2 text-gray-500 py-4 px-5 hover:bg-gray-900 rounded-lg cursor-pointer" onClick={playSong}>
+        <div
+            className="grid grid-cols-2 text-gray-500 py-4 px-5 hover:bg-gray-900 rounded-lg cursor-pointer"
+            onClick={playSong}
+        >
             <div className="flex items-center space-x-4">
                 <p>{order + 1}</p>
                 <img

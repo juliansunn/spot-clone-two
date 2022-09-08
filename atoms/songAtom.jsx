@@ -9,3 +9,14 @@ export const isPlayingState = atom({
     key: "isPlayingState",
     default: false,
 });
+
+export const isShuffleState = atom({
+    key: "isShuffleState",
+    default: false,
+});
+
+export const isRepeatState = atom({
+    key: "isRepeatState",
+    default: false,
+});
+

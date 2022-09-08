@@ -1,14 +1,16 @@
 import { ReplyIcon, SwitchHorizontalIcon, VolumeUpIcon, VolumeOffIcon } from "@heroicons/react/outline";
 import { RewindIcon, PlayIcon, FastForwardIcon, PauseIcon, DeviceMobileIcon, DesktopComputerIcon } from "@heroicons/react/solid";
 import ReactModal from "react-modal";
-import { debounce, set, times } from "lodash";
+import { debounce, shuffle } from "lodash";
 import { useSession } from "next-auth/react";
 import { useCallback, useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
-import { currentTrackIdState, isPlayingState } from "../atoms/songAtom";
+import { currentTrackIdState, isPlayingState, isRepeatState, isShuffleState } from "../atoms/songAtom";
 import { currentDeviceState, myDevicesState } from "../atoms/deviceAtom";
 import useSongInfo from "../hooks/useSongInfo";
 import useSpotify from "../hooks/useSpotify"
+import { playlistState, playlistTrackUrisState } from "../atoms/playlistAtom";
+
 
 
 
@@ -19,13 +21,31 @@ function Player() {
     const [isPlaying, setIsPlaying] = useRecoilState(isPlayingState);
     const [myDevices, setMyDevices] = useRecoilState(myDevicesState)
     const [currentDevice, setCurrentDevice] = useRecoilState(currentDeviceState);
+    const [isShuffle, setIsShuffle] = useRecoilState(isShuffleState);
+    const [repeat, setRepeat] = useRecoilState(isRepeatState);
     const [volume, setVolume] = useState(50);
     const [muted, setMuted] = useState(false);
     const [modalIsOpen, setIsOpen] = useState(false);
+    const [playlistTrackUris, setPlaylistTrackUris] = useRecoilState(playlistTrackUrisState);
+    const [playlist, setPlaylist] = useRecoilState(playlistState);
 
 
     const toggleDeviceModal = () => {
         setIsOpen(prevState => !prevState)
+    }
+
+    const toggleShuffle = () => {
+        if (!shuffle) {
+            setPlaylistTrackUris(playlist.body?.items.map((track) => track.track.uri));
+        } else {
+            setPlaylistTrackUris(shuffle(playlistTrackUris));
+        }
+
+        setIsShuffle(prevState => !prevState)
+    }
+
+    const toggleRepeat = () => {
+        setRepeat(prevState => !prevState)
     }
 
     const songInfo = useSongInfo();
@@ -110,14 +130,13 @@ function Player() {
     }, [currentTrackId, spotifyApi, session])
 
     useEffect(() => {
-        console.log(myDevices, currentDevice)
-        setVolume(50);
+        setVolume(volume);
     }, [myDevices])
 
     const nextSong = () => {
         spotifyApi.skipToNext()
     }
-    console.log("current track id -->", currentTrackId)
+    console.log(playlistTrackUris)
     return (
         <div className="h-24 bg-gradient-to-b from-black to-gray-900 text-white grid grid-cols-3 text-xs md:text-base px-2 md:px-8">
             {/* left side */}
@@ -129,9 +148,21 @@ function Player() {
                 </div>
             </div>
             <div className="flex items-center justify-evenly">
-                <SwitchHorizontalIcon className="button" />
+
+                {
+                    isShuffle ? (
+                        <SwitchHorizontalIcon
+                            className="button stroke-green-400"
+                            onClick={toggleShuffle}
+                        />
+                    )
+                        : (<SwitchHorizontalIcon
+                            className="button"
+                            onClick={toggleShuffle}
+                        />)
+                }
                 <RewindIcon
-                    onClick={nextSong}
+                    onClick={() => { spotifyApi.skipToPrevious() }}
                     className="button" />
                 {
                     isPlaying ? (<PauseIcon onClick={handlePlayPause} className="button w-10 h-10" />)
@@ -140,7 +171,21 @@ function Player() {
                 <FastForwardIcon
                     onClick={nextSong}
                     className="button" />
-                <ReplyIcon className="button" />
+                {
+                    repeat ? (
+                        <ReplyIcon
+                            className="button stroke-green-400"
+                            onClick={toggleRepeat}
+                        />
+                    ) : (
+                        <ReplyIcon
+                            className="button"
+                            onClick={toggleRepeat}
+                        />
+                    )
+                }
+
+
             </div>
             {/* Right */}
             <div className="flex items-center space-x-3 md:space-x-4 justify-end pr-5">
