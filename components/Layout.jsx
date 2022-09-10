@@ -2,7 +2,7 @@ import React from 'react'
 import Head from "next/head";
 import Sidebar from "./Sidebar";
 // import Center from './Center';
-import Player from './Player';
+import Player from './Player/Player';
 import { useSession } from 'next-auth/react';
 import { signOut } from 'next-auth/react';
 import { ChevronDownIcon } from '@heroicons/react/outline';

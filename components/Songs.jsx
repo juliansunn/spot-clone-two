@@ -1,15 +1,20 @@
 import { useEffect } from "react";
-import { useRecoilValue, useSetRecoilState } from "recoil"
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
 import { playlistTrackState, playlistTrackUrisState } from "../atoms/playlistAtom"
 import Song from "./Song";
 
 function Songs() {
     const setPlaylistTrackUris = useSetRecoilState(playlistTrackUrisState);
     const playlistTracks = useRecoilValue(playlistTrackState);
+    // const [currentTrackId, setCurrentTrackId] = useRecoilState(currentTrackIdState);
 
     useEffect(() => {
         setPlaylistTrackUris(playlistTracks?.map((track => track.track?.uri)))
     }, [])
+
+    // useEffect(() => {
+    //     setCurrentTrackId(currentTrackId);
+    // }, [currentTrackId])
 
 
     return (

@@ -38,37 +38,41 @@ function Sidebar() {
                     <LogoutIcon className="h-5 w-5" />
                     <p>Logout</p>
                 </button>
-                <button className='flex items-center space-x-2 hover:text-white'>
-                    <HomeIcon className="h-5 w-5" />
-                    <p>Home</p>
-                </button>
+                <Link href="/home">
+                    <button className='flex items-center space-x-2 hover:text-white'>
+                        <HomeIcon className="h-5 w-5" />
+                        <p>Home</p>
+                    </button>
+                </Link>
                 <button className='flex items-center space-x-2 hover:text-white'>
                     <SearchIcon className="h-5 w-5" />
                     <p>Search</p>
                 </button>
                 <Link href="/library">
-                    <button
-                        className='flex items-center space-x-2 hover:text-white'
-                    // onClick={getLibrary}
-                    >
+                    <button className='flex items-center space-x-2 hover:text-white'>
                         <LibraryIcon className="h-5 w-5" />
                         <p>Library</p>
                     </button>
                 </Link>
+
                 <hr className='border-t-[0.1px] border-gray-900' />
 
                 <button className='flex items-center space-x-2 hover:text-white'>
                     <PlusCircleIcon className="h-5 w-5" />
                     <p>Create Playlist</p>
                 </button>
-                <button className='flex items-center space-x-2 hover:text-white'>
-                    <HeartIcon className="h-5 w-5" />
-                    <p>Liked Songs</p>
-                </button>
-                <button className='flex items-center space-x-2 hover:text-white'>
-                    <RssIcon className="h-5 w-5" />
-                    <p>Your Episodes</p>
-                </button>
+                <Link href="/liked-songs">
+                    <button className='flex items-center space-x-2 hover:text-white'>
+                        <HeartIcon className="h-5 w-5" />
+                        <p>Liked Songs</p>
+                    </button>
+                </Link>
+                <Link href="/episodes">
+                    <button className='flex items-center space-x-2 hover:text-white'>
+                        <RssIcon className="h-5 w-5" />
+                        <p>Your Episodes</p>
+                    </button>
+                </Link>
                 <hr className='border-t-[0.1px] border-gray-900' />
 
                 {playlists.map((playlist) => (
