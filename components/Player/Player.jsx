@@ -162,8 +162,19 @@ function Player() {
     }, [myDevices])
 
     const nextSong = () => {
-        spotifyApi.skipToNext()
+        spotifyApi.skipToNext().then(() => {
+            spotifyApi.getMyCurrentPlayingTrack().then((data) => {
+                setCurrentTrackId(data.body?.item?.id);
+
+                spotifyApi.getMyCurrentPlaybackState().then((data) => {
+                    setIsPlaying(data.body?.is_playing);
+                })
+            })
+        }
+
+        )
     }
+    console.log("Current track id", currentTrackId)
     return (
         <div className=" h-26 grid bg-gradient-to-b from-black to-gray-900 text-white grid-rows-2 " >
 
