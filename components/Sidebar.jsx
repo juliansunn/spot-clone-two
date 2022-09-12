@@ -26,6 +26,7 @@ function Sidebar() {
         if (spotifyApi.getAccessToken()) {
             spotifyApi.getUserPlaylists().then((data) => {
                 setPlaylists(data.body.items);
+                setPlaylistId(data.body.items[0].id);
             })
         }
     }, [session, spotifyApi])
