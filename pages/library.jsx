@@ -13,15 +13,12 @@ function Library() {
     const [playlistTracks, setPlaylistTracks] = useRecoilState(playlistTrackState);
     const [trackInfo, setTrackInfo] = useRecoilState(trackInfoState);
     const getLibrary = async () => {
-
         const library = [];
-
         for (let i = 0; i < 5; ++i) {
             library.push(spotifyApi.getMySavedTracks({
                 offset: i * 20,
             }));
         }
-
         Promise.all(library)
             .then((data) => {
                 const d = data[0];
@@ -30,14 +27,11 @@ function Library() {
                 }
                 setPlaylistTracks(d.body?.items);
                 setTrackInfo(d.body?.items?.map((track, i) => ({ position: i, uri: track.track.uri, id: track.track.id })));
-
             })
             .catch((e) => {
                 console.log("Error Fetching Library: ", e)
             });
-
     }
-
 
     useEffect(() => {
         getLibrary();
