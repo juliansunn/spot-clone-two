@@ -5,14 +5,18 @@ import { debounce, shuffle } from "lodash";
 import { useSession } from "next-auth/react";
 import { useCallback, useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
-import { currentTrackIdState, isPlayingState, isRepeatState, isShuffleState } from "../../atoms/songAtom";
+import {
+    currentTrackIdState,
+    currentTrackLocState,
+    trackInfoState,
+    isPlayingState,
+    isRepeatState,
+    isShuffleState,
+} from "../../atoms/songAtom";
 import { currentDeviceState, myDevicesState } from "../../atoms/deviceAtom";
 import useSongInfo from "../../hooks/useSongInfo";
 import useSpotify from "../../hooks/useSpotify"
-import { playlistState, playlistTrackUrisState } from "../../atoms/playlistAtom";
-import { HStack, Slider, SliderFilledTrack, SliderThumb, SliderTrack } from "@chakra-ui/react";
-import { PlayerControl } from "./PlayerControl";
-import { MdGraphicEq } from 'react-icons/md';
+import { playlistState } from "../../atoms/playlistAtom";
 import { millisToMinutesAndSeconds } from "../../lib/time";
 
 
@@ -25,15 +29,17 @@ function Player() {
     const [myDevices, setMyDevices] = useRecoilState(myDevicesState)
     const [currentDevice, setCurrentDevice] = useRecoilState(currentDeviceState);
     const [isShuffle, setIsShuffle] = useRecoilState(isShuffleState);
-    const [repeat, setRepeat] = useRecoilState(isRepeatState);
+    const [isRepeat, setIsRepeat] = useRecoilState(isRepeatState);
     const [volume, setVolume] = useState(50);
     const [muted, setMuted] = useState(false);
     const [modalIsOpen, setIsOpen] = useState(false);
-    const [playlistTrackUris, setPlaylistTrackUris] = useRecoilState(playlistTrackUrisState);
     const [playlist, setPlaylist] = useRecoilState(playlistState);
     const [progress, setProgress] = useState(0);
     const [duration, setDuration] = useState(0);
     const [seeking, setSeeking] = useState(false);
+    const [currentTrackLoc, setCurrentTrackLoc] = useRecoilState(currentTrackLocState);
+    const [trackInfo, setTrackInfo] = useRecoilState(trackInfoState);
+
 
 
 
@@ -42,17 +48,17 @@ function Player() {
     }
 
     const toggleShuffle = () => {
-        if (!shuffle) {
-            setPlaylistTrackUris(playlist.body?.items.map((track) => track.track.uri));
+        var info = playlist.tracks?.items?.map((track, i) => ({ position: i, uri: track.track.uri, id: track.track.id }))
+        if (isShuffle) {
+            setTrackInfo(info);
         } else {
-            setPlaylistTrackUris(shuffle(playlistTrackUris));
+            setTrackInfo(shuffle(info));
         }
-
         setIsShuffle(prevState => !prevState)
     }
 
     const toggleRepeat = () => {
-        setRepeat(prevState => !prevState)
+        setIsRepeat(prevState => !prevState)
     }
 
     const songInfo = useSongInfo();
@@ -70,17 +76,19 @@ function Player() {
     }
 
     const getCurrentDevices = () => {
-        spotifyApi.getMyDevices().then((data) => {
-            const devices = data.body.devices;
-            const deviceToActivate = devices[0]
-            setMyDevices(devices);
-            spotifyApi.transferMyPlayback([deviceToActivate?.id]).then((data) => {
-                setCurrentDevice(
-                    deviceToActivate
-                )
+        spotifyApi.getMyDevices()
+            .then((data) => {
+                const devices = data.body.devices;
+                const deviceToActivate = devices[0]
+                setMyDevices(devices);
+                spotifyApi.transferMyPlayback([deviceToActivate?.id])
+                    .then((data) => {
+                        setCurrentDevice(
+                            deviceToActivate
+                        )
+                    })
             })
-
-        }).catch((e) => { console.log("There was an error getting your devices: ", e) })
+            .catch((e) => { console.log("There was an error getting your devices: ", e) })
     }
 
     const activateDevice = ({ device }) => {
@@ -92,11 +100,9 @@ function Player() {
     const muteOrUnMute = () => {
         if (!muted) {
             setMuted(true);
-            // setVolume(0);
             spotifyApi.setVolume(0)
         } else {
             setMuted(false);
-            // setVolume(50);
             spotifyApi.setVolume(volume);
         }
     }
@@ -117,7 +123,7 @@ function Player() {
         const interval = setInterval(() => {
             if (!seeking)
                 spotifyApi.getMyCurrentPlaybackState().then((data) => {
-                    setDuration(data.body?.item.duration_ms);
+                    setDuration(data.body?.item?.duration_ms);
                     setProgress(data.body?.progress_ms);
                 });
         }, 500);
@@ -127,7 +133,6 @@ function Player() {
 
     const debouncedAdjustProgress = useCallback(
         debounce((progress) => {
-            console.log(progress)
             spotifyApi.seek(progress).catch((e) => { console.log("Adjusting Progress Error: ", e) });
         }, 200),
         [progress]
@@ -161,20 +166,37 @@ function Player() {
         setVolume(volume);
     }, [myDevices])
 
-    const nextSong = () => {
-        spotifyApi.skipToNext().then(() => {
-            spotifyApi.getMyCurrentPlayingTrack().then((data) => {
-                setCurrentTrackId(data.body?.item?.id);
+    useEffect(() => {
+        setTrackInfo(playlist?.tracks?.items?.map((track, i) => ({ position: i, uri: track.track.uri, id: track.track.id })))
+    }, [playlist])
 
-                spotifyApi.getMyCurrentPlaybackState().then((data) => {
-                    setIsPlaying(data.body?.is_playing);
-                })
+    function changeSong({ direction }) {
+        const uris = trackInfo.map(({ uri }) => uri);
+        if (playlist) {
+            var newLoc = currentTrackLoc + direction;
+            if (newLoc >= uris.length) {
+                if (isRepeat) {
+                    newLoc = 0;
+                } else {
+                    console.log("We need to search and put new songs in the playlist queue");
+                    return
+                }
+            }
+            if (newLoc < 0) {
+                if (isRepeat) {
+                    newLoc = uris.length - 1;
+                } else {
+                    newLoc = 0;
+                }
+            }
+            spotifyApi.play({
+                uris: uris,
+                offset: { position: newLoc },
             })
+            setCurrentTrackLoc(newLoc);
+            setCurrentTrackId(trackInfo[newLoc]?.id);
         }
-
-        )
     }
-    console.log("Current track id", currentTrackId)
     return (
         <div className=" h-26 grid bg-gradient-to-b from-black to-gray-900 text-white grid-rows-2 " >
 
@@ -203,17 +225,17 @@ function Player() {
                             />)
                     }
                     <RewindIcon
-                        onClick={() => { spotifyApi.skipToPrevious() }}
+                        onClick={() => { changeSong({ direction: -1 }) }}
                         className="button" />
                     {
                         isPlaying ? (<PauseIcon onClick={handlePlayPause} className="button w-10 h-10" />)
                             : (<PlayIcon onClick={handlePlayPause} className="button w-10 h-10" />)
                     }
                     <FastForwardIcon
-                        onClick={nextSong}
+                        onClick={() => { changeSong({ direction: 1 }) }}
                         className="button" />
                     {
-                        repeat ? (
+                        isRepeat ? (
                             <ReplyIcon
                                 className="button stroke-green-400"
                                 onClick={toggleRepeat}

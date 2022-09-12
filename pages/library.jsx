@@ -1,7 +1,8 @@
 import { useSession } from 'next-auth/react';
-import React, { useEffect } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { playlistTrackState, playlistTrackUrisState } from '../atoms/playlistAtom';
+import { trackInfoState } from '../atoms/songAtom';
 import Layout from '../components/Layout'
 import Songs from '../components/Songs';
 import useSpotify from '../hooks/useSpotify';
@@ -10,7 +11,7 @@ function Library() {
     const { data: session } = useSession();
     const spotifyApi = useSpotify();
     const [playlistTracks, setPlaylistTracks] = useRecoilState(playlistTrackState);
-    const setPlaylistTrackUris = useSetRecoilState(playlistTrackUrisState);
+    const [trackInfo, setTrackInfo] = useRecoilState(trackInfoState);
     const getLibrary = async () => {
 
         const library = [];
@@ -28,7 +29,7 @@ function Library() {
                     d.body.items.push(...data[j].body.items)
                 }
                 setPlaylistTracks(d.body?.items);
-                setPlaylistTrackUris(d.body?.items.map((track) => track.track.uri));
+                setTrackInfo(d.body?.items?.map((track, i) => ({ position: i, uri: track.track.uri, id: track.track.id })));
 
             })
             .catch((e) => {
@@ -36,6 +37,7 @@ function Library() {
             });
 
     }
+
 
     useEffect(() => {
         getLibrary();
@@ -52,7 +54,6 @@ function Library() {
                     </div>
                 </section>
                 <div>
-                    {/* <p>yo we here</p> */}
                     <Songs />
                 </div>
             </div>
