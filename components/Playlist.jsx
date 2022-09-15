@@ -1,33 +1,42 @@
 import React, { useEffect, useState } from 'react'
 import Songs from './Songs';
 import { shuffle } from 'lodash';
+import { getRandomInt } from '../lib/utility';
 
 const colors = [
-    'from-indigo-300',
-    'from-blue-300',
-    'from-green-300',
-    'from-red-300',
-    'from-yellow-300',
-    'from-pink-300',
-    'from-purple-300',
+    'indigo-100',
+    'blue-100',
+    'green-100',
+    'red-100',
+    'yellow-100',
+    'pink-100',
+    'purple-100',
 ]
+
 
 function Playlist({ playlist }) {
     const [color, setColor] = useState(null);
+    const [backgroundImg, setBackgroundImg] = useState(null);
 
     useEffect(() => {
         setColor(shuffle(colors).pop());
+        setBackgroundImg(getRandomInt(1, 14));
     }, [playlist])
     return (
         <div>
-            <section className={`flex items-end space-x-7 bg-gradient-to-b to-black from red- ${color} h-60 padding-8 p-8`}>
-                <img src={playlist?.images?.[1]?.url} className="h-44 w-44 shadow-2xl" alt="no image" />
-                <div className="h-44">
-                    <p className='tracking-widest text-black'>PLAYLISTS</p>
-                    <h1 className='text-5xl nd:text-3xl xl:text-6xl mb-5 font-bold text-black drop-shadow-lg'>{playlist?.name}</h1>
-                    <p className="text-xs">Description: {playlist?.description}</p>
+            <div className={`bg-gradient-to-r from-${color} to-gray-600 h-60 w-full relative `}>
+                <img src={`/img/${backgroundImg}.jpg`} className='h-full w-full object-cover mix-blend-overlay absolute grayscale' alt="cant find the photo" />
+                <div className=" flex items-center gap-x-2 p-5 relative">
+
+                    <img src={playlist?.images?.[0]?.url} className="h-44 w-44 shadow-2xl " alt="no image" />
+                    <div className='w-1/2'>
+                        <p className='tracking-widest text-gray-900 text-3xl '>PLAYLISTS</p>
+                        <h1 className='text-5xl nd:text-3xl xl:text-6xl mb-5 font-bold text-gray-900 drop-shadow-lg truncate'>{playlist?.name}</h1>
+                        {/* <p className="text-xs text-gray-900">Description: {!playlist?.description === "" ? playlist.description : "-"}</p> */}
+                        <p className="text-sm text-black tracking-widest font-bold flex-wrap">Description: {playlist?.description}</p>
+                    </div>
                 </div>
-            </section>
+            </div>
             <div>
                 <Songs />
             </div>
