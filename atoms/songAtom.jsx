@@ -12,10 +12,8 @@ export const currentTrackLocState = atom({
 
 export const trackInfoState = atom({
     key: "trackInfoState",
-    default: {},
+    default: [],
 });
-
-
 
 export const isPlayingState = atom({
     key: "isPlayingState",
@@ -29,6 +27,11 @@ export const isShuffleState = atom({
 
 export const isRepeatState = atom({
     key: "isRepeatState",
+    default: false,
+});
+
+export const manualChangeState = atom({
+    key: "manualChangeState",
     default: false,
 });
 

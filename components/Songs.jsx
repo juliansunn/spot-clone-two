@@ -1,4 +1,5 @@
 
+import { ClockIcon } from "@heroicons/react/outline";
 import { useEffect } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
 import { playlistTrackState } from "../atoms/playlistAtom"
@@ -16,10 +17,30 @@ function Songs() {
 
 
     return (
-        <div className="text-white px-8 flex flex-col spacy-y-1 pb-28">
-            {playlistTracks?.map((track, i) => (
-                <Song key={track.track?.id} track={track} order={i} />
-            ))}
+        <div className="px-8 flex flex-col spacy-y-1 pb-28">
+            <table className="min-w-full table-auto [border-spacing:0.50rem] md:[border-spaceing:0.70rem]">
+                <thead className="border-b border-slate-500">
+                    <tr>
+                        <th scope="col" className="sticky top-0 bg-gray-900 text-sm font-medium text-gray-500 px-6 py-4 text-left  w-1">
+                            #
+                        </th>
+                        <th scope="col" className="sticky top-0 bg-gray-900 text-sm font-medium text-gray-500 px-6 py-4 text-left">
+                            TITLE
+                        </th>
+                        <th scope="col" className="sticky top-0 bg-gray-900 text-sm font-medium text-gray-500 px-6 py-4 text-left hidden md:table-cell">
+                            ALBUM
+                        </th>
+                        <th scope="col" className="sticky top-0 bg-gray-900 text-sm font-medium text-gray-500 px-6 py-4 flex justify-center">
+                            <ClockIcon className="button" />
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {playlistTracks?.map((track, i) => (
+                        <Song key={track.track?.id} track={track} order={i} />
+                    ))}
+                </tbody>
+            </table>
         </div>
     )
 }

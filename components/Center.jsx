@@ -18,12 +18,14 @@ function Center() {
     const setPlaylistTracks = useSetRecoilState(playlistTrackState);
 
     useEffect(() => {
-        spotifyApi.getPlaylist(playlistId).then((data) => {
-            const playlist = data.body;
-            setPlaylist(playlist);
-            setPlaylistTracks(playlist.tracks.items);
-            setTrackInfo(playlist?.tracks?.items?.map((track, i) => ({ position: i, uri: track.track.uri, id: track.track.id })))
-        }).catch(error => console.log("something went wrong: ", error))
+        if (playlistId) {
+            spotifyApi.getPlaylist(playlistId).then((data) => {
+                const playlist = data.body;
+                setPlaylist(playlist);
+                setPlaylistTracks(playlist.tracks.items);
+                setTrackInfo(playlist?.tracks?.items?.map((track, i) => ({ position: i, uri: track.track.uri, id: track.track.id })))
+            }).catch(error => console.log("something went wrong: ", error))
+        }
     }, [spotifyApi, playlistId])
 
 
