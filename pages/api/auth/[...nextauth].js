@@ -40,6 +40,7 @@ export default NextAuth({
   },
   callbacks: {
     async jwt({ token, account, user }) {
+      console.log("here in jwt");
       if (account && user) {
         return {
           ...token,
@@ -49,6 +50,7 @@ export default NextAuth({
           accessTokenExpires: account.expires_at * 1000,
         };
       }
+
       // return previous token if the access token has note yet expired
       // this code seems broken for some reason
       // if (Date.now() < token.accessTokenExpires) {
