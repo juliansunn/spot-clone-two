@@ -13,7 +13,8 @@ function Library() {
     const spotifyApi = useSpotify();
     const setPlaylistTracks = useSetRecoilState(playlistTrackState);
     const [trackInfo, setTrackInfo] = useRecoilState(trackInfoState);
-    const [backgroundImg, setBackgroundImg] = useState(null);
+    const [contentType, setContentType] = useState(0);
+    const contentList = ["Playlists", "Podcasts", "Artists", "Albums"]
     const getLibrary = async (offset) => {
         const library = [];
         for (let i = 0; i < 20; ++i) {
@@ -37,31 +38,30 @@ function Library() {
 
     useEffect(() => {
         getLibrary(20);
-        setBackgroundImg(getRandomInt(1, 14));
+        // setBackgroundImg(getRandomInt(1, 14));
 
     }, [])
 
     return (
         <Layout>
 
-            <div>
-                <div className={`flex items-end space-x-7 bg-gradient-to-r from-blue-300 to-gray-900  h-60 w-full relative`}>
-                    <img src={`/img/${backgroundImg}.jpg`} className='h-full w-full object-cover mix-blend-overlay absolute grayscale' alt="cant find the photo" />
-                    <div className=" flex items-center gap-x-2 p-5 relative">
+            <div className='px-10'>
+                {/* Top */}
+                <div className=' flex items-center justify-start px-20 w-full h-20'>
+                    {contentList.map((content, i) => (
 
-                        <img src={session?.user?.image} className="h-44 w-44 shadow-2xl" alt="no image" />
-                        {/* <div className='h-44'> */}
-                        <div className='flex flex-col h-44'>
-                            <h1 className='text-xl lg:text-3xl xl:text-5xl text-gray-900'>My Library</h1>
-                        </div>
-                        {/* </div> */}
-                    </div>
+                        <button
+                            onClick={() => { setContentType(i) }}
+                            className={`hover:bg-slate-600 p-3 mx-1 rounded ${contentType == i ? "bg-slate-600" : ""} cursor-pointer`}>
+                            {content}
+                        </button>
+
+                    ))}
                 </div>
-                <div>
-                    <Songs />
-                </div>
+                <h1 className='text-lg md:text-xl xl:text-2xl text-white'>{contentList[contentType]}</h1>
+                {/* Lib center */}
             </div>
-        </Layout>
+        </Layout >
     )
 }
 

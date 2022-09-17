@@ -30,6 +30,9 @@ function Songs() {
                         <th scope="col" className="sticky top-0 bg-gray-900 text-sm font-medium text-gray-500 px-6 py-4 text-left hidden md:table-cell">
                             ALBUM
                         </th>
+                        <th scope="col" className="sticky top-0 bg-gray-900 text-sm font-medium text-gray-500 px-6 py-4 text-left hidden md:table-cell">
+                            DATE ADDED
+                        </th>
                         <th scope="col" className="sticky top-0 bg-gray-900 text-sm font-medium text-gray-500 px-6 py-4 flex justify-center">
                             <ClockIcon className="button" />
                         </th>

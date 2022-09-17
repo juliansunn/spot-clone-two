@@ -1,7 +1,7 @@
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { currentTrackIdState, isPlayingState, currentTrackLocState, trackInfoState, manualChangeState } from "../atoms/songAtom";
 import useSpotify from "../hooks/useSpotify"
-import { millisToMinutesAndSeconds } from "../lib/utility";
+import { millisToMinutesAndSeconds, parseDate } from "../lib/utility";
 import { PauseIcon, PlayIcon } from "@heroicons/react/outline";
 
 
@@ -40,10 +40,14 @@ function Song({ track, order, }) {
     }
 
 
+    if (track.track.name === currentTrackId) {
+        console.log(currentTrackId, track.track.name, order,);
+    }
+    console.log(track)
     return (
 
         <tr
-            className={"text-gray-500 mb-3 py-4 px-5 hover:bg-gradient-to-b to-gray-900 from red- from-slate-800 text-sm lg:text-lg cursor-pointer" + (track.track.id === currentTrackId ? (isPlaying ? " animate-pulse " : "") : "")}
+            className={"text-gray-500 mb-3 py-4 px-5 hover:bg-gradient-to-b to-gray-900 from-slate-800 text-sm lg:text-lg cursor-pointer" + (track.track.id === currentTrackId ? (isPlaying ? " animate-pulse " : "") : "")}
             onClick={playSong}
         >
             <td>
@@ -74,6 +78,9 @@ function Song({ track, order, }) {
                     <p className="hidden md:inline w-40 md:truncate">{track.track?.album.name}</p>
 
                 </div>
+            </td>
+            <td>
+                <p>{parseDate(track?.added_at)}</p>
             </td>
             <td>
                 <div className="flex justify-center">
