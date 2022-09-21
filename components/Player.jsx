@@ -13,13 +13,13 @@ import {
     isRepeatState,
     isShuffleState,
     manualChangeState,
-} from "../../atoms/songAtom";
-import { currentDeviceState, myDevicesState } from "../../atoms/deviceAtom";
-import useSongInfo from "../../hooks/useSongInfo";
-import useSpotify from "../../hooks/useSpotify"
-import useDidMountEffect from "../../hooks/useDidMountEffect";
-import { playlistState } from "../../atoms/playlistAtom";
-import { millisToMinutesAndSeconds } from "../../lib/utility";
+} from "../atoms/songAtom";
+import { currentDeviceState, myDevicesState } from "../atoms/deviceAtom";
+import useSongInfo from "../hooks/useSongInfo";
+import useSpotify from "../hooks/useSpotify"
+import useDidMountEffect from "../hooks/useDidMountEffect";
+import { playlistState } from "../atoms/playlistAtom";
+import { millisToMinutesAndSeconds } from "../lib/utility";
 
 
 

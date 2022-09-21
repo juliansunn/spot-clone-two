@@ -5,6 +5,11 @@ export const playlistState = atom({
     default: null,
 })
 
+export const playlistsState = atom({
+    key: "playlistsState",
+    default: null,
+})
+
 export const playlistTrackState = atom({
     key: "playlistTrackState",
     default: null,
