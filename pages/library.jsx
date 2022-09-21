@@ -76,17 +76,6 @@ function Library() {
                         ))
                     }
                 </div>
-                {/* <div className='grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8' >
-                    <div>Hello</div>
-                    <div>Hello</div>
-                    <div>Hello</div>
-                    <div>Hello</div>
-                    <div>Hello</div>
-                    <div>Hello</div>
-                    <div>Hello</div>
-                    <div>Hello</div>
-                </div> */}
-            </div>
         </Layout >
     )
 }

@@ -40,6 +40,7 @@ export default NextAuth({
   },
   callbacks: {
     async jwt({ token, account, user }) {
+      console.log("here in jwt");
       if (account && user) {
         return {
           ...token,
