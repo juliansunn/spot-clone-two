@@ -12,12 +12,12 @@ import {
     LogoutIcon
 } from "@heroicons/react/outline";
 import { useRecoilState } from 'recoil';
-import { playlistState, playlistIdState } from '../atoms/playlistAtom';
+import { playlistState, playlistIdState, playlistsState } from '../atoms/playlistAtom';
 
 function Sidebar() {
     const spotifyApi = useSpotify();
     const { data: session, status } = useSession();
-    const [playlists, setPlaylists] = useState([]);
+    const [playlists, setPlaylists] = useRecoilState(playlistsState)
     const [playlistId, setPlaylistId] = useRecoilState(playlistIdState);
     const [playlist, setPlaylist] = useRecoilState(playlistState);
 
@@ -35,7 +35,9 @@ function Sidebar() {
                     d.body.items.push(...data[j].body.items)
                 }
                 setPlaylists(d.body.items);
-                setPlaylistId(d.body.items[0].id);
+                if (!playlistId) {
+                    setPlaylistId(d.body.items[0].id);
+                }
             })
             .catch((e) => {
                 console.log("Error Fetching Playlists: ", e)
@@ -50,7 +52,7 @@ function Sidebar() {
 
     return (
         <div className='text-gray-500 p-5 text-xs lg:text-sm border-r border-gray-600
-        overflow-y-scroll h-screen scrollbar-hide sm:max-w-[12rem] lg:max-w-[15rem] hidden md:inline-flex pb-36'>
+        overflow-y-scroll h-screen scrollbar-hide sm:max-w-[12rem] lg:max-w-[15rem] sm:min-w-[12rem] lg:min-w-[15rem] hidden md:inline-flex pb-36'>
             <div className='space-y-4'>
 
                 <button className='flex items-center space-x-2 hover:text-white' onClick={() => signOut()} >
@@ -95,7 +97,7 @@ function Sidebar() {
                 <hr className='border-t-[0.1px] border-gray-900' />
 
                 {
-                    playlists.map((playlist) => (
+                    playlists?.map((playlist) => (
                         <Link href="/" key={playlist.id}>
                             <p key={playlist.id} onClick={() => setPlaylistId(playlist.id)} className="cursor-pointer hover:text-white">{playlist.name}</p>
                         </Link>

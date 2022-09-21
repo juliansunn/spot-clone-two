@@ -22,11 +22,12 @@ function Center() {
             spotifyApi.getPlaylist(playlistId).then((data) => {
                 const playlist = data.body;
                 setPlaylist(playlist);
+                console.log("here in center", playlistId)
                 setPlaylistTracks(playlist.tracks.items);
                 setTrackInfo(playlist?.tracks?.items?.map((track, i) => ({ position: i, uri: track.track.uri, id: track.track.id })))
             }).catch(error => console.log("something went wrong: ", error))
         }
-    }, [spotifyApi, playlistId])
+    }, [playlistId])
 
 
     return (

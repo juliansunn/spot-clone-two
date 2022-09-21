@@ -43,7 +43,6 @@ function Song({ track, order, }) {
     if (track.track.name === currentTrackId) {
         console.log(currentTrackId, track.track.name, order,);
     }
-    console.log(track)
     return (
 
         <tr
@@ -65,12 +64,12 @@ function Song({ track, order, }) {
 
                 <img
                     className="h-10 w-10"
-                    src={track.track?.album?.images[0].url}
+                    src={track.track?.album?.images[0]?.url}
                     alt={track.track?.album?.name}
                 />
                 <div>
                     <p className="w-36 lg:w-64 truncate text-white">{track.track?.name}</p>
-                    <p className="truncate">{track.track?.artists[0].name}</p>
+                    <p className="truncate">{track.track?.artists[0]?.name}</p>
                 </div>
             </td>
             <td>
@@ -80,7 +79,7 @@ function Song({ track, order, }) {
                 </div>
             </td>
             <td>
-                <p>{parseDate(track?.added_at)}</p>
+                <p className="hidden md:inline">{parseDate(track?.added_at)}</p>
             </td>
             <td>
                 <div className="flex justify-center">

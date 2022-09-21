@@ -45,13 +45,13 @@ function LikedSongs() {
         <Layout>
 
             <div>
-                <div className={`flex items-end space-x-7 bg-gradient-to-r from-blue-300 to-gray-900  h-60 w-full relative`}>
+                <div className={`flex items-end  bg-gradient-to-l to-blue-100 from-slate-400  min-h-64 w-full relative`}>
                     <img src={`/img/${backgroundImg}.jpg`} className='h-full w-full object-cover mix-blend-overlay absolute grayscale' alt="cant find the photo" />
                     <div className=" flex items-center gap-x-2 p-5 relative">
 
-                        <img src={session?.user?.image} className="h-44 w-44 shadow-2xl" alt="no image" />
+                        <img src={session?.user?.image} className="h-52 w-52 shadow-2xl shadow-black rounded-md" alt="no image" />
                         <div className='flex flex-col h-44'>
-                            <h1 className='text-xl lg:text-3xl xl:text-5xl text-gray-900'>My Liked Songs</h1>
+                            <h1 className='text-5xl md:text-3xl xl:text-6xl mb-5 text-gray-900 drop-shadow-lg truncate pb-5 capitalize tracking-[0.5rem]'>MY LIKED SONGS</h1>
                         </div>
                     </div>
                 </div>
