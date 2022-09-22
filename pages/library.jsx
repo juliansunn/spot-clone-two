@@ -46,7 +46,6 @@ function Library() {
         if (contentType === 0) {
             getPlaylistData(20);
         }
-        console.log(contentType)
         // setBackgroundImg(getRandomInt(1, 14));
 
     }, [contentType,])

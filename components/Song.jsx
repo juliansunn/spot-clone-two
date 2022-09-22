@@ -39,10 +39,6 @@ function Song({ track, order, }) {
         })
     }
 
-
-    if (track.track.name === currentTrackId) {
-        console.log(currentTrackId, track.track.name, order,);
-    }
     return (
 
         <tr
@@ -91,3 +87,6 @@ function Song({ track, order, }) {
 }
 
 export default Song
+
+
+https://accounts.spotify.com/en/login?continue=https%3A%2F%2Faccounts.spotify.com%2Fauthorize%3Fnextauth%3Dsignin%252Cspotify%26scope%3Duser-read-email%26response_type%3Dcode%26redirect_uri%3Dhttp%253A%252F%252Flocalhost%253A3000%252Fapi%252Fauth%252Fcallback%252Fspotify%26scopes%3Duser-modify-playback-state%252Cuser-read-playback-state%252Cuser-read-email%252Cuser-read-private%252Cplaylist-read-private%252Cuser-library-read%252Cuser-read-currently-playing%252Cuser-read-recently-played%252Cplaylist-read-collaborative%252Cuser-top-read%252Cuser-follow-read%26state%3D4TYZ_EZI86bwLxG1Cc21_YHEVSVuxOkihqWqykpVkTo%26client_id%3D58faffc8452d44a2aa81e039544b8c0d
