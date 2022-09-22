@@ -72,10 +72,12 @@ function Library() {
                 <div className='grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4  pb-24 pt-3' >
                     {
                         contentType === 0 && playlists.map((playlist) => (
-                            <ContentCard data={playlist} />
+                            <ContentCard key={playlist.id} data={playlist} />
                         ))
                     }
                 </div>
+            </div>
+
         </Layout >
     )
 }

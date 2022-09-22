@@ -16,7 +16,7 @@ const scopes = [
 ].join(",");
 
 const params = {
-  scopes: scopes
+  scope: scopes
 };
 
 const queryParamString = new URLSearchParams(params);
