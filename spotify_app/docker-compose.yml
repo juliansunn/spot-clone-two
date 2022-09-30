@@ -1,0 +1,68 @@
+version: '3.8'
+
+services:
+    web:
+        build: .
+        command: bash -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+        container_name: sp_service
+        env_file:
+            - .env
+        volumes:
+            - .:/sp_service
+        ports:
+            - "8000:8000" # webserver
+            - "8888:8888" # iptyhon notebook
+        depends_on:
+            - db
+            - redis
+
+    celery:
+        restart: always
+        build: .
+        command: celery -A proj worker --loglevel=info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+        container_name: celery
+        volumes:
+            - .:/sp_service
+        environment:
+            - DEBUG=1
+            - DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]
+            - CELERY_BROKER=redis://redis:6379/0
+            # - CELERY_BACKEND=redis://redis:6379/0
+            - CELERY_BACKEND=django-db
+        env_file:
+            - .env
+        depends_on:
+            - web
+            - redis
+
+    celery_beat:
+        restart: always
+        build: .
+        container_name: celery_beat
+        volumes:
+            - .:/sp_service
+        depends_on:
+            - db
+            - redis
+            - celery
+        command: celery -A proj worker --beat --scheduler django --loglevel=info
+
+    db:
+        image: postgres
+        # container_name: pgdb
+        environment:
+            POSTGRES_DB: "postgres"
+            POSTGRES_USER: "postgres"
+            POSTGRES_PASSWORD: "supersecretpassword"
+            PGDATA: "/var/lib/postgresql/data/pgdata"
+        env_file:
+            - .env
+        volumes:
+            - pgdata:/var/lib/postgresql/data/
+
+    redis:
+        image: "redis:alpine"
+
+volumes:
+    pgdata:
+
