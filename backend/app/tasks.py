@@ -1,6 +1,6 @@
 from __future__ import absolute_import, unicode_literals
 from celery import shared_task
-from spotify_app.utils.spotify_settings import V2SpotifyConn
+from app.utils.spotify_settings import V2SpotifyConn
 
 
 @shared_task(name="Add Recently Played Songs")

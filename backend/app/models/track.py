@@ -1,5 +1,5 @@
 from django.db import models
-from spotify_app.utils.db_utils import convert_to_local_time
+from app.utils.db_utils import convert_to_local_time
 from .spotify_search import SpotifySearch
 from django.conf import settings
 

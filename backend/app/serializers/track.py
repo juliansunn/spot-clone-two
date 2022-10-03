@@ -1,7 +1,7 @@
 from rest_framework import serializers
-from spotify_app.models import *
-from spotify_app.serializers.album import AlbumSerializer
-from spotify_app.serializers.play_history import PlayHistorySerializer
+from app.models import *
+from app.serializers.album import AlbumSerializer
+from app.serializers.play_history import PlayHistorySerializer
 
 
 class TrackSerializer(serializers.ModelSerializer):

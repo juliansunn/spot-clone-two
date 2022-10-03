@@ -3,7 +3,7 @@ from django.utils import timezone
 
 
 def create_track(track):
-    from spotify_app.models import (Track, PlayHistory)
+    from app.models import (Track, PlayHistory)
     album = create_album(track.album)
     db_track, created = Track.objects.get_or_create(
         name=track.name,
@@ -24,7 +24,7 @@ def create_track(track):
     return db_track, created
 
 def create_album(album):
-    from spotify_app.models import Album
+    from app.models import Album
     album_artists = [create_artist(a) for a in album.artists]
     release_date = album.release_date
     if '-' not in release_date:
@@ -45,7 +45,7 @@ def create_album(album):
     return album_db
 
 def create_image(image, album):
-    from spotify_app.models import Image
+    from app.models import Image
     return Image.objects.get_or_create(
         height=image.height,
         width=image.width,
@@ -54,7 +54,7 @@ def create_image(image, album):
     )[0]
 
 def create_artist(data):
-    from spotify_app.models import Artist
+    from app.models import Artist
     return Artist.objects.get_or_create(
         name=data.name,
         href=data.href,

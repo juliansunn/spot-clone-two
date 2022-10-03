@@ -1,8 +1,8 @@
 from datetime import timedelta
 from django.utils import timezone
 from rest_framework import viewsets
-from spotify_app.models import Track, play_history
-from spotify_app.serializers import TrackSerializer
+from app.models import Track, play_history
+from app.serializers import TrackSerializer
 from django.db.models import Count
 
 

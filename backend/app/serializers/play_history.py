@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from spotify_app.models import PlayHistory
+from app.models import PlayHistory
 
 
 class PlayHistorySerializer(serializers.ModelSerializer):

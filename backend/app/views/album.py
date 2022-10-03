@@ -1,6 +1,6 @@
 from rest_framework import viewsets
-from spotify_app.models import Album
-from spotify_app.serializers import AlbumSerializer
+from app.models import Album
+from app.serializers import AlbumSerializer
 
 
 class AlbumView(viewsets.ModelViewSet):

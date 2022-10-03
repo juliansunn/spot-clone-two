@@ -1,5 +1,5 @@
 from django.urls import path, include
-from spotify_app.views import (
+from app.views import (
     track,
     artist,
     album,

@@ -6,8 +6,8 @@ import pandas as pd
 import pickle
 from spotipy import Spotify, util
 from dotenv import load_dotenv
-from spotify_app.utils.parser import Parser, ParsedTrack
-from spotify_app.utils.db_utils import create_track
+from app.utils.parser import Parser, ParsedTrack
+from app.utils.db_utils import create_track
 from django.utils import timezone
 from proj import settings
 from tqdm import tqdm
@@ -22,7 +22,7 @@ from datetime import datetime, timedelta
 load_dotenv()
 
 
-from spotify_app.models import *
+from app.models import *
 
 
 logger = logging.getLogger(__name__)

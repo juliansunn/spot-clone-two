@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from spotify_app.models import Album
+from app.models import Album
 
 class AlbumSerializer(serializers.ModelSerializer):
 

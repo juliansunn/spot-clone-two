@@ -1,6 +1,6 @@
 from django_cron import CronJobBase, Schedule
 import logging
-from spotify_app.utils.spotify_settings import V2SpotifyConn
+from app.utils.spotify_settings import V2SpotifyConn
 
 logger = logging.getLogger(__name__)
 

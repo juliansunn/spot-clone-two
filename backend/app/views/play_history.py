@@ -1,6 +1,6 @@
 from rest_framework import viewsets
-from spotify_app.models import PlayHistory
-from spotify_app.serializers import PlayHistorySerializer
+from app.models import PlayHistory
+from app.serializers import PlayHistorySerializer
 
 
 class PlayHistoryView(viewsets.ModelViewSet):
