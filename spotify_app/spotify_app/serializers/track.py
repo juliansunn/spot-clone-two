@@ -13,12 +13,12 @@ class TrackSerializer(serializers.ModelSerializer):
     class Meta:
         model = Track
         fields = [
+            "id",
             "name",
             "href",
             "uri",
             "duration",
             "popularity",
-            "album",
             "album",
             "last_played_at",
             "play_count",

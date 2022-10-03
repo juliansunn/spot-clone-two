@@ -161,10 +161,10 @@ REST_FRAMEWORK = {
     "PAGE_SIZE": 50,
 }
 
-# SHELL_PLUS_PRE_IMPORTS = (
-#     ("spotify_app.utils.spotify_settings", "SpotifyConn"),
-#     ("pprint", "pprint"),
-# )
+SHELL_PLUS_PRE_IMPORTS = (
+    ("spotify_app.utils.spotify_settings", "V2SpotifyConn"),
+    ("pprint", "pprint"),
+)
 
 SHELL_PLUS = "ipython"
 
