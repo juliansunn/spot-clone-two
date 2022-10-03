@@ -40,7 +40,7 @@ class Migration(migrations.Migration):
                 ('popularity', models.IntegerField(null=True)),
                 ('preview_url', models.URLField(null=True)),
                 ('track_number', models.IntegerField(null=True)),
-                ('album', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='album_tracks', to='spotify_app.album')),
+                ('album', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='album_tracks', to='app.album')),
             ],
             options={
                 'abstract': False,
@@ -52,7 +52,7 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('created_at', models.DateTimeField(auto_now=True)),
                 ('played_at', models.DateTimeField()),
-                ('track', models.ForeignKey(null=True, on_delete=django.db.models.deletion.PROTECT, related_name='play_history', to='spotify_app.track')),
+                ('track', models.ForeignKey(null=True, on_delete=django.db.models.deletion.PROTECT, related_name='play_history', to='app.track')),
             ],
         ),
         migrations.CreateModel(
@@ -62,7 +62,7 @@ class Migration(migrations.Migration):
                 ('height', models.IntegerField(null=True)),
                 ('width', models.IntegerField(null=True)),
                 ('url', models.URLField(default=None, max_length=100)),
-                ('album', models.ForeignKey(null=True, on_delete=django.db.models.deletion.PROTECT, related_name='album_images', to='spotify_app.album')),
+                ('album', models.ForeignKey(null=True, on_delete=django.db.models.deletion.PROTECT, related_name='album_images', to='app.album')),
             ],
         ),
         migrations.CreateModel(
@@ -73,7 +73,7 @@ class Migration(migrations.Migration):
                 ('href', models.URLField(max_length=100, null=True)),
                 ('spotify_id', models.CharField(help_text='Search spotify API with this ID for Data.', max_length=50, null=True)),
                 ('uri', models.CharField(max_length=100, null=True)),
-                ('tracks', models.ForeignKey(null=True, on_delete=django.db.models.deletion.PROTECT, related_name='artist_tracks', to='spotify_app.track')),
+                ('tracks', models.ForeignKey(null=True, on_delete=django.db.models.deletion.PROTECT, related_name='artist_tracks', to='app.track')),
             ],
             options={
                 'abstract': False,
@@ -82,6 +82,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='album',
             name='artists',
-            field=models.ManyToManyField(related_name='artist_albums', to='spotify_app.Artist'),
+            field=models.ManyToManyField(related_name='artist_albums', to='app.Artist'),
         ),
     ]

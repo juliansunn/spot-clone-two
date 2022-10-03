@@ -6,7 +6,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('spotify_app', '0004_auto_20220803_2251'),
+        ('app', '0004_auto_20220803_2251'),
     ]
 
     operations = [

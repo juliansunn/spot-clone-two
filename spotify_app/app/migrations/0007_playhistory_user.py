@@ -9,7 +9,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('spotify_app', '0006_add_user_relation_to_play_history'),
+        ('app', '0006_add_user_relation_to_play_history'),
     ]
 
     operations = [

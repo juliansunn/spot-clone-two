@@ -11,7 +11,7 @@ class RecentlyPlayedSongs(CronJobBase):
     schedule = Schedule(
         run_every_mins=RUN_EVERY_MINS, retry_after_failure_mins=RETRY_AFTER_FAILURE_MINS
     )
-    code = "spotify_app.recently_played_songs"
+    code = "app.recently_played_songs"
 
     def do(self):
 

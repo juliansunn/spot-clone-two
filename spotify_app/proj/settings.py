@@ -48,7 +48,7 @@ INSTALLED_APPS = [
     "rest_framework",
     # 'rest_framework.authtoken',
     "core",
-    "spotify_app",
+    "app",
 ]
 
 MIDDLEWARE = [
@@ -162,7 +162,7 @@ REST_FRAMEWORK = {
 }
 
 SHELL_PLUS_PRE_IMPORTS = (
-    ("spotify_app.utils.spotify_settings", "V2SpotifyConn"),
+    # ("app.utils.spotify_settings", "V2SpotifyConn"),
     ("pprint", "pprint"),
 )
 

@@ -15,7 +15,7 @@ class TrackView(viewsets.ReadOnlyModelViewSet):
         now = timezone.now()
         seven_days_ago = now - timedelta(days=7)
         print(now, seven_days_ago)
-        # return Track.objects.all()
-        return Track.objects.filter(
-            play_history__played_at__range=(seven_days_ago, now)
-        )
+        return Track.objects.all()
+        # return Track.objects.filter(
+        #     play_history__played_at__range=(seven_days_ago, now)
+        # )

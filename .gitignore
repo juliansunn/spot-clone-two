@@ -100,8 +100,8 @@ __pypackages__/
 celerybeat-schedule
 celerybeat.pid
 
-# notebook files 
-/spotify_app/notebooks/
+# notebook files
+/backend/notebooks/
 *.ipynb
 
 # SageMath parsed files

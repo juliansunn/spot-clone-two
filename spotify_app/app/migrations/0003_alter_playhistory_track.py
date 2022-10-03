@@ -7,13 +7,13 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('spotify_app', '0002_alter_artist_tracks'),
+        ('app', '0002_alter_artist_tracks'),
     ]
 
     operations = [
         migrations.AlterField(
             model_name='playhistory',
             name='track',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='play_history', to='spotify_app.track'),
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='play_history', to='app.track'),
         ),
     ]
