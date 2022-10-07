@@ -9,7 +9,7 @@ function Playlist({ playlist }) {
         <div>
             <ListHeader data={playlist} audioType="PLAYLIST" />
             <div>
-                <Songs />
+                <Songs songs={playlist?.tracks?.items}/>
             </div>
         </div >
     )

@@ -14,7 +14,7 @@ class Track(SpotifySearch):
         "Album", related_name="album_tracks", on_delete=models.CASCADE, null=True
     )
     disc_number = models.IntegerField(null=True)
-    duration = models.IntegerField(null=True)
+    duration_ms = models.IntegerField(null=True)
     popularity = models.IntegerField(null=True)
     preview_url = models.URLField(null=True)
     track_number = models.IntegerField(null=True)

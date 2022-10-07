@@ -6,16 +6,17 @@ import { playlistTrackState } from "../atoms/playlistAtom"
 import { trackInfoState } from "../atoms/songAtom";
 import Song from "./Song";
 
-function Songs() {
-    const playlistTracks = useRecoilValue(playlistTrackState);
+function Songs({songs}) {
+    // const playlistTracks = useRecoilValue(playlistTrackState);
     const setTrackInfo = useSetRecoilState(trackInfoState);
 
     useEffect(() => {
-        setTrackInfo(playlistTracks?.map((track, i) => ({ position: i, uri: track.track.uri, id: track.track.id })))
+        setTrackInfo(songs?.map((track, i) => ({ position: i, uri: track.track.uri, id: track.track.id })))
+        // setTrackInfo(playlistTracks?.map((track, i) => ({ position: i, uri: track.track.uri, id: track.track.id })))
     }, [])
 
 
-
+    console.log("I AM IN SONGS: ", songs)
     return (
         <div className="px-8 flex flex-col spacy-y-1 pb-28">
             <table className="min-w-full table-auto [border-spacing:0.50rem] md:[border-spaceing:0.70rem]">
@@ -39,7 +40,7 @@ function Songs() {
                     </tr>
                 </thead>
                 <tbody>
-                    {playlistTracks?.map((track, i) => (
+                    {songs?.map((track, i) => (
                         <Song key={track.track?.id + i} track={track} order={i} />
                     ))}
                 </tbody>

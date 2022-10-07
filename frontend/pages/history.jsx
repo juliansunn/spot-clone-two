@@ -10,7 +10,7 @@ import Songs from '../components/Songs'
 function History() {
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
-    const [countTracks, setCountTracks] = useState({});
+    // const [countTracks, setCountTracks] = useState({});
     const [playlistTracks, setPlaylistTracks] = useRecoilState(playlistTrackState);
     const [trackInfo, setTrackInfo] = useRecoilState(trackInfoState);
 
@@ -21,21 +21,22 @@ function History() {
                 // end_date: endDate
             }));
             const data = await res.json();
-            setCountTracks(data);
-            setPlaylistTracks(data.results)
+            console.log(data)
+            // setCountTracks(data);
+            setPlaylistTracks(data)
         } catch (err) {
             console.log('err', err)
         }
     }
     useEffect(() => {
         getCountHistory();
-    }, [startDate, endDate])
+    }, [])
     console.log(playlistTracks)
     return (
         <Layout>
             <div >
                 <h1 className='text-white'> Count History</h1>
-                <Songs />
+                <Songs songs={playlistTracks}/>
             </div>
         </Layout>
     )

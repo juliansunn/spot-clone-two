@@ -4,6 +4,7 @@ from app.serializers import ArtistSerializer
 
 
 class ArtistView(viewsets.ModelViewSet):
-    """List all Tracks"""
+    """List all Artists"""
+
     queryset = Artist.objects.all()
     serializer_class = ArtistSerializer

@@ -11,7 +11,7 @@ import { getRandomInt } from '../lib/utility';
 function LikedSongs() {
     const { data: session } = useSession();
     const spotifyApi = useSpotify();
-    const setPlaylistTracks = useSetRecoilState(playlistTrackState);
+    const [playlistTracks, setPlaylistTracks] = useRecoilState(playlistTrackState);
     const [trackInfo, setTrackInfo] = useRecoilState(trackInfoState);
     const [backgroundImg, setBackgroundImg] = useState(null);
     const getLikedSongs = async (offset) => {
@@ -56,7 +56,7 @@ function LikedSongs() {
                     </div>
                 </div>
                 <div>
-                    <Songs />
+                    <Songs songs={playlistTracks} />
                 </div>
             </div>
         </Layout>

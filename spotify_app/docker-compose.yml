@@ -49,12 +49,15 @@ services:
 
     db:
         image: postgres
-        # container_name: pgdb
+        container_name: db
+        restart: always
         environment:
             POSTGRES_DB: "postgres"
             POSTGRES_USER: "postgres"
             POSTGRES_PASSWORD: "supersecretpassword"
             PGDATA: "/var/lib/postgresql/data/pgdata"
+        ports:
+            - "5432:5432"
         env_file:
             - .env
         volumes:

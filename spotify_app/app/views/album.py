@@ -4,6 +4,7 @@ from app.serializers import AlbumSerializer
 
 
 class AlbumView(viewsets.ModelViewSet):
-    """List all Tracks"""
+    """List all Albums"""
+
     queryset = Album.objects.all()
     serializer_class = AlbumSerializer
