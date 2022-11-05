@@ -16,7 +16,7 @@ function Center() {
     const [playlist, setPlaylist] = useRecoilState(playlistState);
     const setTrackInfo = useSetRecoilState(trackInfoState);
     const setPlaylistTracks = useSetRecoilState(playlistTrackState);
-
+    
     useEffect(() => {
         if (playlistId) {
             spotifyApi.getPlaylist(playlistId).then((data) => {

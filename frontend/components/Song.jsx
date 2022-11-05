@@ -48,7 +48,7 @@ function Song({ track, order, }) {
             <td>
                 <div className="flex flex-row items-center justify-evenly">
 
-                    {track.track.id === currentTrackId ?
+                    {track.track?.id === currentTrackId ?
                         <div>
                             {isPlaying ? (<PauseIcon onClick={handlePlayPause} className="button stroke-green-400 animate-bounce" />)
                                 : (<PlayIcon onClick={handlePlayPause} className="button stroke-green-400 animate-bounce" />)}
@@ -70,7 +70,7 @@ function Song({ track, order, }) {
             </td>
             <td>
                 <div className="flex items-center justify-between ml-auto md:ml-0">
-                    <p className="hidden md:inline w-40 md:truncate">{track.track?.album.name}</p>
+                    <p className="hidden md:inline w-40 md:truncate">{track.track?.album?.name}</p>
 
                 </div>
             </td>

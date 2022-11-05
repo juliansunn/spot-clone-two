@@ -6,7 +6,7 @@ import { albumIdState } from '../atoms/albumAtom'
 function AlbumCard({ data }) {
     const [albumId, setAlbumId] = useRecoilState(albumIdState);
     return (
-        <Link href="/album" key={data.id} >
+        <Link href={`/album/${data.id}`} key={data.id} >
 
             <div
                 onClick={() => setAlbumId(data.id)}

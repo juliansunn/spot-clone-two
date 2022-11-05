@@ -1,33 +1,26 @@
 import { useSession } from 'next-auth/react';
-import Link from 'next/link';
 import React, { useEffect, useState } from 'react'
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { playlistIdState, playlistsState, playlistTrackState } from '../atoms/playlistAtom';
-import { trackInfoState } from '../atoms/songAtom';
+import { albumsState } from '../atoms/albumAtom';
+import { artistsState } from '../atoms/artistAtom';
 import Layout from '../components/Layout'
-import Songs from '../components/Songs';
 import useSpotify from '../hooks/useSpotify';
-import { getRandomInt } from '../lib/utility';
 import PlaylistCard from '../components/PlaylistCard';
-import { getShows } from '../lib/otherSpotifyEndpoints';
 import PodcastCard from '../components/PodcastCard';
-import { albumIdState, albumsState } from '../atoms/albumAtom';
 import AlbumCard from '../components/AlbumCard';
-import { artistIdState, artistsState } from '../atoms/artistAtom';
 import ArtistCard from '../components/ArtistCard';
+import { getShows } from '../lib/otherSpotifyEndpoints';
 
 function Library() {
     const { data: session } = useSession();
     const spotifyApi = useSpotify();
-    const setPlaylistTracks = useSetRecoilState(playlistTrackState);
-    // const [trackInfo, setTrackInfo] = useRecoilState(trackInfoState);
     const [playlists, setPlaylists] = useRecoilState(playlistsState);
     const [playlistId, setPlaylistId] = useRecoilState(playlistIdState);
     const [albums, setAlbums] = useRecoilState(albumsState);
     const [artists, setArtists] = useRecoilState(artistsState);
 
     const [contentType, setContentType] = useState(0);
-    // const [content, setContent] = useState(null)
     const [podcasts, setPodcasts] = useState([])
     const contentList = ["Playlists", "Podcasts", "Artists", "Albums"]
 
@@ -36,10 +29,9 @@ function Library() {
             .then((data) => {
 
                 setArtists(data.body.artists.items);
-                // setPlaylistId(d.body.items[0].id);
             })
             .catch((e) => {
-                console.log("Error Fetching Albums: ", e)
+                console.log("Error Fetching Artists: ", e)
             });
     }
 
@@ -101,7 +93,6 @@ function Library() {
             getAlbumData(20);
         }
     }, [contentType,])
-    console.log(artists)
     return (
         <Layout>
 

@@ -15,7 +15,6 @@ function Podcast() {
     useEffect(() => {
         if (podcastId) {
             spotifyApi.getShowEpisodes(podcastId).then((data) => {
-                console.log(data);
                 setPodcastShows(data.body.items);
             });
         }

@@ -5,12 +5,17 @@ export const albumsState = atom({
     default: [],
 });
 
+export const albumState = atom({
+    key: "albumState",
+    default: {},
+});
+
 export const albumIdState = atom({
     key: "albumIdState",
     default: null,
 });
 
-export const albumState = atom({
-    key: "albumState",
-    default: {},
+export const albumIdsState = atom({
+    key: "albumIdsState",
+    default: [],
 });

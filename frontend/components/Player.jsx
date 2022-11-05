@@ -123,19 +123,20 @@ function Player() {
     }
 
     useEffect(() => {
-        const interval = setInterval(() => {
-            if (!seeking)
-                spotifyApi.getMyCurrentPlaybackState().then((data) => {
-                    setDuration(data.body?.item?.duration_ms);
-                    setProgress(data.body?.progress_ms);
-                });
-        }, 500);
-        return () => clearInterval(interval);
+            const interval = setInterval(() => {
+                if (!seeking)
+                    spotifyApi.getMyCurrentPlaybackState().then((data) => {
+                        setDuration(data.body?.item?.duration_ms);
+                        setProgress(data.body?.progress_ms);
+                    });
+            }, 500);
+            return () => clearInterval(interval);
     }, [seeking]);
 
 
     const debouncedAdjustProgress = useCallback(
         debounce((progress) => {
+            console.log('progress', progress)
             spotifyApi.seek(progress).catch((e) => { console.log("Adjusting Progress Error: ", e) });
         }, 200),
         [progress]
@@ -210,14 +211,13 @@ function Player() {
             setCurrentTrackId(trackInfo[newLoc]?.id);
         }
     }
-    const imgUrl = songInfo?.album ? songInfo?.album.images?.[0].url : songInfo?.images?.[0].url
     return (
 
 
         <div className="h-26 text-white grid grid-cols-5 text-xs md:text-base px-2 md:px-8 bg-gradient-to-b from-gray-900 to-gray-800  drop-shadow">
             {/* left side */}
             <div className="flex items-start space-x-4">
-                <img className="hidden md:inline h-20 w-20" src={imgUrl} alt="" />
+                <img className="hidden md:inline h-20 w-20" src={songInfo?.album ? songInfo?.album.images?.[0].url : songInfo?.images?.[0].url} alt="" />
                 <div>
                     <h3 className="text-sm md:text-lg truncate">{songInfo?.name}</h3>
                     <p className="test-xs md:text:sm text-gray-500">{songInfo?.artists?.[0]?.name}</p>

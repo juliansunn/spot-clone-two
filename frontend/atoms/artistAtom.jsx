@@ -5,12 +5,17 @@ export const artistsState = atom({
     default: [],
 });
 
+export const artistState = atom({
+    key: "artistState",
+    default: {},
+});
+
 export const artistIdState = atom({
     key: "artistIdState",
     default: null,
 });
 
-export const artistState = atom({
-    key: "artistState",
-    default: {},
+export const artistIdsState = atom({
+    key: "artistIdsState",
+    default: [],
 });

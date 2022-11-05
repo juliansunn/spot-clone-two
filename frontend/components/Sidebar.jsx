@@ -66,10 +66,12 @@ function Sidebar() {
                         <p>Home</p>
                     </button>
                 </Link>
-                <button className='flex items-center space-x-2 hover:text-white'>
-                    <SearchIcon className="h-5 w-5" />
-                    <p>Search</p>
-                </button>
+                <Link href="/search">
+                    <button className='flex items-center space-x-2 hover:text-white'>
+                        <SearchIcon className="h-5 w-5" />
+                        <p>Search</p>
+                    </button>
+                </Link>
                 <Link href="/library">
                     <button className='flex items-center space-x-2 hover:text-white'>
                         <LibraryIcon className="h-5 w-5" />
@@ -85,10 +87,10 @@ function Sidebar() {
 
                 <hr className='border-t-[0.1px] border-gray-900' />
 
-                <button className='flex items-center space-x-2 hover:text-white'>
+                {/* <button className='flex items-center space-x-2 hover:text-white'>
                     <PlusCircleIcon className="h-5 w-5" />
                     <p>Create Playlist</p>
-                </button>
+                </button> */}
                 <Link href="/liked-songs">
                     <button className='flex items-center space-x-2 hover:text-white'>
                         <HeartIcon className="h-5 w-5" />

@@ -7,7 +7,6 @@ import ListHeader from '../components/listHeader'
 
 function Album() {
     const [album, setAlbum] = useRecoilState(albumState);
-    console.log()
     return (
 
         <Layout>

@@ -13,7 +13,7 @@ function History() {
     // const [countTracks, setCountTracks] = useState({});
     const [playlistTracks, setPlaylistTracks] = useRecoilState(playlistTrackState);
     const [trackInfo, setTrackInfo] = useRecoilState(trackInfoState);
-
+    
     const getCountHistory = async () => {
         try {
             const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/tracks/` + new URLSearchParams({
@@ -21,7 +21,6 @@ function History() {
                 // end_date: endDate
             }));
             const data = await res.json();
-            console.log(data)
             // setCountTracks(data);
             setPlaylistTracks(data)
         } catch (err) {
@@ -31,7 +30,6 @@ function History() {
     useEffect(() => {
         getCountHistory();
     }, [])
-    console.log(playlistTracks)
     return (
         <Layout>
             <div >
