@@ -2,7 +2,7 @@ import React from 'react'
 
 function Artist() {
     return (
-        <div>Artist</div>
+        <div>Artist!!</div>
     )
 }
 
