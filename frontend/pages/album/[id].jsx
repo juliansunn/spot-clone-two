@@ -7,9 +7,11 @@ import useSpotify from '../../hooks/useSpotify'
 import { albumIdState } from '../../atoms/albumAtom'
 import {useRouter} from 'next/router'
 import Songs from '../../components/Songs'
+import { playlistIdState } from '../../atoms/playlistAtom'
 
 function Album() {
     const [albumId, setAlbumId] = useRecoilState(albumIdState);
+    const [playlist, setPlaylist] = useRecoilState(playlistIdState);
     const [album, setAlbum] = useRecoilState(albumState);
     const router = useRouter();
     const pid = router.query.id;
@@ -17,17 +19,17 @@ function Album() {
     
     useEffect(() => {
         spotify.getAlbum(pid).then((data) => {
-            setAlbum(data.body);
+            setPlaylist(data.body);
+            // setAlbum(data.body);
             setAlbumId(pid);
-        }, [album])
+        }, [playlist])
     })
     return (
 
         <Layout>
-            <ListHeader data={album} audioType="ALBUM" />
+            <ListHeader data={playlist} audioType="ALBUM" />
             <div>
-                <h1>{album?.name}</h1>
-                T<Songs songs={album?.tracks?.items}/>
+                <Songs songs={playlist?.tracks?.items}/>
             </div>
         </Layout>
     )

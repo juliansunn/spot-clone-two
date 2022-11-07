@@ -3,13 +3,13 @@ import Songs from './Songs';
 import ListHeader from './listHeader';
 
 
-function Playlist({ playlist }) {
-
+function Playlist(props) {
     return (
         <div>
-            <ListHeader data={playlist} audioType="PLAYLIST" />
+            <ListHeader data={props.playlist} audioType="PLAYLIST" />
             <div>
-                <Songs songs={playlist?.tracks?.items}/>
+                <Songs {...props}/>
+                {/* <Songs songs={props.playlist?.tracks?.items}/> */}
             </div>
         </div >
     )

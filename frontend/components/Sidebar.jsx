@@ -20,7 +20,6 @@ function Sidebar() {
     const { data: session, status } = useSession();
     const [playlists, setPlaylists] = useRecoilState(playlistsState)
     const [playlistId, setPlaylistId] = useRecoilState(playlistIdState);
-    const [playlist, setPlaylist] = useRecoilState(playlistState);
 
     const getPlaylists = async (offset) => {
         const plsts = [];
