@@ -28,5 +28,4 @@ class TrackView(viewsets.ReadOnlyModelViewSet):
         serializer = self.get_serializer(queryset, many=True)
         # s = [{"track": t} for t in serializer.data]
         # serializer.data = s
-        print("*************", serializer)
         return Response(serializer.data)
