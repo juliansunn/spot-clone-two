@@ -1,9 +1,8 @@
 import React, { useEffect } from 'react'
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import {
     playlistIdState,
     playlistState,
-    playlistTrackState
 } from '../atoms/playlistAtom';
 import { trackInfoState } from '../atoms/songAtom';
 import spotifyApi from '../lib/spotify';
@@ -14,23 +13,23 @@ function Center() {
 
     const playlistId = useRecoilValue(playlistIdState);
     const [playlist, setPlaylist] = useRecoilState(playlistState);
-    const setTrackInfo = useSetRecoilState(trackInfoState);
-    const setPlaylistTracks = useSetRecoilState(playlistTrackState);
+    const [trackInfo, setTrackInfo] = useRecoilState(trackInfoState);
+    
+    
+    function selectPlaylist() {
+        spotifyApi.getPlaylist(playlistId).then((data) => {
+            const playlist = data.body;
+            setPlaylist(playlist);
+        }).catch(error => console.log("something went wrong: ", error))
+    }
     
     useEffect(() => {
-        if (playlistId) {
-            spotifyApi.getPlaylist(playlistId).then((data) => {
-                const playlist = data.body;
-                setPlaylist(playlist);
-                setPlaylistTracks(playlist.tracks.items);
-                setTrackInfo(playlist?.tracks?.items?.map((track, i) => ({ position: i, uri: track.track.uri, id: track.track.id })))
-            }).catch(error => console.log("something went wrong: ", error))
-        }
-    }, [spotifyApi, playlistId])
+        selectPlaylist();
+    }, [playlistId])
 
 
     return (
-        <Playlist playlist={playlist} />
+        <Playlist playlist={playlist} trackInfo={trackInfo} handleSongSelected={selectPlaylist}/>
     )
 }
 

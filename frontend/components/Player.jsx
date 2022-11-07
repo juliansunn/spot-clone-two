@@ -168,9 +168,9 @@ function Player() {
         setVolume(volume);
     }, [myDevices])
 
-    useEffect(() => {
-        setTrackInfo(playlist?.tracks?.items?.map((track, i) => ({ position: i, uri: track.track.uri, id: track.track.id })))
-    }, [playlist])
+    // useEffect(() => {
+    //     setTrackInfo(playlist?.tracks?.items?.map((track, i) => ({ position: i, uri: track.track.uri, id: track.track.id })))
+    // }, [playlist])
 
 
     useDidMountEffect(() => {
@@ -211,6 +211,7 @@ function Player() {
             setCurrentTrackId(trackInfo[newLoc]?.id);
         }
     }
+
     return (
 
 
