@@ -29,7 +29,7 @@ function Center() {
 
 
     return (
-        <Playlist playlist={playlist} trackInfo={trackInfo} handleSongSelected={selectPlaylist}/>
+        <Playlist playlist={playlist} trackInfo={trackInfo} handleSongSelected={selectPlaylist} type="playlist"/>
     )
 }
 

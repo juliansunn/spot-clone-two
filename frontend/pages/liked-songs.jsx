@@ -45,7 +45,7 @@ function LikedSongs() {
         <Layout>
 
             <div>
-                <div className={`flex items-end  bg-gradient-to-l to-blue-100 from-slate-400  min-h-64 w-full relative`}>
+                <div className={`flex items-end  bg-gradient-to-l to-blue-100 from-gray-400  min-h-64 w-full relative`}>
                     <img src={`/img/${backgroundImg}.jpg`} className='h-full w-full object-cover mix-blend-overlay absolute grayscale' alt="cant find the photo" />
                     <div className=" flex items-center gap-x-2 p-5 relative">
 

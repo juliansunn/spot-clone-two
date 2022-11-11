@@ -487,7 +487,8 @@ class V2SpotifyConn:
     def _id_dict(self):
         try:
             ids = pickle.load(open(f"{self.data_path}/{self.picklefile}.pickle", "rb"))
-        except (OSError, IOError):
+        except Exception as e:
+            print(f"Exception: {e} occurred when trying to open the pickle file {self.data_path}/{self.picklefile}.pickle")
             ids = {"in_db": set(), "not_found": {}}
             pickle.dump(ids, open(f"{self.data_path}/{self.picklefile}.pickle", "wb"))
         return ids

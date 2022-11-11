@@ -98,19 +98,19 @@ function Library() {
 
             <div className='px-10'>
                 {/* Top */}
-                <div className=' flex items-center justify-start px-20 w-full h-20 pt-20'>
+                <div className=' flex items-center justify-start px-20 w-full h-20 '>
                     {contentList.map((content, i) => (
 
                         <button
                             key={i}
                             onClick={() => { setContentType(i) }}
-                            className={`hover:bg-slate-600 p-3 mx-1 rounded ${contentType == i ? "bg-slate-600" : ""} cursor-pointer`}>
+                            className={`hover:bg-gray-400 dark:hover:bg-gray-600 p-3 mx-1 rounded ${contentType == i ? "bg-gray-300 dark:bg-gray-600" : ""} cursor-pointer`}>
                             {content}
                         </button>
 
                     ))}
                 </div>
-                <h1 className='text-lg md:text-xl xl:text-2xl text-white'>{contentList[contentType]}</h1>
+                <h1 className='text-lg md:text-xl xl:text-2xl text-gray-800 dark:text-white'>{contentList[contentType]}</h1>
                 {/* Lib center */}
                 <div className='grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4  pb-24 pt-3' >
                     {

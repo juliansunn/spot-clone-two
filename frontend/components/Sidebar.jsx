@@ -23,7 +23,7 @@ function Sidebar() {
 
     const getPlaylists = async (offset) => {
         const plsts = [];
-        for (let i = 0; i < 2; ++i) {
+        for (let i = 0; i < 3; ++i) {
             plsts.push(spotifyApi.getUserPlaylists({
                 offset: i * offset,
             }));
@@ -31,12 +31,13 @@ function Sidebar() {
         Promise.all(plsts)
             .then((data) => {
                 const d = data[0];
-                for (let j = 1; j < Math.ceil(d.body.total / offset); j++) {
-                    d.body.items.push(...data[j].body.items)
+                for (let j = 1; j < plsts.length; j++) {
+                    console.log(plsts)
+                    d?.body.items.push(...data[j]?.body.items)
                 }
-                setPlaylists(d.body.items);
+                setPlaylists(d?.body.items);
                 if (!playlistId) {
-                    setPlaylistId(d.body.items[0].id);
+                    setPlaylistId(d?.body.items[0].id);
                 }
             })
             .catch((e) => {
@@ -51,34 +52,34 @@ function Sidebar() {
     }, [session, spotifyApi])
 
     return (
-        <div className='text-gray-500 p-5 text-xs lg:text-sm border-r border-gray-600
+        <div className='text-gray-900 dark:text-gray-500 p-5 text-xs lg:text-sm border-r border-gray-600
         overflow-y-scroll h-screen scrollbar-hide sm:max-w-[12rem] lg:max-w-[15rem] sm:min-w-[12rem] lg:min-w-[15rem] hidden md:inline-flex pb-36'>
             <div className='space-y-4'>
 
-                <button className='flex items-center space-x-2 hover:text-white' onClick={() => signOut()} >
+                <button className='flex items-center space-x-2 hover:text-green-500 dark:hover:text-white ' onClick={() => signOut()} >
                     <LogoutIcon className="h-5 w-5" />
                     <p>Logout</p >
                 </button >
                 <Link href="/">
-                    <button className='flex items-center space-x-2 hover:text-white'>
+                    <button className='flex items-center space-x-2 hover:text-green-500 dark:hover:text-white'>
                         <HomeIcon className="h-5 w-5" />
                         <p>Home</p>
                     </button>
                 </Link>
                 <Link href="/search">
-                    <button className='flex items-center space-x-2 hover:text-white'>
+                    <button className='flex items-center space-x-2 hover:text-green-500 dark:hover:text-white'>
                         <SearchIcon className="h-5 w-5" />
                         <p>Search</p>
                     </button>
                 </Link>
                 <Link href="/library">
-                    <button className='flex items-center space-x-2 hover:text-white'>
+                    <button className='flex items-center space-x-2 hover:text-green-500 dark:hover:text-white'>
                         <LibraryIcon className="h-5 w-5" />
                         <p>Library</p>
                     </button>
                 </Link>
                 <Link href="/history">
-                    <button className='flex items-center space-x-2 hover:text-white'>
+                    <button className='flex items-center space-x-2 hover:text-green-500 dark:hover:text-white'>
                         <BookOpenIcon className="h-5 w-5" />
                         <p>History</p>
                     </button>
@@ -91,13 +92,13 @@ function Sidebar() {
                     <p>Create Playlist</p>
                 </button> */}
                 <Link href="/liked-songs">
-                    <button className='flex items-center space-x-2 hover:text-white'>
+                    <button className='flex items-center space-x-2 hover:text-green-500 dark:hover:text-white'>
                         <HeartIcon className="h-5 w-5" />
                         <p>Liked Songs</p>
                     </button>
                 </Link>
                 <Link href="/episodes">
-                    <button className='flex items-center space-x-2 hover:text-white'>
+                    <button className='flex items-center space-x-2 hover:text-green-500 dark:hover:text-white'>
                         <RssIcon className="h-5 w-5" />
                         <p>Your Episodes</p>
                     </button>
@@ -107,7 +108,7 @@ function Sidebar() {
                 {
                     playlists?.map((playlist) => (
                         <Link href="/playlist" key={playlist.id}>
-                            <p key={playlist.id} onClick={() => setPlaylistId(playlist.id)} className="cursor-pointer hover:text-white">{playlist.name}</p>
+                            <p key={playlist.id} onClick={() => setPlaylistId(playlist.id)} className="cursor-pointer hover:text-green-500 dark:hover:text-white">{playlist.name}</p>
                         </Link>
                     ))
                 }

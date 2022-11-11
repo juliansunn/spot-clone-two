@@ -42,7 +42,7 @@ function Show({ show }) {
     return (
         <div
             onClick={playShow}
-            className='cursor-pointer grid-container grid grid-cols-8 space-x-3 px-8  hover:border-b border-gray-700 p-5 m-5 hover:bg-gradient-to-b to-gray-900 from-slate-800 rounded-lg'>
+            className='cursor-pointer grid-container grid grid-cols-8 space-x-3 px-8  hover:border-b border-gray-700 p-5 m-5 hover:bg-gradient-to-b to-gray-900 from-gray-800 rounded-lg'>
             <div className='col-span-1 flex items-start justify-start'>
                 <img className='mx-auto hidden md:inline rounded-md' src={show.images[0].url} alt="No Image" />
             </div>

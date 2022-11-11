@@ -20,16 +20,16 @@ function Album() {
     useEffect(() => {
         spotify.getAlbum(pid).then((data) => {
             setPlaylist(data.body);
-            // setAlbum(data.body);
+            setAlbum(data.body);
             setAlbumId(pid);
-        }, [playlist])
+        }, [])
     })
     return (
 
         <Layout>
             <ListHeader data={playlist} audioType="ALBUM" />
             <div>
-                <Songs songs={playlist?.tracks?.items}/>
+                <Songs songs={album} type="album"/>
             </div>
         </Layout>
     )

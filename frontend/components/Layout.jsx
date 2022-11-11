@@ -6,49 +6,46 @@ import { useSession } from 'next-auth/react';
 import { signOut } from 'next-auth/react';
 import { ChevronDownIcon } from '@heroicons/react/outline';
 import SearchBar from './SearchBar';
+import { ThemeProvider } from './Theme/ThemeContext';
+import Background from './Theme/Background';
+import Theme from './Theme/Toggle';
 
 function Layout({ children }) {
     const { data: session } = useSession();
     return (
-        <div className="bg-gray-900 h-screen overflow-hidden ">
-            <Head>
-                <title>Spotify 2.0</title>
-            </Head>
-            <main className="flex">
-                <Sidebar />
-                <div className="flex-grow h-screen overflow-y-scroll overflow-hidden scrollbar-hide text-white w-full">
-                    {/* <header className='absolute z-40 top-5 right-8'>
-                        <div className='flex items-center sticky top-0 bg-gray-900 space-x-3 opacity-90 hover:opacity-70 cursor-pointer rounded-full p-1 pr-2' onClick={signOut}>
-                            <img className="rounded-full w-6 h-6" src={session?.user.image} alt="user_profile_pic" />
-                            <h2>{session?.user.name}</h2>
-                            <ChevronDownIcon className='h-5 w-5' />
+        <ThemeProvider>
+            <Background>
+                <div className="bg-gray-200 dark:bg-gray-900 h-screen overflow-hidden">
+                    <Head>
+                        <title>Spotify 2.0</title>
+                    </Head>
+                    <main className="flex">
+                        <Sidebar />
+                        <div className="flex-grow h-screen overflow-y-scroll overflow-hidden scrollbar-hide text-gray-800 dark:text-white w-full">
+                            {/* <div className='flex w-10/12 justify-between absolute z-40 p-2 bg-transparent dark:bg-transparent'> */}
+                            <header className='sticky top-0 z-30 w-full p-2 bg-gray-200 dark:bg-gray-900 sm:px-4 shadow-xl flex justify-between'>
+                                <div className='w-3/4 md:w-5/12'>
+                                    <SearchBar />
+                                </div>
+                                <div className='right-2 hidden md:inline-flex'>
+                                    <div className='flex items-center sticky top-0 bg-gray-300 dark:bg-gray-700  space-x-3 opacity-90 hover:opacity-70 cursor-pointer rounded-full p-1 pr-2' onClick={signOut}>
+                                        <img className="rounded-full w-6 h-6" src={session?.user.image} alt="user_profile_pic" />
+                                        <h2>{session?.user.name}</h2>
+                                        <ChevronDownIcon className='h-5 w-5' />
+                                    </div>
+                                <Theme />
+                                </div>
+                            </header>
+                            {children}
                         </div>
-                    </header> */}
 
-                    <header className='flex w-4/5 justify-between absolute z-40 pt-2'>
-
-                        <div></div>
-                        <div className='w-3/4 md:w-5/12 '>
-
-                            <SearchBar />
-                        </div>
-                        <div className='right-8 hidden md:inline'>
-                            <div className='flex items-center sticky top-0 bg-gray-900 space-x-3 opacity-90 hover:opacity-70 cursor-pointer rounded-full p-1 pr-2' onClick={signOut}>
-                                <img className="rounded-full w-6 h-6" src={session?.user.image} alt="user_profile_pic" />
-                                <h2>{session?.user.name}</h2>
-                                <ChevronDownIcon className='h-5 w-5' />
-                            </div>
-                        </div>
-                    </header>
-                    {children}
+                    </main>
+                    <div className="sticky bottom-0">
+                        <Player />
+                    </div>
                 </div>
-
-            </main>
-            <div className="sticky bottom-0">
-                <Player />
-            </div>
-
-        </div>
+        </Background>
+    </ThemeProvider>
     )
 }
 

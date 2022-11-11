@@ -54,7 +54,7 @@ function Song(props) {
     return (
 
         <tr
-            className={"text-gray-500 mb-3 py-4 px-5 hover:bg-gradient-to-b to-gray-900 from-slate-800 text-sm lg:text-lg cursor-pointer" + (props.track.track.id === currentTrackId ? (isPlaying ? " animate-pulse " : "") : "")}
+            className={"text-gray-800 dark:text-gray-200 mb-3 py-4 px-5 hover:bg-gradient-to-b to-gray-100 dark:to-gray-900 from-gray-200 dark:from-gray-700 text-sm lg:text-lg cursor-pointer" + (props.track.track.id === currentTrackId ? (isPlaying ? " animate-pulse " : "") : "")}
             onClick={playSong}
         >
             <td>
@@ -68,7 +68,7 @@ function Song(props) {
                 </div>
             </td>
 
-            <td className="flex items-center space-x-4 text-gray-500">
+            <td className="flex items-center space-x-4 text-gray-800 dark:text-gray-500">
 
                 <img
                     className="h-10 w-10"
@@ -76,7 +76,7 @@ function Song(props) {
                     alt={props.track.track?.album?.name}
                 />
                 <div>
-                    <p className="w-36 lg:w-64 truncate text-white">{props.track.track?.name}</p>
+                    <p className="w-36 lg:w-64 truncate font-semibold dark:font-normal text-gray-800 dark:text-white">{props.track.track?.name}</p>
                     <p className="truncate">{props.track.track?.artists[0]?.name}</p>
                 </div>
             </td>

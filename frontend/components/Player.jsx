@@ -168,11 +168,6 @@ function Player() {
         setVolume(volume);
     }, [myDevices])
 
-    // useEffect(() => {
-    //     setTrackInfo(playlist?.tracks?.items?.map((track, i) => ({ position: i, uri: track.track.uri, id: track.track.id })))
-    // }, [playlist])
-
-
     useDidMountEffect(() => {
         if (!manualChange) {
             changeSong(1, false);
@@ -215,13 +210,13 @@ function Player() {
     return (
 
 
-        <div className="h-26 text-white grid grid-cols-5 text-xs md:text-base px-2 md:px-8 bg-gradient-to-b from-gray-900 to-gray-800  drop-shadow">
+        <div className="h-26 text-white grid grid-cols-5 text-xs md:text-base px-2 md:px-8 bg-gradient-to-b from-gray-200 to-gray-400 dark:from-gray-700 dark:to-gray-900  drop-shadow">
             {/* left side */}
             <div className="flex items-start space-x-4">
                 <img className="hidden md:inline h-20 w-20" src={songInfo?.album ? songInfo?.album.images?.[0].url : songInfo?.images?.[0].url} alt="" />
                 <div>
-                    <h3 className="text-sm md:text-lg truncate">{songInfo?.name}</h3>
-                    <p className="test-xs md:text:sm text-gray-500">{songInfo?.artists?.[0]?.name}</p>
+                    <h3 className="text-sm md:text-lg truncate text-gray-900 dark:text-white font-semibold dark:font-normal">{songInfo?.name}</h3>
+                    <p className="test-xs md:text:sm text-gray-900 dark:text-gray-500">{songInfo?.artists?.[0]?.name}</p>
                 </div>
             </div>
             {/* center */}
@@ -229,34 +224,31 @@ function Player() {
                 <div className="grid grid-row">
                     <div className="flex items-center justify-center gap-x-4">
 
-                        {
-                            isShuffle ? (
-                                <SwitchHorizontalIcon
-                                    className="button stroke-green-400"
-                                    onClick={toggleShuffle}
-                                />
-                            )
-                                : (<SwitchHorizontalIcon
-                                    className="button"
-                                    onClick={toggleShuffle}
-                                />)
-                        }
+                        
+                    
+                        <SwitchHorizontalIcon
+                            className={`button ${isShuffle ? "stroke-green-400" : "stroke-gray-700 dark:stroke-white"}`}
+                            onClick={toggleShuffle}
+                        />
+                            
+                                
+                        
                         <RewindIcon
                             onClick={() => { changeSong(-1, true) }}
-                            className="button" />
+                            className="button fill-gray-700 dark:fill-white" />
                         {
-                            isPlaying ? (<PauseIcon onClick={handlePlayPause} className="button w-10 h-10" />)
-                                : (<PlayIcon onClick={handlePlayPause} className="button w-10 h-10" />)
+                            isPlaying ? (<PauseIcon onClick={handlePlayPause} className="button w-10 h-10 fill-gray-700 dark:fill-white" />)
+                                : (<PlayIcon onClick={handlePlayPause} className="button w-10 h-10 fill-gray-700 dark:fill-white" />)
                         }
                         <FastForwardIcon
                             onClick={() => { changeSong(1, true) }}
-                            className="button" />
-                        {
-                            <ReplyIcon
-                                className={`button ${isRepeat ? "stroke-green-400" : ""}`}
-                                onClick={toggleRepeat}
-                            />
-                        }
+                            className="button fill-gray-700 dark:fill-white" />
+                    
+                        <ReplyIcon
+                            className={`button ${isRepeat ? "stroke-green-400 " : "stroke-gray-700 dark:stroke-white"} `}
+                            onClick={toggleRepeat}
+                        />
+                        
 
 
                     </div>
@@ -287,7 +279,7 @@ function Player() {
             </div>
             {/* Right side*/}
             <div className="flex items-center space-x-3 md:space-x-4 justify-end pr-5">
-                <DeviceMobileIcon className="button" onClick={toggleDeviceModal} />
+                <DeviceMobileIcon className="button fill-gray-700 dark:fill-white" onClick={toggleDeviceModal} />
                 <ReactModal
                     ariaHideApp={false}
                     contentLabel="Change Playback Device"
@@ -315,13 +307,13 @@ function Player() {
 
                 {muted ? (
                     <VolumeOffIcon
-                        className="button"
+                        className="button stroke-gray-700 dark:stroke-white"
                         onClick={muteOrUnMute}
                     />
                 ) : (
                     <VolumeUpIcon
                         onClick={muteOrUnMute}
-                        className="button"
+                        className="button stroke-gray-700 dark:stroke-white"
                     />
                 )}
 
