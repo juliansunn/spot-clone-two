@@ -7,7 +7,7 @@ function AlbumCard({ data }) {
     const [albumId, setAlbumId] = useRecoilState(albumIdState);
 
     return (
-        <Link href={`/album/${data.id}`} key={data.id} >
+        <Link href="/album" key={data.id} >
 
             <div
                 onClick={() => setAlbumId(data.id)}
@@ -18,7 +18,6 @@ function AlbumCard({ data }) {
                     className="shadow-md shadow-neutral-500/50 mx-auto rounded-md" alt="No Image" />
                 <h3 className='text-gray-800 dark:text-white truncate'>{data?.name}</h3>
                 <p className='text-gray-500'>{data?.artists?.[0].name}</p>
-
             </div>
         </Link>
     )

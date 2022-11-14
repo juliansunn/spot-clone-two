@@ -1,18 +1,28 @@
-import React from 'react'
-import { useRecoilState } from 'recoil'
-import { albumState } from '../atoms/albumAtom'
-import Center from '../components/Center'
+import React, { useEffect } from 'react'
+import { useRecoilState, useRecoilValue } from 'recoil'
+import { albumIdState, albumState } from '../atoms/albumAtom'
 import Layout from '../components/Layout'
 import ListHeader from '../components/listHeader'
+import SongTable from '../components/SongTable'
+import spotifyApi from '../lib/spotify'
 
 function Album() {
+    const albumId = useRecoilValue(albumIdState);
     const [album, setAlbum] = useRecoilState(albumState);
+    useEffect(() => {
+        if (albumId) {
+            spotifyApi.getAlbum(albumId).then((data) => {
+                setAlbum(data.body);
+            });
+        }
+    }, [albumId])
+    console.log('album', album)
     return (
 
         <Layout>
             <ListHeader data={album} audioType="ALBUM" />
             <div>
-                This is where songs from albums will end up going
+                <SongTable type="album" album={album} />
             </div>
         </Layout>
     )

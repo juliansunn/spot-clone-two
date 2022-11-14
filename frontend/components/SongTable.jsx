@@ -5,7 +5,7 @@ import { trackInfoState } from '../atoms/songAtom';
 import Song from './Song';
 
 
-function Songs(props) {
+function SongTable(props) {
 	const defaultStyle = "text-sm font-medium bg-gray-200 dark:bg-gray-900 text-gray-800 dark:text-gray-500 px-6 py-4 "
 	const columnItems = [
 		{name:'#', style: defaultStyle + "text-left w-1",},
@@ -14,16 +14,16 @@ function Songs(props) {
 		{name:'DATE ADDED', style: defaultStyle + "text-left hidden lg:table-cell",},
 		{name: <ClockIcon className="button" />, style: defaultStyle + "flex justify-center"},
 	]
-
 	return (
 		<div className="px-8 flex flex-col spacy-y-1 pb-28">
 			<table className="min-w-full table-auto [border-spacing:0.50rem] lg:[border-spaceing:0.70rem]">
 				<thead className="border-b border-gray-500 sticky top-14">
 					<tr>
-						{columnItems.map(item => (
+						{columnItems.map((item, idx) => (
 							<th
 								scope="col"
 								className={item.style}
+								key={idx}
 							>
 								{item?.name}
 							</th>
@@ -43,11 +43,12 @@ function Songs(props) {
                     }
 
                     {props.type === "album" &&
-                    props?.songs?.tracks?.items.map((track, i) => {
+                    props?.album?.tracks?.items.map((track, i) => {
                         <Song  
                             key={track?.id + i}
-                            track={track}
-                            order={i} 
+                            track={{track: track}}
+                            order={i}
+							{...props}
                         />
                     })
                     }
@@ -58,4 +59,4 @@ function Songs(props) {
 	);
 }
 
-export default Songs;
+export default SongTable;

@@ -5,7 +5,7 @@ import { playlistTrackState } from '../atoms/playlistAtom';
 import { trackInfoState } from '../atoms/songAtom';
 import Layout from '../components/Layout';
 import SearchBar from '../components/SearchBar';
-import Songs from '../components/Songs'
+import SongTable from '../components/SongTable'
 
 function History() {
     const [startDate, setStartDate] = useState(null);
@@ -15,12 +15,14 @@ function History() {
     const [trackInfo, setTrackInfo] = useRecoilState(trackInfoState);
     
     const getCountHistory = async () => {
+        console.log('in getCountHistory')
         try {
             const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/tracks/` + new URLSearchParams({
                 // start_date: startDate,
                 // end_date: endDate
             }));
             const data = await res.json();
+            console.log('data', data)
             // setCountTracks(data);
             setPlaylistTracks(data)
         } catch (err) {
@@ -34,7 +36,7 @@ function History() {
         <Layout>
             <div >
                 <h1 className='text-white'> Count History</h1>
-                <Songs songs={playlistTracks}/>
+                <SongTable songs={playlistTracks}/>
             </div>
         </Layout>
     )

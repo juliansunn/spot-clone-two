@@ -1,5 +1,5 @@
 import React from 'react'
-import Songs from './Songs';
+import SongTable from './SongTable';
 import ListHeader from './listHeader';
 
 
@@ -8,8 +8,8 @@ function Playlist(props) {
         <div>
             <ListHeader data={props.playlist} audioType="PLAYLIST" />
             <div>
-                <Songs {...props}/>
-                {/* <Songs songs={props.playlist?.tracks?.items}/> */}
+                <SongTable {...props}/>
+                {/* <SongTable songs={props.playlist?.tracks?.items}/> */}
             </div>
         </div >
     )

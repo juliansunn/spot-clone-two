@@ -32,7 +32,6 @@ function Sidebar() {
             .then((data) => {
                 const d = data[0];
                 for (let j = 1; j < plsts.length; j++) {
-                    console.log(plsts)
                     d?.body.items.push(...data[j]?.body.items)
                 }
                 setPlaylists(d?.body.items);

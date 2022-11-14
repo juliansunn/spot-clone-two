@@ -19,7 +19,7 @@ function Song(props) {
     
     const playlist = useRecoilValue(playlistState);
 
-    
+    console.log('song props', props)
     function handleTracks () {
         const tracks = playlist?.tracks?.items?.map((track, i) => ({ position: i, uri: track.track.uri, id: track.track.id }))
         setTrackInfo(tracks)

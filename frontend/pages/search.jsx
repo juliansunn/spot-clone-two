@@ -54,7 +54,6 @@ function Search() {
         getSearchAlbums();
         getSearchArtists();
     },[searchQuery])
-    console.log("albumIds: ", albumIds);
     return (
         <Layout>
             <div>

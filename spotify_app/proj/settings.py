@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 import os
+import sys
 from pathlib import Path
 from corsheaders.defaults import default_headers
 from dotenv import load_dotenv, find_dotenv
@@ -46,7 +47,6 @@ INSTALLED_APPS = [
     "django_celery_results",
     "corsheaders",
     "rest_framework",
-    # 'rest_framework.authtoken',
     "core",
     "app",
 ]
@@ -162,7 +162,7 @@ REST_FRAMEWORK = {
 }
 
 SHELL_PLUS_PRE_IMPORTS = (
-    # ("app.utils.spotify_settings", "V2SpotifyConn"),
+    ("app.utils.spotify_settings", "V2SpotifyConn"),
     ("pprint", "pprint"),
 )
 

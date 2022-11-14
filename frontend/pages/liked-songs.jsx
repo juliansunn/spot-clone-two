@@ -4,7 +4,7 @@ import { useRecoilState, useSetRecoilState } from 'recoil';
 import { playlistTrackState } from '../atoms/playlistAtom';
 import { trackInfoState } from '../atoms/songAtom';
 import Layout from '../components/Layout'
-import Songs from '../components/Songs';
+import SongTable from '../components/SongTable';
 import useSpotify from '../hooks/useSpotify';
 import { getRandomInt } from '../lib/utility';
 
@@ -56,7 +56,7 @@ function LikedSongs() {
                     </div>
                 </div>
                 <div>
-                    <Songs songs={playlistTracks} />
+                    <SongTable songs={playlistTracks} />
                 </div>
             </div>
         </Layout>

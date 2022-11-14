@@ -8,24 +8,40 @@ from rest_framework.response import Response
 from app.pagination import StandardResultsSetPagination
 from rest_framework.pagination import PageNumberPagination
 
+from rest_framework.pagination import PageNumberPagination
+
+class StandardResultsSetPagination(PageNumberPagination):
+    page_size = 100
+    page_size_query_param = 'page_size'
+    max_page_size = 1000
+
+    def get_paginated_response(self, data):
+        return Response({
+            'links': {
+                'next': self.get_next_link(),
+                'previous': self.get_previous_link()
+            },
+            'count': self.page.paginator.count,
+            'results': data
+        })
 
 class TrackView(viewsets.ReadOnlyModelViewSet):
     """List all Tracks"""
 
-    # pagination_class = PageNumberPagination
+    pagination_class = StandardResultsSetPagination
     serializer_class = TrackSerializer
 
     def get_queryset(self):
-        now = timezone.now()
-        seven_days_ago = now - timedelta(days=7)
-        return Track.objects.all()
-        # return Track.objects.filter(
-        #     play_history__played_at__range=(seven_days_ago, now)
-        # )
+
+        return Track.objects.all().order_by("-play_history__played_at")
 
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
         serializer = self.get_serializer(queryset, many=True)
-        # s = [{"track": t} for t in serializer.data]
-        # serializer.data = s
         return Response(serializer.data)
+        

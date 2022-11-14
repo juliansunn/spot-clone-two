@@ -10,7 +10,7 @@ RUN apt update
 ENV PYTHONUNBUFFERED 1
 
 # create root directory for our project in the container
-RUN mkdir /sp_service
+# RUN mkdir /sp_service
 
 # Set the working directory to /music_service
 WORKDIR /sp_service
@@ -20,7 +20,7 @@ WORKDIR /sp_service
 # RUN touch /cron/django_cron.log
 
 # Copy the current directory contents into the container at /music_service
-ADD . /sp_service/
+COPY . ./
 # COPY requirements.txt /sp_service/
 # COPY backend /sp_service/
 

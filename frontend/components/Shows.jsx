@@ -9,8 +9,8 @@ function Shows() {
 
     return (
         <div className='pb-28'>
-            {podcastShows?.map((show) => (
-                <Show show={show} />
+            {podcastShows?.map((show, idx) => (
+                <Show show={show} key={idx} />
             ))}
         </div>
     )
