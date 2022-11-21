@@ -84,6 +84,7 @@ services:
             - web
         volumes:
             - ./frontend:/frontend
+            - ./frontend/node_modules
     
     proxy:
       build:
