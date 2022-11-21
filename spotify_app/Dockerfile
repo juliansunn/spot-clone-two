@@ -21,6 +21,7 @@ WORKDIR /sp_service
 
 # Copy the current directory contents into the container at /music_service
 COPY . ./
+# COPY ./scripts /scripts
 # COPY requirements.txt /sp_service/
 # COPY backend /sp_service/
 

@@ -180,3 +180,8 @@ next-env.d.ts
 
 # vs code settings
 /.vscode
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
