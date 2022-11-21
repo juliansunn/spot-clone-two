@@ -26,12 +26,20 @@ AUTH_USER_MODEL = "core.User"
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "9)3^kjck=2*nsn141*vlf$@8gnymi%3t&rfn&(ijitksdk6a2%"
+SECRET_KEY = os.environ.get("SECRET_KEY")
+
+DEBUG = bool(int(os.environ.get("DEBUG", 0)))
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = []
+ALLOWED_HOSTS.extend(
+    filter(
+        None,
+        os.environ.get("ALLOWED_HOSTS", "").split(",")
+    )
+)
 
 # Application definition
 
