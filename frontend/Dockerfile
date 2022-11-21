@@ -14,7 +14,7 @@
 
 FROM node:16-alpine as BUILD_IMAGE
 WORKDIR /frontend
-COPY package.json package-lock.lock ./
+COPY package.json package-lock.json ./
 # install dependencies
 RUN npm ci
 COPY . .
