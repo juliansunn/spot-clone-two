@@ -31,8 +31,13 @@ RUN pip install --upgrade pip
 
 RUN apt-get install ca-certificates
 
-RUN pip install -r requirements.txt --root-user-action=ignore
+RUN python -m venv /py && \
+    /py/bin/pip install --upgrade pip && \
+    /py/bin/pip install -r requirements.txt && \
+    adduser --disabled-password --no-create-home sp-user
 
-USER sp_service
+ENV PATH="/py/bin:$PATH"
+
+USER sp-user
 
 
