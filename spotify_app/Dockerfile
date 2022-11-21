@@ -33,4 +33,6 @@ RUN apt-get install ca-certificates
 
 RUN pip install -r requirements.txt --root-user-action=ignore
 
+USER sp_service
+
 
