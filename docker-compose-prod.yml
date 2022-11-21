@@ -33,7 +33,7 @@ services:
             # - DEBUG=1
             - DJANGO_ALLOWED_HOSTS=${DJANGO_ALLOWED_HOSTS}
             - CELERY_BROKER=${CELERY_BROKER}
-            - CELERY_BACKEND=${DELERY_BACKEND}
+            - CELERY_BACKEND=${CELERY_BACKEND}
         depends_on:
             - web
             - redis
