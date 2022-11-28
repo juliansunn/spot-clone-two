@@ -76,7 +76,7 @@ services:
             context: ./frontend/
             dockerfile: Dockerfile
         container_name: frontend
-
+    
     nginx:
         build:
             context: ./nginx/
@@ -88,7 +88,6 @@ services:
             - 80:80
         depends_on:
             - sp_service
-            - frontend
 
 volumes:
     pgdata:
