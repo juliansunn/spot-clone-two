@@ -1,20 +1,17 @@
 version: '3.8'
 
-x-aws-vpc: "vpc-123456789"
 services:
-    web:
+    sp_service:
         build: 
-            context: ./spotify_app/
+            context: ./sp_service
             dockerfile: Dockerfile
-        command: bash -c "cd spotify_app && python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
         container_name: sp_service
         env_file:
             - .env
+        restart: always
+        entrypoint: /entrypoint.sh
         volumes:
-            - .:/sp_service
-        ports:
-            - "8000:8000" # webserver
-            - "8888:8888" # iptyhon notebook
+            - staticfiles:/sp_service/staticfiles
         depends_on:
             - db
             - redis
@@ -22,12 +19,12 @@ services:
     celery:
         restart: always
         build: 
-            context: ./spotify_app/
+            context: ./sp_service/
             dockerfile: Dockerfile
-        command: bash -c " cd spotify_app && celery -A proj worker --loglevel=info --scheduler django_celery_beat.schedulers:DatabaseScheduler"
+        command: bash -c " celery -A proj worker --loglevel=info --scheduler django_celery_beat.schedulers:DatabaseScheduler"
         container_name: celery
         volumes:
-            - .:/sp_service
+            - ./sp_service:/sp_service
         environment:
             - DEBUG=1
             - DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]
@@ -36,22 +33,24 @@ services:
         env_file:
             - .env
         depends_on:
-            - web
+            - sp_service
             - redis
 
     celery_beat:
         restart: always
         build: 
-            context: ./spotify_app/
+            context: ./sp_service/
             dockerfile: Dockerfile
         container_name: celery_beat
         volumes:
-            - .:/sp_service
+            - ./sp_service:/sp_service
+        env_file:
+            - .env
         depends_on:
             - db
             - redis
             - celery
-        command: bash -c "cd spotify_app && celery -A proj worker --beat --scheduler django --loglevel=info"
+        command: bash -c "celery -A proj worker --beat --scheduler django --loglevel=info"
 
     db:
         image: postgres
@@ -76,16 +75,21 @@ services:
         build:
             context: ./frontend/
             dockerfile: Dockerfile
-        restart: always
-        command : npm start
         container_name: frontend
-        ports:
-            - "3000:3000"
-        depends_on:
-            - web
+
+    nginx:
+        build:
+            context: ./nginx/
+            dockerfile: Dockerfile
+        container_name: nginx
         volumes:
-            - ./frontend:/frontend
+        - staticfiles:/staticfiles
+        ports:
+            - 80:80
+        depends_on:
+            - sp_service
+            - frontend
 
 volumes:
     pgdata:
-
+    staticfiles:

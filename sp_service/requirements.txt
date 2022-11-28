@@ -50,6 +50,7 @@ executing==0.9.1
 fastjsonschema==2.16.1
 flower==1.1.0
 future==0.16.0
+gunicorn==20.1.0
 holidaycal==0.0.1
 humanize==4.2.3
 idna==3.3

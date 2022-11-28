@@ -196,7 +196,9 @@ IPYTHON_KERNEL_DISPLAY_NAME = "Django Shell-Plus"
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
-STATIC_URL = "/static/"
+STATIC_URL = "/staticfiles/"
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 
 CORS_ALLOWED_ORIGINS = ["http://localhost:3000", "http://127.0.0.1:3000"]
