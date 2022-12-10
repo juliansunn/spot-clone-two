@@ -52,7 +52,7 @@ function Sidebar() {
 
     return (
         <div className='text-gray-900 dark:text-gray-500 p-5 text-xs lg:text-sm border-r border-gray-600
-        overflow-y-scroll h-screen scrollbar-hide sm:max-w-[12rem] lg:max-w-[15rem] sm:min-w-[12rem] lg:min-w-[15rem] hidden md:inline-flex pb-36'>
+        overflow-y-scroll h-screen scrollbar-hide sm:max-w-[12rem] lg:max-w-[15rem] sm:min-w-[12rem] lg:min-w-[15rem] md:inline-flex pb-36'>
             <div className='space-y-4'>
 
                 <button className='flex items-center space-x-2 hover:text-green-500 dark:hover:text-white ' onClick={() => signOut()} >

@@ -1,14 +1,17 @@
 import Link from 'next/link'
 import React, { useRef, useState } from 'react'
-import { useSetRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import { searchQueryState } from '../atoms/searchAtom';
+import { sidebarVisibilityState } from '../atoms/visibilityAtom';
+import {
+    ArrowsExpandIcon
+} from "@heroicons/react/outline";
 
 
 
-function SearchBar() {
+function SearchBar({toggleSidebar}) {
     const searchParams = useRef();
     const setSearchQuery = useSetRecoilState(searchQueryState);
-
     const setSearchResults = () => {
         setSearchQuery(searchParams.current.value);
     }
@@ -18,6 +21,7 @@ function SearchBar() {
             <form>
 
                 <div className="relative w-full rounded-full">
+                    
                     <input ref={searchParams} type="search" id="search-dropdown" className=" opacity-60 block p-2.5 w-full z-60 text-sm text-gray-900 bg-gray-50 rounded-full   focus:opacity-90  dark:placeholder-gray-900 dark:text-black" placeholder="Search Artists, Albums, Podcasts..." required />
                     <Link href="/search">
                         <button

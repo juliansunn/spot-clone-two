@@ -1,17 +1,20 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Head from "next/head";
 import Sidebar from "./Sidebar";
 import Player from './Player';
 import { useSession } from 'next-auth/react';
 import { signOut } from 'next-auth/react';
-import { ChevronDownIcon } from '@heroicons/react/outline';
+import { ArrowsExpandIcon, ChevronDownIcon, ChevronRightIcon, ChevronLeftIcon } from '@heroicons/react/outline';
 import SearchBar from './SearchBar';
 import { ThemeProvider } from './Theme/ThemeContext';
 import Background from './Theme/Background';
 import Theme from './Theme/Toggle';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { sidebarVisibilityState } from '../atoms/visibilityAtom';
 
 function Layout({ children }) {
     const { data: session } = useSession();
+    const [sidebarVisibility, setSidebarVisibility] = useRecoilState(sidebarVisibilityState);
     return (
         <ThemeProvider>
             <Background>
@@ -20,10 +23,15 @@ function Layout({ children }) {
                         <title>Spotify 2.0</title>
                     </Head>
                     <main className="flex">
-                        <Sidebar />
+                        {sidebarVisibility && <Sidebar />}
+                        
                         <div className="flex-grow h-screen overflow-y-scroll overflow-hidden scrollbar-hide text-gray-800 dark:text-white w-full">
                             {/* <div className='flex w-10/12 justify-between absolute z-40 p-2 bg-transparent dark:bg-transparent'> */}
                             <header className='sticky top-0 z-30 w-full p-2 bg-gray-200 dark:bg-gray-900 sm:px-4 shadow-xl flex justify-between'>
+                                <button onClick={() => setSidebarVisibility(!sidebarVisibility)} >
+                                    {sidebarVisibility ? (<ChevronLeftIcon className="h-5 w-5"/>) : <ChevronRightIcon className="h-5 w-5"/>}
+                                    
+                                </button>
                                 <div className='w-3/4 md:w-5/12'>
                                     <SearchBar />
                                 </div>
