@@ -22,6 +22,7 @@ class StandardResultsSetPagination(PageNumberPagination):
                 'previous': self.get_previous_link()
             },
             'count': self.page.paginator.count,
+            "type": "history",
             'results': data
         })
 
