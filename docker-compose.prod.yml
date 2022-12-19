@@ -4,7 +4,7 @@ services:
     sp_service:
         build: 
             context: ./sp_service
-            dockerfile: Dockerfile
+            dockerfile: Dockerfile.prod
         container_name: sp_service
         env_file:
             - .env
@@ -20,7 +20,7 @@ services:
         restart: always
         build: 
             context: ./sp_service/
-            dockerfile: Dockerfile
+            dockerfile: Dockerfile.prod
         command: bash -c " celery -A proj worker --loglevel=info --scheduler django_celery_beat.schedulers:DatabaseScheduler"
         container_name: celery
         volumes:
@@ -40,7 +40,7 @@ services:
         restart: always
         build: 
             context: ./sp_service/
-            dockerfile: Dockerfile
+            dockerfile: Dockerfile.prod
         container_name: celery_beat
         volumes:
             - ./sp_service:/sp_service
@@ -74,7 +74,7 @@ services:
     frontend:
         build:
             context: ./frontend/
-            dockerfile: Dockerfile
+            dockerfile: Dockerfile.prod
         container_name: frontend
     
     nginx:

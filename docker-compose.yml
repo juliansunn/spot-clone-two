@@ -4,20 +4,19 @@ services:
     sp_service:
         build: 
             context: ./sp_service
-            dockerfile: Dockerfile.dev
+            dockerfile: Dockerfile.prod
         container_name: sp_service
         env_file:
             - .env
-        # volumes:
-            # - ./backend:/app
-            # - /app/node_modules
+        restart: always
+        entrypoint: /entrypoint.sh
+        volumes:
+            - staticfiles:/sp_service/staticfiles
         depends_on:
             - db
             - redis
 
-        command: bash -c "cd sp_service && python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
-        volumes:
-            - .:/sp_service
+        command: bash -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
         ports:
             - "8000:8000" # webserver
             - "8888:8888" # iptyhon notebook
@@ -73,19 +72,6 @@ services:
 
     redis:
         image: "redis:alpine"
-    
-    # frontend:
-    #     build:
-    #         context: ./frontend/
-    #         dockerfile: Dockerfile.dev
-    #     container_name: frontend
-    #     env_file:
-    #         - ./frontend/.env
-    #     volumes:
-    #         - .:/frontend
-    #         - /frontend/node_modules
-    #     ports:
-    #         - 3000:3000
 
 volumes:
     pgdata:
