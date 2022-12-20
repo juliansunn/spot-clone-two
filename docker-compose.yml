@@ -11,7 +11,7 @@ services:
         restart: always
         entrypoint: /entrypoint.sh
         volumes:
-            - staticfiles:/sp_service/staticfiles
+            - ./sp_service:/sp_service
         depends_on:
             - db
             - redis

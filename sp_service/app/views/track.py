@@ -22,6 +22,7 @@ class StandardResultsSetPagination(PageNumberPagination):
                 'previous': self.get_previous_link()
             },
             'count': self.page.paginator.count,
+            'total_pages': self.page.paginator.num_pages,
             "type": "history",
             'results': data
         })
@@ -33,7 +34,6 @@ class TrackView(viewsets.ReadOnlyModelViewSet):
     serializer_class = TrackSerializer
 
     def get_queryset(self):
-
         return Track.objects.all().order_by("-play_history__played_at")
 
     def list(self, request, *args, **kwargs):

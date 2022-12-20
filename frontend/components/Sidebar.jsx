@@ -13,7 +13,7 @@ import {
 	LogoutIcon,
 	BookOpenIcon
 } from '@heroicons/react/outline';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import {
 	playlistState,
 	playlistIdState,
@@ -21,12 +21,14 @@ import {
 } from '../atoms/playlistAtom';
 
 import { sidebarVisibilityState } from '../atoms/visibilityAtom';
+import { songListState } from '../atoms/songAtom';
 
 function Sidebar() {
 	const spotifyApi = useSpotify();
 	const { data: session, status } = useSession();
 	const [playlists, setPlaylists] = useRecoilState(playlistsState);
 	const [playlistId, setPlaylistId] = useRecoilState(playlistIdState);
+	const setSongs = useSetRecoilState(songListState);
 	const isOpen = useRecoilValue(sidebarVisibilityState);
 
 	const sidebarVariants = {
@@ -41,6 +43,10 @@ function Sidebar() {
 	const sidebarTransition = {
 		duration: 0.5,
 		ease: 'easeInOut'
+	};
+
+	const handleSelected = (playlistId) => {
+		setPlaylistId(playlistId);
 	};
 
 	const getPlaylists = async (offset) => {
@@ -144,7 +150,7 @@ function Sidebar() {
 						<Link href="/playlist" key={playlist.id}>
 							<p
 								key={playlist.id}
-								onClick={() => setPlaylistId(playlist.id)}
+								onClick={() => handleSelected(playlist.id)}
 								className="cursor-pointer hover:text-green-500 dark:hover:text-white"
 							>
 								{playlist.name}

@@ -4,14 +4,14 @@ import {
 	isPlayingState,
 	currentTrackLocState,
 	trackInfoState,
-	manualChangeState
+	manualChangeState,
+	songListState
 } from '../atoms/songAtom';
 import useSpotify from '../hooks/useSpotify';
 import { millisToMinutesAndSeconds, parseDate } from '../lib/utility';
 import { PauseIcon, PlayIcon } from '@heroicons/react/outline';
-import { playlistState } from '../atoms/playlistAtom';
 
-function Song(props) {
+function Song({ track, order, addedAt }) {
 	const spotifyApi = useSpotify();
 
 	const [currentTrackId, setCurrentTrackId] =
@@ -19,30 +19,29 @@ function Song(props) {
 	const [isPlaying, setIsPlaying] = useRecoilState(isPlayingState);
 
 	const setCurrentTrackLocState = useSetRecoilState(currentTrackLocState);
-	const setTrackInfo = useSetRecoilState(trackInfoState);
+	const [trackInfo, setTrackInfo] = useRecoilState(trackInfoState);
 	const setManualChange = useSetRecoilState(manualChangeState);
-
-	const playlist = useRecoilValue(playlistState);
+	const songs = useRecoilValue(songListState);
 
 	function handleTracks() {
-		const tracks = playlist?.tracks?.items?.map((track, i) => ({
+		const tracks = songs.map((track, i) => ({
 			position: i,
-			uri: track.track.uri,
-			id: track.track.id
+			uri: track.track ? track.track.uri : track.uri,
+			id: track.track ? track.track.id : track.id
 		}));
 		setTrackInfo(tracks);
 		return tracks;
 	}
 
 	const playSong = () => {
-		props.handleSongSelected();
-		setCurrentTrackId(props.track.track.id);
-		setCurrentTrackLocState(props.order);
+		handleTracks();
+		setCurrentTrackId(track.id);
+		setCurrentTrackLocState(order);
 		setIsPlaying(true);
 		setManualChange(true);
 		spotifyApi.play({
 			uris: handleTracks().map(({ uri }) => uri),
-			offset: { position: props.order }
+			offset: { position: order }
 		});
 	};
 
@@ -62,17 +61,13 @@ function Song(props) {
 		<tr
 			className={
 				'text-gray-800 dark:text-gray-200 mb-3 py-4 px-5 hover:bg-gradient-to-b to-gray-100 dark:to-gray-900 from-gray-200 dark:from-gray-700 text-sm lg:text-lg cursor-pointer' +
-				(props.track.track.id === currentTrackId
-					? isPlaying
-						? ' animate-pulse '
-						: ''
-					: '')
+				(track?.id === currentTrackId ? (isPlaying ? ' animate-pulse ' : '') : '')
 			}
 			onClick={playSong}
 		>
 			<td>
 				<div className="flex flex-row items-center justify-evenly">
-					{props.track.track?.id === currentTrackId ? (
+					{track?.id === currentTrackId ? (
 						<div>
 							{isPlaying ? (
 								<PauseIcon
@@ -87,7 +82,7 @@ function Song(props) {
 							)}
 						</div>
 					) : (
-						<p>{props.order + 1}</p>
+						<p>{order + 1}</p>
 					)}
 				</div>
 			</td>
@@ -95,29 +90,29 @@ function Song(props) {
 			<td className="flex items-center space-x-4 text-gray-800 dark:text-gray-500">
 				<img
 					className="h-10 w-10"
-					src={props.track.track?.album?.images[0]?.url}
-					alt={props.track.track?.album?.name}
+					src={track?.album?.images[0]?.url}
+					alt={track?.album?.name}
 				/>
 				<div>
 					<p className="w-36 lg:w-64 truncate font-semibold dark:font-normal text-gray-800 dark:text-white">
-						{props.track.track?.name}
+						{track?.name}
 					</p>
-					<p className="truncate">{props.track.track?.artists[0]?.name}</p>
+					<p className="truncate">
+						{track?.artists ? track.artists[0]?.name : null}
+					</p>
 				</div>
 			</td>
 			<td>
 				<div className="flex items-center justify-between ml-auto md:ml-0">
-					<p className="hidden md:inline w-40 md:truncate">
-						{props.track.track?.album?.name}
-					</p>
+					<p className="hidden md:inline w-40 md:truncate">{track?.album?.name}</p>
 				</div>
 			</td>
 			<td>
-				<p className="hidden md:inline">{parseDate(props.track?.added_at)}</p>
+				<p className="hidden md:inline">{parseDate(addedAt)}</p>
 			</td>
 			<td>
 				<div className="flex justify-center">
-					<p>{millisToMinutesAndSeconds(props.track.track?.duration_ms)}</p>
+					<p>{millisToMinutesAndSeconds(track?.duration_ms)}</p>
 				</div>
 			</td>
 		</tr>

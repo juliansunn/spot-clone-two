@@ -12,6 +12,7 @@ class AlbumSerializer(serializers.ModelSerializer):
         model = Album
         depth = 1
         fields = [
+            "name",
             "release_date",
             "artists",
             "total_tracks",
