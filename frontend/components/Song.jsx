@@ -27,7 +27,7 @@ function Song({ track, order, addedAt }) {
 		const tracks = songs.map((track, i) => ({
 			position: i,
 			uri: track.track ? track.track.uri : track.uri,
-			id: track.track ? track.track.id : track.id
+			id: track.track ? track.track.id : track.spotify_id
 		}));
 		setTrackInfo(tracks);
 		return tracks;
@@ -35,12 +35,13 @@ function Song({ track, order, addedAt }) {
 
 	const playSong = () => {
 		handleTracks();
-		setCurrentTrackId(track.id);
+		setCurrentTrackId(track.spotify_id ? track.spotify_id : track.id);
 		setCurrentTrackLocState(order);
 		setIsPlaying(true);
 		setManualChange(true);
+		const uris = handleTracks().map(({ uri }) => uri);
 		spotifyApi.play({
-			uris: handleTracks().map(({ uri }) => uri),
+			uris: uris,
 			offset: { position: order }
 		});
 	};
@@ -67,7 +68,7 @@ function Song({ track, order, addedAt }) {
 		>
 			<td>
 				<div className="flex flex-row items-center justify-evenly">
-					{track?.id === currentTrackId ? (
+					{(track?.spotify_id ? track?.spotify_id : track?.id) === currentTrackId ? (
 						<div>
 							{isPlaying ? (
 								<PauseIcon

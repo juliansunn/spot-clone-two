@@ -1,11 +1,17 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { playlistTrackState } from '../atoms/playlistAtom';
+import { endDateState, startDateState } from '../atoms/searchAtom';
 import { songListState, trackInfoState } from '../atoms/songAtom';
+import MyDatePicker from '../components/DatePicker';
 import Layout from '../components/Layout';
-import SearchBar from '../components/SearchBar';
 import SongTable from '../components/SongTable';
+import { format as formatDate } from 'date-fns';
+import { useQuery } from 'react-query';
+import Loading from '../components/Loading';
+import Pagination from '../components/Pagination';
+import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/solid';
 
 function PaginationControls({ currentPage, totalPages, onPageChange }) {
 	return (
@@ -21,66 +27,72 @@ function PaginationControls({ currentPage, totalPages, onPageChange }) {
 }
 
 function History() {
-	const [startDate, setStartDate] = useState(null);
-	const [endDate, setEndDate] = useState(null);
 	const [playlistTracks, setPlaylistTracks] = useRecoilState(playlistTrackState);
-	const [trackInfo, setTrackInfo] = useRecoilState(trackInfoState);
 
 	const [songs, setSongs] = useRecoilState(songListState);
-	const [loading, setLoading] = useState(true);
 	const [currentPage, setCurrentPage] = useState(1);
 	const [totalPages, setTotalPages] = useState(1);
-
-	const getCountHistory = async () => {
-		try {
+	const startDate = useRecoilValue(startDateState);
+	const endDate = useRecoilValue(endDateState);
+	const [showFilter, setShowFilter] = useState(true);
+	const format = 'yyyy-MM-dd';
+	const { data, error, isLoading } = useQuery(
+		['api', currentPage, startDate, endDate],
+		async () => {
 			const res = await fetch(
-				`${process.env.NEXT_PUBLIC_API_URL}/tracks/?page=${currentPage}` +
-					new URLSearchParams({
-						// start_date: startDate,
-						// end_date: endDate
-					})
+				`${
+					process.env.NEXT_PUBLIC_API_URL
+				}/play-history/?page=${currentPage}&start_date=${formatDate(
+					startDate,
+					format
+				)}&end_date=${formatDate(endDate, format)}`
 			);
 			const data = await res.json();
-			setPlaylistTracks({ type: data.type, songs: data.results });
 			setSongs(data.results);
 			setTotalPages(data.total_pages);
-			setLoading(false);
-		} catch (err) {
-			console.log('err', err);
 		}
-	};
-	useEffect(() => {
-		getCountHistory();
-	}, [currentPage]);
+	);
 
+	const toggleFilter = () => {
+		setShowFilter(!showFilter);
+	};
 	const handlePageChange = (page) => {
 		setCurrentPage(page);
-		setLoading(true);
 	};
-	// if (loading) {
-	// 	return <h3>Loading Historical Data ...</h3>;
-	// }
-	console.log('songs', songs);
+
 	return (
 		<Layout>
-			<div>
-				<div className="px-8 flex flex-col spacy-y-1 pb-28">
-					<button
-						onClick={() => handlePageChange(currentPage - 1)}
-						disabled={currentPage === 1}
-					>
-						Previous
-					</button>
-					<button
-						onClick={() => handlePageChange(currentPage + 1)}
-						disabled={currentPage === totalPages}
-					>
-						Next
-					</button>
+			{showFilter && (
+				<div className="relative">
+					<div className="grid grid-cols-6">
+						<div className="col-start-1 col-end-7 md:col-start-2 md:col-span-4">
+							<MyDatePicker />
+							<div className="flex justify-center items-center">
+								<Pagination
+									numPages={totalPages}
+									currentPage={currentPage}
+									pageChange={handlePageChange}
+								/>
+							</div>
+						</div>
+					</div>
 				</div>
+			)}
 
-				<SongTable type="history" songs={songs} />
-			</div>
+			<button
+				className="flex items-center space-x-2 hover:text-green-500"
+				onClick={toggleFilter}
+			>
+				{showFilter ? (
+					<ChevronUpIcon className="h-5 w-5" />
+				) : (
+					<ChevronDownIcon className="h-5 w-5" />
+				)}
+			</button>
+
+			{isLoading && <Loading />}
+			{error && <div>Oops An Error occurred: {error.message}</div>}
+			{!isLoading && <SongTable type="history" songs={songs} />}
 		</Layout>
 	);
 }

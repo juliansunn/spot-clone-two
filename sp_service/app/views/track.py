@@ -34,6 +34,7 @@ class TrackView(viewsets.ReadOnlyModelViewSet):
     serializer_class = TrackSerializer
 
     def get_queryset(self):
+        
         return Track.objects.all().order_by("-play_history__played_at")
 
     def list(self, request, *args, **kwargs):

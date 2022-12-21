@@ -1,7 +1,6 @@
 from rest_framework import serializers
 from app.models import *
 from app.serializers.album import AlbumSerializer
-from app.serializers.play_history import PlayHistorySerializer
 from app.serializers.artist import ArtistSerializer
 
 
@@ -17,6 +16,7 @@ class TrackSerializer(serializers.ModelSerializer):
         model = Track
         fields = [
             "id",
+            "spotify_id",
             "name",
             "added_at",
             "href",

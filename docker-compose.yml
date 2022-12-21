@@ -4,12 +4,12 @@ services:
     sp_service:
         build: 
             context: ./sp_service
-            dockerfile: Dockerfile.prod
+            dockerfile: Dockerfile.dev
         container_name: sp_service
         env_file:
             - .env
         restart: always
-        entrypoint: /entrypoint.sh
+        # entrypoint: /entrypoint.sh
         volumes:
             - ./sp_service:/sp_service
         depends_on:

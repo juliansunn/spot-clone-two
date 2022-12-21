@@ -12,7 +12,7 @@ function SongTable({ songs, type }) {
 			style: defaultStyle + 'text-left hidden lg:table-cell'
 		},
 		{
-			name: 'DATE ADDED',
+			name: type === 'history' ? 'LAST PLAYED' : 'DATE ADDED',
 			style: defaultStyle + 'text-left hidden lg:table-cell'
 		},
 		{
@@ -21,7 +21,7 @@ function SongTable({ songs, type }) {
 		}
 	];
 	return (
-		<div className="px-8 flex flex-col spacy-y-1 pb-28">
+		<div className="px-1 flex flex-col spacy-y-1 pb-28">
 			<table className="min-w-full table-auto [border-spacing:0.50rem] lg:[border-spaceing:0.70rem]">
 				<thead className="border-b border-gray-500 sticky top-14">
 					<tr>
@@ -45,7 +45,7 @@ function SongTable({ songs, type }) {
 
 					{type === 'history' &&
 						songs.map((track, i) => (
-							<Song key={i} track={track} order={i} addedAt={track.last_played_at} />
+							<Song key={i} track={track.track} order={i} addedAt={track.played_at} />
 						))}
 				</tbody>
 			</table>
