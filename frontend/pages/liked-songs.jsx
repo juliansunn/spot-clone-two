@@ -2,18 +2,21 @@ import { useSession } from 'next-auth/react';
 import React, { useEffect, useState } from 'react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { playlistTrackState } from '../atoms/playlistAtom';
-import { trackInfoState } from '../atoms/songAtom';
+import { songListState, trackInfoState } from '../atoms/songAtom';
 import Layout from '../components/Layout';
 import SongTable from '../components/SongTable';
 import useSpotify from '../hooks/useSpotify';
-import { getRandomInt } from '../lib/utility';
+import { getRandomInt, historyHeaders } from '../lib/utility';
 
 function LikedSongs() {
 	const { data: session } = useSession();
 	const spotifyApi = useSpotify();
 	const [playlistTracks, setPlaylistTracks] = useRecoilState(playlistTrackState);
 	const [trackInfo, setTrackInfo] = useRecoilState(trackInfoState);
+	const [songs, setSongs] = useRecoilState(songListState);
+
 	const [backgroundImg, setBackgroundImg] = useState(null);
+
 	const getLikedSongs = async (offset) => {
 		const likedSongs = [];
 		for (let i = 0; i < 20; ++i) {
@@ -29,7 +32,7 @@ function LikedSongs() {
 				for (let j = 1; j < Math.ceil(d.body.total / offset); j++) {
 					d.body.items.push(...data[j].body.items);
 				}
-				setPlaylistTracks(d.body?.items);
+				// setPlaylistTracks(d.body?.items);
 				setTrackInfo(
 					d.body?.items?.map((track, i) => ({
 						position: i,
@@ -37,6 +40,7 @@ function LikedSongs() {
 						id: track.track.id
 					}))
 				);
+				setSongs(d.body?.items);
 			})
 			.catch((e) => {
 				console.log('Error Fetching LikedSongs: ', e);
@@ -73,7 +77,7 @@ function LikedSongs() {
 					</div>
 				</div>
 				<div>
-					<SongTable songs={playlistTracks} />
+					<SongTable songs={songs} type="playlist" headers={historyHeaders} />
 				</div>
 			</div>
 		</Layout>

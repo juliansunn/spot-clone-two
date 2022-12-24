@@ -59,7 +59,7 @@ export default function MyDatePicker() {
 		...defaultOptions
 	};
 	return (
-		<div className="flex">
+		<div className="flex flex-col md:flex-row">
 			<Datepicker
 				options={startOptions}
 				onChange={handleStartDateChange}

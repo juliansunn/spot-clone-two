@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { playlistIdState, playlistState } from '../atoms/playlistAtom';
-import { songListState, trackInfoState } from '../atoms/songAtom';
+import { songListState } from '../atoms/songAtom';
 import spotifyApi from '../lib/spotify';
 import Playlist from './Playlist';
 

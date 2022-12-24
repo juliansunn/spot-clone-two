@@ -10,8 +10,10 @@ import {
 import useSpotify from '../hooks/useSpotify';
 import { millisToMinutesAndSeconds, parseDate } from '../lib/utility';
 import { PauseIcon, PlayIcon } from '@heroicons/react/outline';
+import Link from 'next/link';
+import { albumState } from '../atoms/albumAtom';
 
-function Song({ track, order, addedAt }) {
+function Song({ id, uri, name, album, artist, duration, order, addedAt }) {
 	const spotifyApi = useSpotify();
 
 	const [currentTrackId, setCurrentTrackId] =
@@ -21,7 +23,17 @@ function Song({ track, order, addedAt }) {
 	const setCurrentTrackLocState = useSetRecoilState(currentTrackLocState);
 	const [trackInfo, setTrackInfo] = useRecoilState(trackInfoState);
 	const setManualChange = useSetRecoilState(manualChangeState);
-	const songs = useRecoilValue(songListState);
+	const [songs, setSongs] = useRecoilState(songListState);
+	const setAlbum = useSetRecoilState(albumState);
+
+	const handleAlbum = () => {
+		spotifyApi
+			.getAlbum(album.spotify_id ? album.spotify_id : album.id)
+			.then((data) => {
+				setAlbum(data.body);
+				setSongs(data.body?.tracks?.items);
+			});
+	};
 
 	function handleTracks() {
 		const tracks = songs.map((track, i) => ({
@@ -35,7 +47,7 @@ function Song({ track, order, addedAt }) {
 
 	const playSong = () => {
 		handleTracks();
-		setCurrentTrackId(track.spotify_id ? track.spotify_id : track.id);
+		setCurrentTrackId(id);
 		setCurrentTrackLocState(order);
 		setIsPlaying(true);
 		setManualChange(true);
@@ -61,14 +73,14 @@ function Song({ track, order, addedAt }) {
 	return (
 		<tr
 			className={
-				'text-gray-800 dark:text-gray-200 mb-3 py-4 px-5 hover:bg-gradient-to-b to-gray-100 dark:to-gray-900 from-gray-200 dark:from-gray-700 text-sm lg:text-lg cursor-pointer' +
-				(track?.id === currentTrackId ? (isPlaying ? ' animate-pulse ' : '') : '')
+				'text-gray-800 dark:text-gray-200 mb-3 py-4 px-5 hover:bg-gradient-to-b to-gray-100 dark:to-gray-900 from-gray-200 dark:from-gray-700 text-sm lg:text-lg' +
+				(id === currentTrackId ? (isPlaying ? ' animate-pulse ' : '') : '')
 			}
-			onClick={playSong}
+			onDoubleClick={playSong}
 		>
 			<td>
 				<div className="flex flex-row items-center justify-evenly">
-					{(track?.spotify_id ? track?.spotify_id : track?.id) === currentTrackId ? (
+					{id === currentTrackId ? (
 						<div>
 							{isPlaying ? (
 								<PauseIcon
@@ -89,31 +101,45 @@ function Song({ track, order, addedAt }) {
 			</td>
 
 			<td className="flex items-center space-x-4 text-gray-800 dark:text-gray-500">
-				<img
-					className="h-10 w-10"
-					src={track?.album?.images[0]?.url}
-					alt={track?.album?.name}
-				/>
+				{album && (
+					<img className="h-10 w-10" src={album?.images[0]?.url} alt={album?.name} />
+				)}
+
 				<div>
 					<p className="w-36 lg:w-64 truncate font-semibold dark:font-normal text-gray-800 dark:text-white">
-						{track?.name}
+						{name}
 					</p>
-					<p className="truncate">
-						{track?.artists ? track.artists[0]?.name : null}
-					</p>
+					<div className="flex space-x-2">
+						{artist?.map((a) => (
+							<Link href="/artist" className="truncate cursor-pointer tranistion">
+								{a?.name}
+							</Link>
+						))}
+					</div>
 				</div>
 			</td>
-			<td>
-				<div className="flex items-center justify-between ml-auto md:ml-0">
-					<p className="hidden md:inline w-40 md:truncate">{track?.album?.name}</p>
-				</div>
-			</td>
-			<td>
-				<p className="hidden md:inline">{parseDate(addedAt)}</p>
-			</td>
+			{album && (
+				<td>
+					<Link
+						href="/album"
+						className="flex items-center justify-between ml-auto md:ml-0 cursor-pointer"
+					>
+						<a onClick={handleAlbum} className="hidden md:inline w-40 md:truncate">
+							{album?.name}
+						</a>
+					</Link>
+				</td>
+			)}
+
+			{addedAt && (
+				<td>
+					<p className="hidden md:inline">{parseDate(addedAt)}</p>
+				</td>
+			)}
+
 			<td>
 				<div className="flex justify-center">
-					<p>{millisToMinutesAndSeconds(track?.duration_ms)}</p>
+					<p>{millisToMinutesAndSeconds(duration)}</p>
 				</div>
 			</td>
 		</tr>

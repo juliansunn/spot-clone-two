@@ -1,7 +1,6 @@
 from django.db import models
 from app.utils.db_utils import convert_to_local_time
 from .spotify_search import SpotifySearch
-from django.conf import settings
 
 
 class TrackManager(models.Manager):
@@ -18,13 +17,6 @@ class Track(SpotifySearch):
     popularity = models.IntegerField(null=True)
     preview_url = models.URLField(null=True)
     track_number = models.IntegerField(null=True)
-    # users = models.ManyToManyField(
-    #     settings.AUTH_USER_MODEL,
-    #     related_name='tracks',
-    #     blank=True,
-    #     help_text="Users who have played this song before"
-    #     )
-
     objects = TrackManager()
 
     @property

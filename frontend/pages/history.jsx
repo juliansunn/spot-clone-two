@@ -1,9 +1,7 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { playlistTrackState } from '../atoms/playlistAtom';
+import React, { useState } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { endDateState, startDateState } from '../atoms/searchAtom';
-import { songListState, trackInfoState } from '../atoms/songAtom';
+import { songListState } from '../atoms/songAtom';
 import MyDatePicker from '../components/DatePicker';
 import Layout from '../components/Layout';
 import SongTable from '../components/SongTable';
@@ -12,23 +10,9 @@ import { useQuery } from 'react-query';
 import Loading from '../components/Loading';
 import Pagination from '../components/Pagination';
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/solid';
-
-function PaginationControls({ currentPage, totalPages, onPageChange }) {
-	return (
-		<div>
-			{currentPage > 1 && (
-				<button onClick={() => onPageChange(currentPage - 1)}>Previous</button>
-			)}
-			{currentPage < totalPages && (
-				<button onClick={() => onPageChange(currentPage + 1)}>Next</button>
-			)}
-		</div>
-	);
-}
+import { historyHeaders } from '../lib/utility';
 
 function History() {
-	const [playlistTracks, setPlaylistTracks] = useRecoilState(playlistTrackState);
-
 	const [songs, setSongs] = useRecoilState(songListState);
 	const [currentPage, setCurrentPage] = useState(1);
 	const [totalPages, setTotalPages] = useState(1);
@@ -92,7 +76,9 @@ function History() {
 
 			{isLoading && <Loading />}
 			{error && <div>Oops An Error occurred: {error.message}</div>}
-			{!isLoading && <SongTable type="history" songs={songs} />}
+			{!isLoading && (
+				<SongTable type="history" songs={songs} headers={historyHeaders} />
+			)}
 		</Layout>
 	);
 }

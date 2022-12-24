@@ -1,3 +1,5 @@
+import { ClockIcon } from '@heroicons/react/solid';
+
 export function millisToMinutesAndSeconds(millis) {
 	const minutes = Math.floor(millis / 60000);
 	const seconds = ((millis % 60000) / 1000).toFixed(0);
@@ -83,3 +85,47 @@ export function getPageList(totalPages, page, maxLength) {
 		range(totalPages - sideWidth + 1, totalPages)
 	);
 }
+
+const defaultStyle =
+	'text-sm font-medium bg-gray-200 dark:bg-gray-900 text-gray-800 dark:text-gray-500 px-6 py-4 ';
+
+export const playlistHeaders = [
+	{ name: '#', style: defaultStyle + 'text-left w-1' },
+	{ name: 'TITLE', style: defaultStyle + 'text-left' },
+	{
+		name: 'ALBUM NAME',
+		style: defaultStyle + 'text-left hidden lg:table-cell'
+	},
+	{
+		name: 'DATE ADDED',
+		style: defaultStyle + 'text-left hidden lg:table-cell'
+	},
+	{
+		name: <ClockIcon className="button" />,
+		style: defaultStyle + 'flex justify-center'
+	}
+];
+export const albumHeaders = [
+	{ name: '#', style: defaultStyle + 'text-left w-1' },
+	{ name: 'TITLE', style: defaultStyle + 'text-left' },
+	{
+		name: <ClockIcon className="button" />,
+		style: defaultStyle + 'flex justify-center'
+	}
+];
+export const historyHeaders = [
+	{ name: '#', style: defaultStyle + 'text-left w-1' },
+	{ name: 'TITLE', style: defaultStyle + 'text-left' },
+	{
+		name: 'ALBUM NAME',
+		style: defaultStyle + 'text-left hidden lg:table-cell'
+	},
+	{
+		name: 'LAST PLAYED',
+		style: defaultStyle + 'text-left hidden lg:table-cell'
+	},
+	{
+		name: <ClockIcon className="button" />,
+		style: defaultStyle + 'flex justify-center'
+	}
+];

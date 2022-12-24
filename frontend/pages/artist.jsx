@@ -1,9 +1,12 @@
-import React from 'react'
+import React from 'react';
+import Layout from '../components/Layout';
 
 function Artist() {
-    return (
-        <div>Artist!!</div>
-    )
+	return (
+		<Layout>
+			<div>Artist!!</div>
+		</Layout>
+	);
 }
 
-export default Artist
+export default Artist;
