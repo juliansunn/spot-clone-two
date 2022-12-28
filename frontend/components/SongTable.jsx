@@ -20,12 +20,12 @@ function SongTable({ songs, type, headers }) {
 						songs?.map((track, i) => (
 							<Song
 								key={i}
-								id={track.track.id}
-								uri={track.track.uri}
-								name={track.track.name}
-								album={track.track.album}
-								artist={track.track.artists}
-								duration={track.track.duration_ms}
+								id={track?.track?.id}
+								uri={track?.track?.uri}
+								name={track?.track?.name}
+								album={track?.track?.album}
+								artist={track?.track?.artists}
+								duration={track?.track?.duration_ms}
 								order={i}
 								addedAt={track.added_at}
 							/>
@@ -35,11 +35,11 @@ function SongTable({ songs, type, headers }) {
 						songs?.map((track, i) => (
 							<Song
 								key={i}
-								id={track.id}
-								uri={track.uri}
-								name={track.name}
-								artist={track.artists}
-								duration={track.duration_ms}
+								id={track?.id}
+								uri={track?.uri}
+								name={track?.name}
+								artist={track?.artists}
+								duration={track?.duration_ms}
 								order={i}
 							/>
 						))}
@@ -49,11 +49,11 @@ function SongTable({ songs, type, headers }) {
 							<Song
 								key={i}
 								id={track?.track?.spotify_id}
-								uri={track.track.uri}
-								name={track.track.name}
-								album={track.track.album}
-								artist={track.track.artists}
-								duration={track.track.duration_ms}
+								uri={track?.track?.uri}
+								name={track?.track?.name}
+								album={track?.track?.album}
+								artist={track?.track?.artists}
+								duration={track?.track?.duration_ms}
 								order={i}
 								addedAt={track?.played_at}
 							/>

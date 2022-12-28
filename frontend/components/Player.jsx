@@ -32,6 +32,7 @@ import useSpotify from '../hooks/useSpotify';
 import useDidMountEffect from '../hooks/useDidMountEffect';
 import { playlistState } from '../atoms/playlistAtom';
 import { millisToMinutesAndSeconds } from '../lib/utility';
+import { podcastState } from '../atoms/podcastAtom';
 
 function Player() {
 	const spotifyApi = useSpotify();
@@ -81,13 +82,11 @@ function Player() {
 
 	const fetchCurrentSong = () => {
 		if (!songInfo) {
-			spotifyApi.getMyCurrentPlayingTrack().then((data) => {
+			spotifyApi.getMyCurrentPlaybackState().then((data) => {
 				setCurrentTrackId(data.body?.item?.id);
-				spotifyApi.getMyCurrentPlaybackState().then((data) => {
-					setIsPlaying(data.body?.is_playing);
-					// setDuration(data.body?.item?.duration_ms);
-					// setProgress(data.body?.progress_ms);
-				});
+				setIsPlaying(data.body?.is_playing);
+				setDuration(data.body?.item?.duration_ms);
+				setProgress(data.body?.progress_ms);
 			});
 		}
 	};
@@ -137,14 +136,15 @@ function Player() {
 	};
 
 	useEffect(() => {
-		// const interval = setInterval(() => {
-		//     if (!seeking)
-		//         spotifyApi.getMyCurrentPlaybackState().then((data) => {
-		//             setDuration(data.body?.item?.duration_ms);
-		//             setProgress(data.body?.progress_ms);
-		//         });
-		// }, 1000);
-		// return () => clearInterval(interval);
+		const interval = setInterval(() => {
+			if (!seeking) {
+				spotifyApi.getMyCurrentPlayingTrack().then((data) => {
+					setDuration(data.body?.item?.duration_ms);
+					setProgress(data.body?.progress_ms);
+				});
+			}
+		}, 1000);
+		return () => clearInterval(interval);
 	}, [seeking]);
 
 	const debouncedAdjustProgress = useCallback(
@@ -153,7 +153,7 @@ function Player() {
 				console.log('Adjusting Progress Error: ', e);
 			});
 		}, 200),
-		[progress]
+		[]
 	);
 
 	useEffect(() => {
