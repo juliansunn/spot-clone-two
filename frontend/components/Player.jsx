@@ -24,7 +24,8 @@ import {
 	isPlayingState,
 	isRepeatState,
 	isShuffleState,
-	manualChangeState
+	manualChangeState,
+	songListState
 } from '../atoms/songAtom';
 import { currentDeviceState, myDevicesState } from '../atoms/deviceAtom';
 import useSongInfo from '../hooks/useSongInfo';
@@ -47,7 +48,7 @@ function Player() {
 	const [volume, setVolume] = useState(50);
 	const [muted, setMuted] = useState(false);
 	const [modalIsOpen, setIsOpen] = useState(false);
-	const [playlist, setPlaylist] = useRecoilState(playlistState);
+	const [songs, setSongs] = useRecoilState(songListState);
 	const [progress, setProgress] = useState(0);
 	const [duration, setDuration] = useState(0);
 	const [seeking, setSeeking] = useState(false);
@@ -61,10 +62,10 @@ function Player() {
 	};
 
 	const toggleShuffle = () => {
-		var info = playlist.tracks?.items?.map((track, i) => ({
+		var info = songs?.map((track, i) => ({
 			position: i,
-			uri: track.track.uri,
-			id: track.track.id
+			uri: track.track ? track.track.uri : track.uri,
+			id: track.track ? track.track.id : track.id
 		}));
 		if (isShuffle) {
 			setTrackInfo(info);
@@ -190,9 +191,9 @@ function Player() {
 
 	function changeSong(direction, manual = false) {
 		const uris = trackInfo?.map(({ uri }) => uri);
-		if (playlist) {
+		if (songs) {
 			var newLoc = currentTrackLoc + direction;
-			if (newLoc >= uris.length) {
+			if (newLoc >= uris?.length) {
 				if (isRepeat) {
 					newLoc = 0;
 				} else {
@@ -202,7 +203,7 @@ function Player() {
 			}
 			if (newLoc < 0) {
 				if (isRepeat) {
-					newLoc = uris.length - 1;
+					newLoc = uris?.length - 1;
 				} else {
 					newLoc = 0;
 				}

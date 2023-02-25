@@ -87,11 +87,11 @@ export function getPageList(totalPages, page, maxLength) {
 }
 
 const defaultStyle =
-	'text-sm font-medium bg-gray-200 dark:bg-gray-900 text-gray-800 dark:text-gray-500 px-6 py-4 ';
+	'text-sm font-medium bg-gray-200 dark:bg-gray-900 text-gray-800 dark:text-gray-500 px-6 py-4 border-dashed ';
 
 export const playlistHeaders = [
 	{ name: '#', style: defaultStyle + 'text-left w-1' },
-	{ name: 'TITLE', style: defaultStyle + 'text-left' },
+	{ name: 'TITLE', style: defaultStyle },
 	{
 		name: 'ALBUM NAME',
 		style: defaultStyle + 'text-left hidden lg:table-cell'
@@ -118,11 +118,11 @@ export const historyHeaders = [
 	{ name: 'TITLE', style: defaultStyle + 'text-left' },
 	{
 		name: 'ALBUM NAME',
-		style: defaultStyle + 'text-left hidden lg:table-cell'
+		style: defaultStyle + 'text-left lg:table-cell'
 	},
 	{
 		name: 'LAST PLAYED',
-		style: defaultStyle + 'text-left hidden lg:table-cell'
+		style: defaultStyle + 'text-left lg:table-cell'
 	},
 	{
 		name: <ClockIcon className="button" />,

@@ -79,7 +79,7 @@ function Song({ id, uri, name, album, artist, duration, order, addedAt }) {
 			onDoubleClick={playSong}
 		>
 			<td>
-				<div className="flex flex-row items-center justify-evenly">
+				<div className="flex flex-row items-right justify-evenly">
 					{id === currentTrackId ? (
 						<div>
 							{isPlaying ? (
@@ -111,7 +111,11 @@ function Song({ id, uri, name, album, artist, duration, order, addedAt }) {
 					</p>
 					<div className="flex space-x-2">
 						{artist?.map((a) => (
-							<Link href="/artist" className="truncate cursor-pointer tranistion">
+							<Link
+								key={a.id}
+								href="/artist"
+								className="truncate cursor-pointer tranistion"
+							>
 								{a?.name}
 							</Link>
 						))}

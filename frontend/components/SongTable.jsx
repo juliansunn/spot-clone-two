@@ -8,7 +8,7 @@ function SongTable({ songs, type, headers }) {
 				<thead className="border-b border-gray-500 sticky top-14">
 					<tr>
 						{headers.map((item, idx) => (
-							<th scope="col" className={item.style} key={idx}>
+							<th scope="col-2" className={item.style} key={idx}>
 								{item?.name}
 							</th>
 						))}
