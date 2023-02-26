@@ -36,7 +36,7 @@ class TrackAdmin(admin.ModelAdmin):
 
     @admin.display(ordering='play_history', description='Last Played')
     def get_recently_played(self, obj):
-        play_history = obj.play_history.last
+        play_history = obj.play_history.last()
         return play_history.played_at if play_history else None
 
 @admin.register(models.Album)
