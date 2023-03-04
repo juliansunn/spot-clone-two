@@ -34,6 +34,7 @@ import useDidMountEffect from '../hooks/useDidMountEffect';
 import { playlistState } from '../atoms/playlistAtom';
 import { millisToMinutesAndSeconds } from '../lib/utility';
 import { podcastState } from '../atoms/podcastAtom';
+import useVolume from '../hooks/useVolume';
 
 function Player() {
 	const spotifyApi = useSpotify();
