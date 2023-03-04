@@ -20,7 +20,7 @@ function History() {
 	const endDate = useRecoilValue(endDateState);
 	const [showFilter, setShowFilter] = useState(true);
 	const format = 'yyyy-MM-dd';
-	const { data, error, isLoading } = useQuery(
+	const { error, isLoading } = useQuery(
 		['api', currentPage, startDate, endDate],
 		async () => {
 			const res = await fetch(
@@ -49,9 +49,9 @@ function History() {
 			{showFilter && (
 				<div className="relative">
 					<div className="grid grid-cols-6">
-						<div className="col-start-1 col-end-7 md:col-start-2 md:col-span-4">
+						<div className="col-start-1 col-end-7">
 							<MyDatePicker />
-							<div className="flex justify-center items-center">
+							<div className="flex justify-left items-center">
 								<Pagination
 									numPages={totalPages}
 									currentPage={currentPage}

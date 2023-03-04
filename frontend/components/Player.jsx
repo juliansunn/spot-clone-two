@@ -45,7 +45,6 @@ function Player() {
 	const [currentDevice, setCurrentDevice] = useRecoilState(currentDeviceState);
 	const [isShuffle, setIsShuffle] = useRecoilState(isShuffleState);
 	const [isRepeat, setIsRepeat] = useRecoilState(isRepeatState);
-	const [volume, setVolume] = useState(50);
 	const [muted, setMuted] = useState(false);
 	const [modalIsOpen, setIsOpen] = useState(false);
 	const [songs, setSongs] = useRecoilState(songListState);
@@ -56,7 +55,7 @@ function Player() {
 		useRecoilState(currentTrackLocState);
 	const [trackInfo, setTrackInfo] = useRecoilState(trackInfoState);
 	const [manualChange, setManualChange] = useRecoilState(manualChangeState);
-
+	const [volume, setVolume] = useVolume(50);
 	const toggleDeviceModal = () => {
 		setIsOpen((prevState) => !prevState);
 	};
@@ -178,10 +177,6 @@ function Player() {
 		}
 	}, [currentTrackId, spotifyApi, session]);
 
-	useEffect(() => {
-		setVolume(volume);
-	}, [myDevices]);
-
 	useDidMountEffect(() => {
 		if (!manualChange) {
 			changeSong(1, false);
@@ -225,7 +220,7 @@ function Player() {
 			{/* left side */}
 			<div className="flex items-start space-x-4">
 				<img
-					className="hidden md:inline h-20 w-20"
+					className=" max-h-20 max-w-20"
 					src={
 						songInfo?.album
 							? songInfo?.album.images?.[0].url

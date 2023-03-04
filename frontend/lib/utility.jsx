@@ -87,45 +87,45 @@ export function getPageList(totalPages, page, maxLength) {
 }
 
 const defaultStyle =
-	'text-sm font-medium bg-gray-200 dark:bg-gray-900 text-gray-800 dark:text-gray-500 px-6 py-4 border-dashed ';
+	'text-sm text-left font-medium bg-gray-200 dark:bg-gray-900 text-gray-800 dark:text-gray-500 px-6 py-4 ';
 
 export const playlistHeaders = [
-	{ name: '#', style: defaultStyle + 'text-left w-1' },
+	{ name: '#', style: defaultStyle },
 	{ name: 'TITLE', style: defaultStyle },
 	{
 		name: 'ALBUM NAME',
-		style: defaultStyle + 'text-left hidden lg:table-cell'
+		style: defaultStyle
 	},
 	{
 		name: 'DATE ADDED',
-		style: defaultStyle + 'text-left hidden lg:table-cell'
+		style: defaultStyle + ' hidden md:inline-flex'
 	},
 	{
 		name: <ClockIcon className="button" />,
-		style: defaultStyle + 'flex justify-center'
+		style: defaultStyle
 	}
 ];
 export const albumHeaders = [
-	{ name: '#', style: defaultStyle + 'text-left w-1' },
-	{ name: 'TITLE', style: defaultStyle + 'text-left' },
+	{ name: '#', style: defaultStyle },
+	{ name: 'TITLE', style: defaultStyle },
 	{
 		name: <ClockIcon className="button" />,
-		style: defaultStyle + 'flex justify-center'
+		style: defaultStyle
 	}
 ];
 export const historyHeaders = [
-	{ name: '#', style: defaultStyle + 'text-left w-1' },
-	{ name: 'TITLE', style: defaultStyle + 'text-left' },
+	{ name: '#', style: defaultStyle },
+	{ name: 'TITLE', style: defaultStyle },
 	{
 		name: 'ALBUM NAME',
-		style: defaultStyle + 'text-left lg:table-cell'
+		style: defaultStyle
 	},
 	{
 		name: 'LAST PLAYED',
-		style: defaultStyle + 'text-left lg:table-cell'
+		style: defaultStyle + ' hidden md:inline-flex'
 	},
 	{
 		name: <ClockIcon className="button" />,
-		style: defaultStyle + 'flex justify-center'
+		style: defaultStyle
 	}
 ];

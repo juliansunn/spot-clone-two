@@ -59,19 +59,23 @@ export default function MyDatePicker() {
 		...defaultOptions
 	};
 	return (
-		<div className="flex flex-col md:flex-row">
-			<Datepicker
-				options={startOptions}
-				onChange={handleStartDateChange}
-				show={startShow}
-				setShow={handleStartClose}
-			/>
-			<Datepicker
-				options={endOptions}
-				onChange={handleEndDateChange}
-				show={endShow}
-				setShow={handleEndClose}
-			/>
+		<div className="flex flex-col sm:flex-row">
+			<div className="max-w-30">
+				<Datepicker
+					options={startOptions}
+					onChange={handleStartDateChange}
+					show={startShow}
+					setShow={handleStartClose}
+				/>
+			</div>
+			<div className="max-w-30">
+				<Datepicker
+					options={endOptions}
+					onChange={handleEndDateChange}
+					show={endShow}
+					setShow={handleEndClose}
+				/>
+			</div>
 		</div>
 	);
 }
