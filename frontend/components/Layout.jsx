@@ -14,7 +14,7 @@ import SearchBar from './SearchBar';
 import { ThemeProvider } from './Theme/ThemeContext';
 import Background from './Theme/Background';
 import Theme from './Theme/Toggle';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { sidebarVisibilityState } from '../atoms/visibilityAtom';
 
 function Layout({ children }) {

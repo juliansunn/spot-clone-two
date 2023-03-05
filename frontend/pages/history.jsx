@@ -21,7 +21,7 @@ function History() {
 	const [showFilter, setShowFilter] = useState(true);
 	const format = 'yyyy-MM-dd';
 	const { error, isLoading } = useQuery(
-		['api', currentPage, startDate, endDate],
+		['sp-api', currentPage, startDate, endDate],
 		async () => {
 			const res = await fetch(
 				`${

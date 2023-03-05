@@ -50,7 +50,7 @@ function LikedSongs() {
 	useEffect(() => {
 		getLikedSongs(20);
 		setBackgroundImg(getRandomInt(1, 14));
-	}, []);
+	});
 
 	return (
 		<Layout>

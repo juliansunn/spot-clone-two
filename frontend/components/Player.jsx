@@ -10,12 +10,13 @@ import {
 	FastForwardIcon,
 	PauseIcon,
 	DeviceMobileIcon,
-	DesktopComputerIcon
+	DesktopComputerIcon,
+	CheckCircleIcon
 } from '@heroicons/react/solid';
 import ReactModal from 'react-modal';
 import { debounce, shuffle } from 'lodash';
 import { useSession } from 'next-auth/react';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import {
 	currentTrackIdState,
@@ -27,14 +28,12 @@ import {
 	manualChangeState,
 	songListState
 } from '../atoms/songAtom';
-import { currentDeviceState, myDevicesState } from '../atoms/deviceAtom';
 import useSongInfo from '../hooks/useSongInfo';
 import useSpotify from '../hooks/useSpotify';
 import useDidMountEffect from '../hooks/useDidMountEffect';
-import { playlistState } from '../atoms/playlistAtom';
 import { millisToMinutesAndSeconds } from '../lib/utility';
-import { podcastState } from '../atoms/podcastAtom';
 import useVolume from '../hooks/useVolume';
+import useDevice from '../hooks/useDevice';
 
 function Player() {
 	const spotifyApi = useSpotify();
@@ -42,8 +41,7 @@ function Player() {
 	const [currentTrackId, setCurrentTrackId] =
 		useRecoilState(currentTrackIdState);
 	const [isPlaying, setIsPlaying] = useRecoilState(isPlayingState);
-	const [myDevices, setMyDevices] = useRecoilState(myDevicesState);
-	const [currentDevice, setCurrentDevice] = useRecoilState(currentDeviceState);
+	const { currentDevice, myDevices, activateDevice } = useDevice();
 	const [isShuffle, setIsShuffle] = useRecoilState(isShuffleState);
 	const [isRepeat, setIsRepeat] = useRecoilState(isRepeatState);
 	const [muted, setMuted] = useState(false);
@@ -56,7 +54,7 @@ function Player() {
 		useRecoilState(currentTrackLocState);
 	const [trackInfo, setTrackInfo] = useRecoilState(trackInfoState);
 	const [manualChange, setManualChange] = useRecoilState(manualChangeState);
-	const [volume, setVolume] = useVolume(50);
+	const [volume, setVolume] = useVolume();
 	const toggleDeviceModal = () => {
 		setIsOpen((prevState) => !prevState);
 	};
@@ -90,28 +88,6 @@ function Player() {
 				setProgress(data.body?.progress_ms);
 			});
 		}
-	};
-
-	const getCurrentDevices = () => {
-		spotifyApi
-			.getMyDevices()
-			.then((data) => {
-				const devices = data.body.devices;
-				const deviceToActivate = devices[0];
-				setMyDevices(devices);
-				spotifyApi.transferMyPlayback([deviceToActivate?.id]).then((data) => {
-					setCurrentDevice(deviceToActivate);
-				});
-			})
-			.catch((e) => {
-				console.log('There was an error getting your devices: ', e);
-			});
-	};
-
-	const activateDevice = ({ device }) => {
-		spotifyApi.transferMyPlayback([device?.id]).then((data) => {
-			setCurrentDevice(device);
-		});
 	};
 
 	const muteOrUnMute = () => {
@@ -158,23 +134,8 @@ function Player() {
 	);
 
 	useEffect(() => {
-		if (volume > 0 && volume < 100 && myDevices) {
-			setMuted(false);
-			debouncedAdjustVolume(volume);
-		}
-	}, [volume]);
-
-	const debouncedAdjustVolume = useCallback(
-		debounce((volume) => {
-			spotifyApi.setVolume(volume);
-		}, 200),
-		[]
-	);
-
-	useEffect(() => {
 		if (spotifyApi.getAccessToken() && !currentTrackId) {
 			fetchCurrentSong();
-			getCurrentDevices();
 		}
 	}, [currentTrackId, spotifyApi, session]);
 
@@ -328,9 +289,14 @@ function Player() {
 								onClick={() => activateDevice({ device })}
 								className="flex text-gray-500 hover:text-white cursor-pointer justify-evenly items-center p-2"
 							>
+								{currentDevice?.id === device.id && (
+									<CheckCircleIcon className="button fill-white" />
+								)}
 								<p>{device.name}</p>
 								<p>|</p>
 								<p>{device.type}</p>
+								<p>|</p>
+								<p>{device.is_active ? 'Active' : 'Not Active'}</p>
 							</div>
 						))}
 					</div>

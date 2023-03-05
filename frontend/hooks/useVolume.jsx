@@ -1,10 +1,12 @@
 import { useState, useEffect, useCallback } from 'react';
 import { debounce } from 'lodash';
 import useSpotify from './useSpotify';
+import useDevice from './useDevice';
 
-const useVolume = (initialVolume, debounceTime = 200) => {
+const useVolume = (debounceTime = 200) => {
 	const spotifyApi = useSpotify();
-	const [volume, setVolume] = useState(initialVolume);
+	const { initialVolume } = useDevice();
+	const [volume, setVolume] = useState(null);
 
 	const debouncedAdjustVolume = useCallback(
 		debounce((volume) => {
@@ -23,8 +25,12 @@ const useVolume = (initialVolume, debounceTime = 200) => {
 	);
 
 	useEffect(() => {
+		if (initialVolume && !volume) {
+			setVolume(initialVolume);
+			debouncedAdjustVolume(initialVolume);
+		}
 		debouncedAdjustVolume(volume);
-	}, [volume]);
+	}, [volume, initialVolume]);
 
 	return [volume, adjustVolume];
 };
