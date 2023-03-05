@@ -27,9 +27,10 @@ const useVolume = (debounceTime = 200) => {
 	useEffect(() => {
 		if (initialVolume && !volume) {
 			setVolume(initialVolume);
-			debouncedAdjustVolume(initialVolume);
 		}
-		debouncedAdjustVolume(volume);
+		if (volume) {
+			debouncedAdjustVolume(volume);
+		}
 	}, [volume, initialVolume]);
 
 	return [volume, adjustVolume];
