@@ -57,28 +57,27 @@ function Library() {
 			});
 	};
 
-	const getPlaylistData = async (offset = 20) => {
-		const plsts = [];
-		for (let i = 0; i < 2; ++i) {
-			plsts.push(
-				spotifyApi.getUserPlaylists({
-					offset: i * offset
-				})
-			);
-		}
+	const getPlaylistData = async () => {
+		const playlists = [];
+		let offset = 0;
+		let total;
 
-		Promise.all(plsts)
-			.then((data) => {
-				const d = data[0];
-				for (let j = 1; j < Math.ceil(d?.body.total / offset); j++) {
-					d?.body.items.push(...data[j]?.body.items);
-				}
-				setPlaylists(d?.body.items);
-				setPlaylistId(d?.body.items[0].id);
-			})
-			.catch((e) => {
-				console.log('Error Fetching Playlists: ', e);
-			});
+		// Loop until all playlists have been fetched
+		while (offset < total || !total) {
+			const response = await spotifyApi.getUserPlaylists({ offset });
+			const { items, total: newTotal } = response.body;
+			playlists.push(...items);
+
+			if (!total) {
+				// If this is the first request, set the total number of playlists
+				total = newTotal;
+			}
+
+			// Increment the offset for the next request
+			offset += items.length;
+		}
+		setPlaylists(playlists);
+		setPlaylistId(playlists[0].id);
 	};
 
 	useEffect(() => {

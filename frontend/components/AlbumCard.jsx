@@ -2,13 +2,12 @@ import Link from 'next/link';
 import React from 'react';
 import { useRecoilState } from 'recoil';
 import { albumIdState, albumState } from '../atoms/albumAtom';
-import { songListState } from '../atoms/songAtom';
+import useSongs from '../hooks/useSongs';
 import spotifyApi from '../lib/spotify';
 
 function AlbumCard({ data }) {
-	const [albumId, setAlbumId] = useRecoilState(albumIdState);
 	const [album, setAlbum] = useRecoilState(albumState);
-	const [songs, setSongs] = useRecoilState(songListState);
+	const { setSongs } = useSongs();
 
 	const handleAlbum = (albumId) => {
 		spotifyApi.getAlbum(albumId).then((data) => {

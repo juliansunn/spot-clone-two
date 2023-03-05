@@ -1,12 +1,12 @@
 import useSpotify from './useSpotify';
-import { useRecoilState } from 'recoil';
-import { currentTrackIdState } from '../atoms/songAtom';
+import { useRecoilValue } from 'recoil';
+import { currentTrackIdState, currentTrackLocState } from '../atoms/songAtom';
 import { useEffect, useState } from 'react';
 
 function useSongInfo() {
 	const spotifyApi = useSpotify();
-	const [currentTrackId, setCurrentTrackId] =
-		useRecoilState(currentTrackIdState);
+	const currentTrackId = useRecoilValue(currentTrackIdState);
+	const currentTrackLoc = useRecoilValue(currentTrackLocState);
 	const [songInfo, setSongInfo] = useState(null);
 	useEffect(() => {
 		const fetchSongInfo = async () => {
@@ -23,7 +23,7 @@ function useSongInfo() {
 			}
 		};
 		fetchSongInfo();
-	}, [currentTrackId, spotifyApi]);
+	}, [currentTrackId]);
 	return songInfo;
 }
 

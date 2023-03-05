@@ -14,102 +14,39 @@ import {
 	CheckCircleIcon
 } from '@heroicons/react/solid';
 import ReactModal from 'react-modal';
-import { debounce, shuffle } from 'lodash';
-import { useSession } from 'next-auth/react';
+import { debounce } from 'lodash';
 import { useCallback, useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
-import {
-	currentTrackIdState,
-	currentTrackLocState,
-	trackInfoState,
-	isPlayingState,
-	isRepeatState,
-	isShuffleState,
-	manualChangeState,
-	songListState
-} from '../atoms/songAtom';
+
 import useSongInfo from '../hooks/useSongInfo';
 import useSpotify from '../hooks/useSpotify';
-import useDidMountEffect from '../hooks/useDidMountEffect';
 import { millisToMinutesAndSeconds } from '../lib/utility';
 import useVolume from '../hooks/useVolume';
 import useDevice from '../hooks/useDevice';
+import useSongControls from '../hooks/useSongControls';
 
 function Player() {
 	const spotifyApi = useSpotify();
-	const { data: session } = useSession();
-	const [currentTrackId, setCurrentTrackId] =
-		useRecoilState(currentTrackIdState);
-	const [isPlaying, setIsPlaying] = useRecoilState(isPlayingState);
 	const { currentDevice, myDevices, activateDevice } = useDevice();
-	const [isShuffle, setIsShuffle] = useRecoilState(isShuffleState);
-	const [isRepeat, setIsRepeat] = useRecoilState(isRepeatState);
-	const [muted, setMuted] = useState(false);
+	const { volume, setVolume, muted, toggleMute } = useVolume();
+	const songInfo = useSongInfo();
+	const {
+		isShuffle,
+		isRepeat,
+		toggleShuffle,
+		toggleRepeat,
+		changeSong,
+		manualChange,
+		setManualChange,
+		isPlaying,
+		handlePlayPause
+	} = useSongControls();
 	const [modalIsOpen, setIsOpen] = useState(false);
-	const [songs, setSongs] = useRecoilState(songListState);
 	const [progress, setProgress] = useState(0);
 	const [duration, setDuration] = useState(0);
 	const [seeking, setSeeking] = useState(false);
-	const [currentTrackLoc, setCurrentTrackLoc] =
-		useRecoilState(currentTrackLocState);
-	const [trackInfo, setTrackInfo] = useRecoilState(trackInfoState);
-	const [manualChange, setManualChange] = useRecoilState(manualChangeState);
-	const [volume, setVolume] = useVolume();
+
 	const toggleDeviceModal = () => {
 		setIsOpen((prevState) => !prevState);
-	};
-
-	const toggleShuffle = () => {
-		var info = songs?.map((track, i) => ({
-			position: i,
-			uri: track.track ? track.track.uri : track.uri,
-			id: track.track ? track.track.id : track.id
-		}));
-		if (isShuffle) {
-			setTrackInfo(info);
-		} else {
-			setTrackInfo(shuffle(info));
-		}
-		setIsShuffle((prevState) => !prevState);
-	};
-
-	const toggleRepeat = () => {
-		setIsRepeat((prevState) => !prevState);
-	};
-
-	const songInfo = useSongInfo();
-
-	const fetchCurrentSong = () => {
-		if (!songInfo) {
-			spotifyApi.getMyCurrentPlaybackState().then((data) => {
-				setCurrentTrackId(data.body?.item?.id);
-				setIsPlaying(data.body?.is_playing);
-				setDuration(data.body?.item?.duration_ms);
-				setProgress(data.body?.progress_ms);
-			});
-		}
-	};
-
-	const muteOrUnMute = () => {
-		if (!muted) {
-			setMuted(true);
-			spotifyApi.setVolume(0);
-		} else {
-			setMuted(false);
-			spotifyApi.setVolume(volume);
-		}
-	};
-
-	const handlePlayPause = () => {
-		spotifyApi.getMyCurrentPlaybackState().then((data) => {
-			if (data?.body?.is_playing) {
-				spotifyApi.pause();
-				setIsPlaying(false);
-			} else {
-				spotifyApi.play();
-				setIsPlaying(true);
-			}
-		});
 	};
 
 	useEffect(() => {
@@ -134,48 +71,11 @@ function Player() {
 	);
 
 	useEffect(() => {
-		if (spotifyApi.getAccessToken() && !currentTrackId) {
-			fetchCurrentSong();
-		}
-	}, [currentTrackId, spotifyApi, session]);
-
-	useDidMountEffect(() => {
 		if (!manualChange) {
 			changeSong(1, false);
 		}
 		setManualChange(false);
 	}, [duration]);
-
-	function changeSong(direction, manual = false) {
-		const uris = trackInfo?.map(({ uri }) => uri);
-		if (songs) {
-			var newLoc = currentTrackLoc + direction;
-			if (newLoc >= uris?.length) {
-				if (isRepeat) {
-					newLoc = 0;
-				} else {
-					console.log('We need to search and put new songs in the playlist queue');
-					return;
-				}
-			}
-			if (newLoc < 0) {
-				if (isRepeat) {
-					newLoc = uris?.length - 1;
-				} else {
-					newLoc = 0;
-				}
-			}
-			if (manual) {
-				spotifyApi.play({
-					uris: uris,
-					offset: { position: newLoc }
-				});
-				setManualChange(true);
-			}
-			setCurrentTrackLoc(newLoc);
-			setCurrentTrackId(trackInfo[newLoc]?.id);
-		}
-	}
 
 	return (
 		<div className="h-26 text-white grid grid-cols-5 text-xs md:text-base px-2 md:px-8 bg-gradient-to-b from-gray-200 to-gray-400 dark:from-gray-700 dark:to-gray-900  drop-shadow">
@@ -305,11 +205,11 @@ function Player() {
 				{muted ? (
 					<VolumeOffIcon
 						className="button stroke-gray-700 dark:stroke-white"
-						onClick={muteOrUnMute}
+						onClick={toggleMute}
 					/>
 				) : (
 					<VolumeUpIcon
-						onClick={muteOrUnMute}
+						onClick={toggleMute}
 						className="button stroke-gray-700 dark:stroke-white"
 					/>
 				)}

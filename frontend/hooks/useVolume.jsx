@@ -7,6 +7,7 @@ const useVolume = (debounceTime = 200) => {
 	const spotifyApi = useSpotify();
 	const { initialVolume } = useDevice();
 	const [volume, setVolume] = useState(null);
+	const [muted, setMuted] = useState(false);
 
 	const debouncedAdjustVolume = useCallback(
 		debounce((volume) => {
@@ -24,6 +25,16 @@ const useVolume = (debounceTime = 200) => {
 		[debouncedAdjustVolume]
 	);
 
+	const toggleMute = () => {
+		if (!muted) {
+			setMuted(true);
+			spotifyApi.setVolume(0);
+		} else {
+			setMuted(false);
+			spotifyApi.setVolume(volume);
+		}
+	};
+
 	useEffect(() => {
 		if (initialVolume && !volume) {
 			setVolume(initialVolume);
@@ -33,7 +44,7 @@ const useVolume = (debounceTime = 200) => {
 		}
 	}, [volume, initialVolume]);
 
-	return [volume, adjustVolume];
+	return { volume, adjustVolume, muted, toggleMute };
 };
 
 export default useVolume;
