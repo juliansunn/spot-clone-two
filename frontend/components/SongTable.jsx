@@ -1,3 +1,4 @@
+import { parseDate, parseDateTime } from '../lib/utility';
 import Song from './Song';
 
 function SongTable({ songs, type, headers }) {
@@ -16,7 +17,12 @@ function SongTable({ songs, type, headers }) {
 				<tbody>
 					{type === 'playlist' &&
 						songs?.map((track, i) => (
-							<Song key={i} track={track?.track} order={i} addedAt={track.added_at} />
+							<Song
+								key={i}
+								track={track?.track}
+								order={i}
+								addedAt={parseDate(track.added_at)}
+							/>
 						))}
 
 					{type === 'album' &&
@@ -30,7 +36,7 @@ function SongTable({ songs, type, headers }) {
 								key={i}
 								track={track?.track}
 								order={i}
-								addedAt={track?.played_at}
+								addedAt={parseDateTime(track?.played_at)}
 							/>
 						))}
 				</tbody>

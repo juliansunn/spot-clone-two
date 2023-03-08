@@ -1,33 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Link from 'next/link';
-import { signOut, useSession } from 'next-auth/react';
-import useSpotify from '../hooks/useSpotify';
+import { signOut } from 'next-auth/react';
 import { motion } from 'framer-motion';
 import {
 	HomeIcon,
 	SearchIcon,
 	LibraryIcon,
-	PlusCircleIcon,
 	HeartIcon,
 	RssIcon,
 	LogoutIcon,
 	BookOpenIcon
 } from '@heroicons/react/outline';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import {
-	playlistState,
-	playlistIdState,
-	playlistsState
-} from '../atoms/playlistAtom';
+import { useRecoilValue } from 'recoil';
 
 import { sidebarVisibilityState } from '../atoms/visibilityAtom';
-import { songListState } from '../atoms/songAtom';
+import usePlaylists from '../hooks/usePlaylists';
+import { PlayIcon } from '@heroicons/react/solid';
 
 function Sidebar() {
-	const spotifyApi = useSpotify();
-	const { data: session, status } = useSession();
-	const [playlists, setPlaylists] = useRecoilState(playlistsState);
-	const [playlistId, setPlaylistId] = useRecoilState(playlistIdState);
+	const { playlists, playlistId, setPlaylistId } = usePlaylists();
 	const isOpen = useRecoilValue(sidebarVisibilityState);
 
 	const sidebarVariants = {
@@ -47,37 +38,6 @@ function Sidebar() {
 	const handleSelected = (playlistId) => {
 		setPlaylistId(playlistId);
 	};
-
-	const getPlaylists = async (offset) => {
-		const plsts = [];
-		for (let i = 0; i < 3; ++i) {
-			plsts.push(
-				spotifyApi.getUserPlaylists({
-					offset: i * offset
-				})
-			);
-		}
-		Promise.all(plsts)
-			.then((data) => {
-				const d = data[0];
-				for (let j = 1; j < plsts.length; j++) {
-					d?.body.items.push(...data[j]?.body.items);
-				}
-				setPlaylists(d?.body.items);
-				if (!playlistId) {
-					setPlaylistId(d?.body.items[0].id);
-				}
-			})
-			.catch((e) => {
-				console.log('Error Fetching Playlists: ', e);
-			});
-	};
-
-	useEffect(() => {
-		if (spotifyApi.getAccessToken()) {
-			getPlaylists(20);
-		}
-	}, [session, spotifyApi]);
 
 	return (
 		<motion.div
@@ -138,21 +98,25 @@ function Sidebar() {
 			</div>
 			<div
 				className="text-gray-900 dark:text-gray-500 p-5 text-xs lg:text-sm border-r border-gray-600
-        overflow-y-scroll h-screen scrollbar-hide sm:max-w-[12rem] lg:max-w-[15rem] sm:min-w-[12rem] lg:min-w-[15rem] md:inline-flex pb-36"
+        overflow-y-scroll h-screen scrollbar-hide sm:max-w-[12rem] lg:max-w-[15rem] sm:min-w-[12rem] lg:min-w-[15rem] md:inline-flex"
 			>
 				<div className="space-y-4">
 					{playlists?.map((playlist) => (
 						<Link href="/playlist" key={playlist.id}>
-							<p
-								key={playlist.id}
-								onClick={() => handleSelected(playlist.id)}
-								className="cursor-pointer hover:text-green-500 dark:hover:text-white"
-							>
-								{playlist.name}
-							</p>
+							<div className="flex space-x-2 ">
+								{playlistId === playlist.id && (
+									<PlayIcon className="h-5 w-5 text-green-500" />
+								)}
+								<p
+									key={playlist.id}
+									onClick={() => handleSelected(playlist.id)}
+									className="cursor-pointer hover:text-green-500 dark:hover:text-white"
+								>
+									{playlist.name}
+								</p>
+							</div>
 						</Link>
 					))}
-					<div className="h-20"></div>
 				</div>
 			</div>
 		</motion.div>

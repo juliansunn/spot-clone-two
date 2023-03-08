@@ -23,11 +23,13 @@ import { millisToMinutesAndSeconds } from '../lib/utility';
 import useVolume from '../hooks/useVolume';
 import useDevice from '../hooks/useDevice';
 import useSongControls from '../hooks/useSongControls';
+import Image from 'next/image';
+import useDidMountEffect from '../hooks/useDidMountEffect';
 
 function Player() {
 	const spotifyApi = useSpotify();
 	const { currentDevice, myDevices, activateDevice } = useDevice();
-	const { volume, setVolume, muted, toggleMute } = useVolume();
+	const { volume, adjustVolume, muted, toggleMute } = useVolume();
 	const songInfo = useSongInfo();
 	const {
 		isShuffle,
@@ -70,30 +72,34 @@ function Player() {
 		[]
 	);
 
-	useEffect(() => {
+	useDidMountEffect(() => {
 		if (!manualChange) {
 			changeSong(1, false);
 		}
 		setManualChange(false);
 	}, [duration]);
-
 	return (
 		<div className="h-26 text-white grid grid-cols-5 text-xs md:text-base px-2 md:px-8 bg-gradient-to-b from-gray-200 to-gray-400 dark:from-gray-700 dark:to-gray-900  drop-shadow">
 			{/* left side */}
 			<div className="flex items-start space-x-4">
-				<img
-					className=" max-h-20 max-w-20"
-					src={
-						songInfo?.album
-							? songInfo?.album.images?.[0].url
-							: songInfo?.images?.[0].url
-					}
-					alt=""
-				/>
+				{songInfo && (
+					<Image
+						className="max-h-20 max-w-20"
+						src={
+							songInfo?.album
+								? songInfo?.album.images?.[0].url
+								: songInfo?.images?.[0].url
+						}
+						alt=""
+						height={80}
+						width={80}
+					/>
+				)}
 				<div>
-					<h3 className="text-sm md:text-lg truncate text-gray-900 dark:text-white font-semibold dark:font-normal">
+					<h3 className="self-start flex text-sm md:text-lg truncate text-gray-900 dark:text-white font-semibold dark:font-normal">
 						{songInfo?.name}
 					</h3>
+
 					<p className="test-xs md:text:sm text-gray-900 dark:text-gray-500">
 						{songInfo?.artists?.[0]?.name}
 					</p>
@@ -118,12 +124,12 @@ function Player() {
 						/>
 						{isPlaying ? (
 							<PauseIcon
-								onClick={handlePlayPause}
+								onClick={() => handlePlayPause()}
 								className="button w-10 h-10 fill-gray-700 dark:fill-white"
 							/>
 						) : (
 							<PlayIcon
-								onClick={handlePlayPause}
+								onClick={() => handlePlayPause()}
 								className="button w-10 h-10 fill-gray-700 dark:fill-white"
 							/>
 						)}
@@ -175,7 +181,7 @@ function Player() {
 					onRequestClose={toggleDeviceModal}
 					isOpen={modalIsOpen}
 				>
-					<div className="flex  space-x-2">
+					<div className="flex justify-start  space-x-2">
 						<DesktopComputerIcon className="button fill-white" />
 						<h4 className="text-white pb-3">
 							Current Device: {currentDevice ? currentDevice.name : 'No Active Device'}
@@ -218,7 +224,7 @@ function Player() {
 					className="w-14 h-1 text-xs md:w-28 accent-green-500 hover:accent-green-300"
 					type="range"
 					onChange={(e) => {
-						setVolume(Number(e.target.value));
+						adjustVolume(Number(e.target.value));
 					}}
 					value={volume}
 					min={0}

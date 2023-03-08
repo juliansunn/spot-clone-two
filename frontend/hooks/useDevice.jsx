@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
+import { useRecoilState } from 'recoil';
+import { currentDeviceState, myDevicesState } from '../atoms/deviceAtom';
 import useSpotify from './useSpotify';
 const DEFAULT_VOLUME = 50;
 
 const useDevice = () => {
-	const [myDevices, setMyDevices] = useState([]);
-	const [currentDevice, setCurrentDevice] = useState(null);
+	const [myDevices, setMyDevices] = useRecoilState(myDevicesState);
+	const [currentDevice, setCurrentDevice] = useRecoilState(currentDeviceState);
 	const [initialVolume, setInitialVolume] = useState(null);
 	const spotifyApi = useSpotify();
 
@@ -15,12 +17,9 @@ const useDevice = () => {
 				const devices = data.body.devices;
 				const deviceToActivate = devices && devices.find((d) => d.is_active);
 				setMyDevices(devices);
-				spotifyApi.transferMyPlayback([deviceToActivate?.id]).then(() => {
-					setCurrentDevice(deviceToActivate);
-					setInitialVolume(
-						deviceToActivate ? deviceToActivate?.volume_percent : DEFAULT_VOLUME
-					);
-				});
+				if (!currentDevice) {
+					activateDevice(deviceToActivate);
+				}
 			})
 			.catch((e) => {
 				console.log('There was an error getting your devices: ', e);
@@ -28,12 +27,14 @@ const useDevice = () => {
 	};
 
 	const activateDevice = ({ device }) => {
-		spotifyApi.transferMyPlayback([device?.id]).then(() => {
-			setCurrentDevice(device);
-			setInitialVolume(
-				deviceToActivate ? deviceToActivate?.volume_percent : DEFAULT_VOLUME
-			);
-		});
+		if (device) {
+			spotifyApi.transferMyPlayback([device?.id]).then(() => {
+				setCurrentDevice(device);
+				setInitialVolume(
+					deviceToActivate ? deviceToActivate?.volume_percent : DEFAULT_VOLUME
+				);
+			});
+		}
 	};
 
 	useEffect(() => {

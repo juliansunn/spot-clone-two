@@ -49,6 +49,37 @@ export function parseDate(string) {
 	return `${month} ${date}${nth(date)}, ${year}`;
 }
 
+export function parseDateTime(string) {
+	const d = new Date(string);
+	const date = d.getDate();
+	const year = d.getFullYear();
+	const month = [
+		'Jan',
+		'Feb',
+		'Mar',
+		'Apr',
+		'May',
+		'Jun',
+		'Jul',
+		'Aug',
+		'Sep',
+		'Oct',
+		'Nov',
+		'Dec'
+	][d.getMonth()];
+	const hours = d.getHours();
+	const minutes = d.getMinutes();
+	const timeZone = d
+		.toLocaleTimeString('en-us', { timeZoneName: 'short' })
+		.split(' ')[2];
+	const ampm = hours >= 12 ? 'PM' : 'AM';
+	const formattedHours = hours % 12 === 0 ? 12 : hours % 12;
+	const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+	const timeString = `${formattedHours}:${formattedMinutes} ${ampm} ${timeZone}`;
+
+	return `${month} ${date}${nth(date)}, ${year} ${timeString}`;
+}
+
 export function getPageList(totalPages, page, maxLength) {
 	if (maxLength < 5) throw 'maxLength must be at least 5';
 
@@ -129,3 +160,11 @@ export const historyHeaders = [
 		style: defaultStyle
 	}
 ];
+
+export const mapSongsForQueue = (songArray) => {
+	return songArray?.map((track, i) => ({
+		position: i,
+		uri: track.track ? track.track.uri : track.uri,
+		id: track.track ? track.track.id : track.spotify_id
+	}));
+};

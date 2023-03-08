@@ -39,3 +39,8 @@ export const songListState = atom({
 	key: 'songListState',
 	default: []
 });
+
+export const songQueueState = atom({
+	key: 'songQueueState',
+	default: []
+});

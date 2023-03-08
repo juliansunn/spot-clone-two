@@ -1,8 +1,7 @@
 import { useSession } from 'next-auth/react';
 import React, { useEffect, useState } from 'react';
-import { useRecoilState, useSetRecoilState } from 'recoil';
-import { playlistTrackState } from '../atoms/playlistAtom';
-import { songListState, trackInfoState } from '../atoms/songAtom';
+import { useRecoilState } from 'recoil';
+import { songListState } from '../atoms/songAtom';
 import Layout from '../components/Layout';
 import SongTable from '../components/SongTable';
 import useSpotify from '../hooks/useSpotify';
@@ -11,8 +10,6 @@ import { getRandomInt, historyHeaders } from '../lib/utility';
 function LikedSongs() {
 	const { data: session } = useSession();
 	const spotifyApi = useSpotify();
-	const [playlistTracks, setPlaylistTracks] = useRecoilState(playlistTrackState);
-	const [trackInfo, setTrackInfo] = useRecoilState(trackInfoState);
 	const [songs, setSongs] = useRecoilState(songListState);
 
 	const [backgroundImg, setBackgroundImg] = useState(null);
@@ -32,14 +29,6 @@ function LikedSongs() {
 				for (let j = 1; j < Math.ceil(d.body.total / offset); j++) {
 					d.body.items.push(...data[j].body.items);
 				}
-				// setPlaylistTracks(d.body?.items);
-				setTrackInfo(
-					d.body?.items?.map((track, i) => ({
-						position: i,
-						uri: track.track.uri,
-						id: track.track.id
-					}))
-				);
 				setSongs(d.body?.items);
 			})
 			.catch((e) => {

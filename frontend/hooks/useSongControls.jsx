@@ -1,39 +1,34 @@
 import { shuffle } from 'lodash';
-import React, { useState } from 'react';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useState } from 'react';
+import { useRecoilState } from 'recoil';
 import {
 	currentTrackIdState,
 	currentTrackLocState,
 	isPlayingState,
-	manualChangeState,
-	trackInfoState
+	manualChangeState
 } from '../atoms/songAtom';
 import useSongs from './useSongs';
 import useSpotify from './useSpotify';
+import { mapSongsForQueue } from '../lib/utility';
 
 const useSongControls = () => {
 	const spotifyApi = useSpotify();
 	const [isShuffle, setIsShuffle] = useState(false);
 	const [isRepeat, setIsRepeat] = useState(false);
-	const [trackInfo, setTrackInfo] = useRecoilState(trackInfoState);
 	const [currentTrackLoc, setCurrentTrackLoc] =
 		useRecoilState(currentTrackLocState);
-	const setCurrentTrackId = useSetRecoilState(currentTrackIdState);
+	const [currentTrackId, setCurrentTrackId] =
+		useRecoilState(currentTrackIdState);
 	const [manualChange, setManualChange] = useRecoilState(manualChangeState);
 	const [isPlaying, setIsPlaying] = useRecoilState(isPlayingState);
 
-	const { songs } = useSongs();
+	const { songs, songQueue, setSongQueue } = useSongs();
 
 	const toggleShuffle = () => {
-		var info = songs?.map((track, i) => ({
-			position: i,
-			uri: track.track ? track.track.uri : track.uri,
-			id: track.track ? track.track.id : track.id
-		}));
 		if (isShuffle) {
-			setTrackInfo(info);
+			setSongQueue(songQueue);
 		} else {
-			setTrackInfo(shuffle(info));
+			setSongQueue(shuffle(songQueue));
 		}
 		setIsShuffle((prevState) => !prevState);
 	};
@@ -43,10 +38,10 @@ const useSongControls = () => {
 	};
 
 	const changeSong = (direction, manual = false) => {
-		const uris = trackInfo?.map(({ uri }) => uri);
-		if (songs) {
+		const queue = mapSongsForQueue(songQueue);
+		if (songQueue) {
 			var newLoc = currentTrackLoc + direction;
-			if (newLoc >= uris?.length) {
+			if (newLoc >= queue?.length) {
 				if (isRepeat) {
 					newLoc = 0;
 				} else {
@@ -56,21 +51,39 @@ const useSongControls = () => {
 			}
 			if (newLoc < 0) {
 				if (isRepeat) {
-					newLoc = uris?.length - 1;
+					newLoc = queue?.length - 1;
 				} else {
 					newLoc = 0;
 				}
 			}
 			if (manual) {
 				spotifyApi.play({
-					uris: uris,
+					uris: queue.map(({ uri }) => uri),
 					offset: { position: newLoc }
 				});
 				setManualChange(true);
 			}
 			setCurrentTrackLoc(newLoc);
-			setCurrentTrackId(trackInfo[newLoc]?.id);
+			setCurrentTrackId(
+				songQueue[newLoc].track
+					? songQueue[newLoc].track.id
+					: songQueue[newLoc].spotify_id
+			);
+			// setCurrentTrackId(trackInfo ? trackInfo[newLoc]?.id : null);
 		}
+	};
+
+	const playSong = (track, order) => {
+		setCurrentTrackId(track?.id);
+		setCurrentTrackLoc(order);
+		setSongQueue(songs);
+		setIsPlaying(true);
+		setManualChange(true);
+		const uris = mapSongsForQueue(songs).map(({ uri }) => uri);
+		spotifyApi.play({
+			uris: uris,
+			offset: { position: order }
+		});
 	};
 
 	const handlePlayPause = () => {
@@ -94,7 +107,10 @@ const useSongControls = () => {
 		manualChange,
 		setManualChange,
 		isPlaying,
-		handlePlayPause
+		handlePlayPause,
+		playSong,
+		currentTrackLoc,
+		currentTrackId
 	};
 };
 

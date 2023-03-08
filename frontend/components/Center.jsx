@@ -1,31 +1,28 @@
-import React, { useEffect } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { playlistIdState, playlistState } from '../atoms/playlistAtom';
-import { songListState } from '../atoms/songAtom';
-import spotifyApi from '../lib/spotify';
-import Playlist from './Playlist';
+import React from 'react';
+import { useRecoilValue } from 'recoil';
+import { playlistIdState } from '../atoms/playlistAtom';
+
+import ListHeader from './listHeader';
+import SongTable from './SongTable';
+import { playlistHeaders } from '../lib/utility';
+import usePlaylist from '../hooks/usePlaylist';
 
 function Center() {
 	const playlistId = useRecoilValue(playlistIdState);
-	const [playlist, setPlaylist] = useRecoilState(playlistState);
-	const [songs, setSongs] = useRecoilState(songListState);
+	const { playlist } = usePlaylist(playlistId);
 
-	function selectPlaylist() {
-		spotifyApi
-			.getPlaylist(playlistId)
-			.then((data) => {
-				const playlist = data.body;
-				setPlaylist(playlist);
-				setSongs(playlist?.tracks?.items);
-			})
-			.catch((error) => console.log('something went wrong: ', error));
-	}
-
-	useEffect(() => {
-		selectPlaylist();
-	}, [playlistId]);
-
-	return <Playlist playlist={playlist} type="playlist" />;
+	return (
+		<div>
+			<ListHeader data={playlist} audioType="PLAYLIST" />
+			<div>
+				<SongTable
+					songs={playlist?.tracks?.items}
+					type="playlist"
+					headers={playlistHeaders}
+				/>
+			</div>
+		</div>
+	);
 }
 
 export default Center;

@@ -1,29 +1,19 @@
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import {
-	currentTrackIdState,
-	isPlayingState,
-	currentTrackLocState,
-	trackInfoState,
-	manualChangeState,
-	songListState
-} from '../atoms/songAtom';
+import { useSetRecoilState } from 'recoil';
 import useSpotify from '../hooks/useSpotify';
-import { millisToMinutesAndSeconds, parseDate } from '../lib/utility';
+import { millisToMinutesAndSeconds } from '../lib/utility';
 import { PauseIcon, PlayIcon } from '@heroicons/react/outline';
 import Link from 'next/link';
 import { albumState } from '../atoms/albumAtom';
+import useSongControls from '../hooks/useSongControls';
+import useSongs from '../hooks/useSongs';
 
-function Song({ id, track, order, addedAt }) {
+function Song({ track, order, addedAt }) {
 	const spotifyApi = useSpotify();
+	const { isPlaying, handlePlayPause, playSong, currentTrackId } =
+		useSongControls();
 
-	const [currentTrackId, setCurrentTrackId] =
-		useRecoilState(currentTrackIdState);
-	const [isPlaying, setIsPlaying] = useRecoilState(isPlayingState);
+	const { setSongs } = useSongs();
 
-	const setCurrentTrackLocState = useSetRecoilState(currentTrackLocState);
-	const [trackInfo, setTrackInfo] = useRecoilState(trackInfoState);
-	const setManualChange = useSetRecoilState(manualChangeState);
-	const [songs, setSongs] = useRecoilState(songListState);
 	const setAlbum = useSetRecoilState(albumState);
 
 	const handleAlbum = () => {
@@ -36,49 +26,16 @@ function Song({ id, track, order, addedAt }) {
 				setSongs(data.body?.tracks?.items);
 			});
 	};
-
-	function handleTracks() {
-		const tracks = songs.map((track, i) => ({
-			position: i,
-			uri: track.track ? track.track.uri : track.uri,
-			id: track.track ? track.track.id : track.spotify_id
-		}));
-		setTrackInfo(tracks);
-		return tracks;
+	if (track?.id === currentTrackId) {
 	}
 
-	const playSong = () => {
-		handleTracks();
-		setCurrentTrackId(track?.id);
-		setCurrentTrackLocState(order);
-		setIsPlaying(true);
-		setManualChange(true);
-		const uris = handleTracks().map(({ uri }) => uri);
-		spotifyApi.play({
-			uris: uris,
-			offset: { position: order }
-		});
-	};
-
-	const handlePlayPause = (event) => {
-		event.stopPropagation();
-		spotifyApi.getMyCurrentPlaybackState().then((data) => {
-			if (data?.body?.is_playing) {
-				spotifyApi.pause();
-				setIsPlaying(false);
-			} else {
-				spotifyApi.play();
-				setIsPlaying(true);
-			}
-		});
-	};
 	return (
 		<tr
 			className={
 				'text-gray-800 dark:text-gray-200 mb-3 py-4 px-5 hover:bg-gradient-to-b to-gray-100 dark:to-gray-900 from-gray-200 dark:from-gray-700 text-sm' +
 				(track?.id === currentTrackId ? (isPlaying ? ' animate-pulse ' : '') : '')
 			}
-			onDoubleClick={playSong}
+			onDoubleClick={() => playSong(track, order)}
 		>
 			<td>
 				<div className="flex flex-row items-right justify-evenly">
@@ -143,7 +100,7 @@ function Song({ id, track, order, addedAt }) {
 
 			{addedAt && (
 				<td>
-					<p className="hidden md:inline">{parseDate(addedAt)}</p>
+					<p className="hidden md:inline">{addedAt}</p>
 				</td>
 			)}
 
