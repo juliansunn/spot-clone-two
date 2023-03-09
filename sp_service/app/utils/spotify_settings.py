@@ -353,7 +353,7 @@ class V2SpotifyConn:
         not_found = {}
 
         if historical_data:
-            tracks, not_found = self.un_historical_audit(**kwargs)
+            tracks, not_found = self.run_historical_audit(**kwargs)
             for k, v in not_found.items():
                 print(f"{k} | {v}")
                 print("_" * 40)
