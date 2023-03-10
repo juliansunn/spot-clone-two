@@ -4,6 +4,7 @@ from django.db.models import Count
 from django.db.models.functions import TruncDate
 from django.utils.timezone import make_aware
 from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticated
 from app.models import PlayHistory
 from app.serializers import PlayHistorySerializer
 from app.views.track import StandardResultsSetPagination
@@ -11,7 +12,7 @@ from app.views.track import StandardResultsSetPagination
 
 class PlayHistoryView(viewsets.ModelViewSet):
     """List all PlayHistory Tracks"""
-
+    permission_classes = (IsAuthenticated,)
     serializer_class = PlayHistorySerializer
     pagination_class = StandardResultsSetPagination
 

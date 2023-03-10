@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     "django_celery_results",
     "corsheaders",
     "rest_framework",
+    "rest_framework.authtoken",
     "core",
     "app",
 ]
@@ -161,7 +162,13 @@ CELERY_RESULT_SERIALIZER = "json"
 REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.AllowAny",
-    ]
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+    )
 }
 
 REST_FRAMEWORK = {

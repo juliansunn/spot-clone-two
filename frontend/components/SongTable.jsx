@@ -31,7 +31,7 @@ function SongTable({ songs, type, headers }) {
 						))}
 
 					{type === 'history' &&
-						songs.map((track, i) => (
+						songs?.map((track, i) => (
 							<Song
 								key={i}
 								track={track?.track}

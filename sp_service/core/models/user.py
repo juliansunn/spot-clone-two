@@ -28,6 +28,7 @@ class UserManager(BaseUserManager):
 
     def create_superuser(self, email, password, **extra_fields):
         extra_fields.setdefault('is_superuser', True)
+        extra_fields.setdefault('is_staff', True)
 
         if extra_fields.get('is_superuser') is not True:
             raise ValueError('Superuser must have is_superuser=True.')
@@ -58,9 +59,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         verbose_name = _('user')
         verbose_name_plural = _('users')
 
-    def email_user(self, subject, message, from_email=None, **kwargs):
-        """Sends an email to this User."""
-        send_mail(subject, message, from_email, [self.email], **kwargs)
 
     def __str__(self):
         """Returns the first_name plus the last_name, with a space in between."""
