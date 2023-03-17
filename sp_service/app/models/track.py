@@ -1,11 +1,18 @@
 from django.db import models
+from django.db.models import Count, Max
 from app.utils.db_utils import convert_to_local_time
 from .spotify_search import SpotifySearch
 
 
-class TrackManager(models.Manager):
+class TrackQuerySet(models.query.QuerySet):
     def recently_played_tracks(self, n: int = 10) -> list:
         return self.order_by("-play_history__played_at")[:n]
+    
+    def annotate_play_count_by_date(self):
+        return self.annotate(
+            last_play=Max('play_history__played_at'),
+            play_cnt=Count('play_history')
+        ).order_by("-last_play", "-play_cnt")
 
 
 class Track(SpotifySearch):
@@ -17,7 +24,8 @@ class Track(SpotifySearch):
     popularity = models.IntegerField(null=True)
     preview_url = models.URLField(null=True)
     track_number = models.IntegerField(null=True)
-    objects = TrackManager()
+    
+    objects = TrackQuerySet.as_manager()
 
     @property
     def artists(self):

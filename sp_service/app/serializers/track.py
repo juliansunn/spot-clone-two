@@ -8,8 +8,8 @@ class TrackSerializer(serializers.ModelSerializer):
     # play_history = PlayHistorySerializer(many=True, read_only=True)
     album = AlbumSerializer(read_only=True)
     artists = ArtistSerializer(many=True, source="artist_tracks")
-    play_count = serializers.ReadOnlyField()
-    last_played_at = serializers.ReadOnlyField()
+    play_cnt = serializers.ReadOnlyField()
+    last_play = serializers.ReadOnlyField()
     added_at = serializers.CharField(read_only=True, source="play_history.added_at")
 
     class Meta:
@@ -24,7 +24,7 @@ class TrackSerializer(serializers.ModelSerializer):
             "duration_ms",
             "popularity",
             "album",
-            "last_played_at",
-            "play_count",
+            "last_play",
+            "play_cnt",
             "artists",
         ]

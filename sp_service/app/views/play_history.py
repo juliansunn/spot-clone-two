@@ -1,18 +1,16 @@
-from datetime import datetime
-from datetime import timedelta
-from django.db.models import Count
-from django.db.models.functions import TruncDate
+from datetime import datetime, timedelta
 from django.utils.timezone import make_aware
 from rest_framework import viewsets
-from app.models import PlayHistory
-from app.serializers import PlayHistorySerializer
+from rest_framework.permissions import IsAuthenticated
+from app.models import Track
+from app.serializers import TrackSerializer
 from app.views.track import StandardResultsSetPagination
 
 
-class PlayHistoryView(viewsets.ModelViewSet):
+class PlayHistoryViewSet(viewsets.ModelViewSet):
     """List all PlayHistory Tracks"""
-
-    serializer_class = PlayHistorySerializer
+    permission_classes = (IsAuthenticated,)
+    serializer_class = TrackSerializer
     pagination_class = StandardResultsSetPagination
 
     def aware_dates(self):
@@ -23,12 +21,9 @@ class PlayHistoryView(viewsets.ModelViewSet):
         return start, end
 
     def get_queryset(self):
-        playhistory_queryset = PlayHistory.objects.annotate(
-            play_date=TruncDate('played_at')
-        ).values('play_date').annotate(
-            play_count=Count('play_date')
-        )
-        return PlayHistory.objects.filter(played_at__range=(self.aware_dates())).order_by("-played_at")
+        queryset = Track.objects.filter(play_history__user=self.request.user, play_history__played_at__range=(self.aware_dates())).annotate_play_count_by_date()
+        return queryset
+ 
     
     
 

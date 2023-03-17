@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import Head from 'next/head';
 import Sidebar from './Sidebar';
 import Player from './Player';
-import { useSession } from 'next-auth/react';
-import { signOut } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 import {
 	ArrowsExpandIcon,
 	ChevronDownIcon,

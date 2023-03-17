@@ -7,10 +7,9 @@ from django.db.models import Count
 from rest_framework.response import Response
 from app.pagination import StandardResultsSetPagination
 from rest_framework.pagination import PageNumberPagination
-
-from rest_framework.pagination import PageNumberPagination
-
+from rest_framework.permissions import IsAuthenticated
 class StandardResultsSetPagination(PageNumberPagination):
+    
     page_size = 100
     page_size_query_param = 'page_size'
     max_page_size = 1000
@@ -27,9 +26,9 @@ class StandardResultsSetPagination(PageNumberPagination):
             'results': data
         })
 
-class TrackView(viewsets.ReadOnlyModelViewSet):
+class TrackViewSet(viewsets.ReadOnlyModelViewSet):
     """List all Tracks"""
-
+    permission_classes = (IsAuthenticated,)
     pagination_class = StandardResultsSetPagination
     serializer_class = TrackSerializer
 

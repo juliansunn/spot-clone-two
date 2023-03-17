@@ -30,9 +30,7 @@ const useDevice = () => {
 		if (device) {
 			spotifyApi.transferMyPlayback([device?.id]).then(() => {
 				setCurrentDevice(device);
-				setInitialVolume(
-					deviceToActivate ? deviceToActivate?.volume_percent : DEFAULT_VOLUME
-				);
+				setInitialVolume(device ? device?.volume_percent : DEFAULT_VOLUME);
 			});
 		}
 	};
