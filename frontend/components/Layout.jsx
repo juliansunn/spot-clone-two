@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import Head from 'next/head';
 import Sidebar from './Sidebar';
 import Player from './Player';
-import { useSession } from 'next-auth/react';
-import { signOut } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 import {
 	ArrowsExpandIcon,
 	ChevronDownIcon,
@@ -16,11 +15,9 @@ import Background from './Theme/Background';
 import Theme from './Theme/Toggle';
 import { useRecoilState } from 'recoil';
 import { sidebarVisibilityState } from '../atoms/visibilityAtom';
-import useUser from '../hooks/useUser';
 
 function Layout({ children }) {
 	const { data: session } = useSession();
-	const { userToken } = useUser();
 	const [sidebarVisibility, setSidebarVisibility] = useRecoilState(
 		sidebarVisibilityState
 	);

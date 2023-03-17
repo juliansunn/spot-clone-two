@@ -3,7 +3,7 @@ from app.models import Artist
 from app.serializers import ArtistSerializer
 
 
-class ArtistView(viewsets.ModelViewSet):
+class ArtistViewSet(viewsets.ModelViewSet):
     """List all Artists"""
 
     queryset = Artist.objects.all()

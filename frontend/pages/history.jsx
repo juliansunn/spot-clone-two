@@ -11,6 +11,7 @@ import Loading from '../components/Loading';
 import Pagination from '../components/Pagination';
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/solid';
 import { historyHeaders } from '../lib/utility';
+import useAxios from '../utils/axiosInstance';
 
 function History() {
 	const [songs, setSongs] = useRecoilState(songListState);
@@ -20,23 +21,30 @@ function History() {
 	const endDate = useRecoilValue(endDateState);
 	const [showFilter, setShowFilter] = useState(true);
 	const format = 'yyyy-MM-dd';
+	const { axiosInstance, user } = useAxios();
+
 	const { error, isLoading } = useQuery(
 		['sp-api', currentPage, startDate, endDate],
 		async () => {
-			const res = await fetch(
-				`${
-					process.env.NEXT_PUBLIC_API_URL
-				}/play-history/?page=${currentPage}&start_date=${formatDate(
-					startDate,
-					format
-				)}&end_date=${formatDate(endDate, format)}`
-			);
-			const data = await res.json();
-			setSongs(data.results);
-			setTotalPages(data.total_pages);
+			axiosInstance.instance
+				.get('/play-history/', {
+					params: {
+						page: currentPage,
+						start_date: formatDate(startDate, format),
+						end_date: formatDate(endDate, format)
+					}
+				})
+				.then((response) => {
+					if (response.status === 200) {
+						setSongs(response.data.results);
+						setTotalPages(response.data.total_pages);
+					}
+				})
+				.catch((error) => {
+					console.log(error);
+				});
 		}
 	);
-
 	const toggleFilter = () => {
 		setShowFilter(!showFilter);
 	};

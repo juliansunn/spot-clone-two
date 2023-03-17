@@ -34,9 +34,10 @@ function SongTable({ songs, type, headers }) {
 						songs?.map((track, i) => (
 							<Song
 								key={i}
-								track={track?.track}
+								track={track}
 								order={i}
-								addedAt={parseDateTime(track?.played_at)}
+								addedAt={parseDateTime(track?.last_play)}
+								playCount={track?.play_cnt}
 							/>
 						))}
 				</tbody>

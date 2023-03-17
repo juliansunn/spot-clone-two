@@ -76,7 +76,7 @@ class RegistrationViewSet(viewsets.ModelViewSet, TokenObtainPairView):
         return Response({
             "user": serializer.data,
             "refresh": res["refresh"],
-            "token": res["access"]
+            "access": res["access"]
         }, status=user_status)
 
 

@@ -3,7 +3,7 @@ from app.models import Album
 from app.serializers import AlbumSerializer
 
 
-class AlbumView(viewsets.ModelViewSet):
+class AlbumViewSet(viewsets.ModelViewSet):
     """List all Albums"""
 
     queryset = Album.objects.all()

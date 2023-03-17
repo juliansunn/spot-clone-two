@@ -26,7 +26,7 @@ class StandardResultsSetPagination(PageNumberPagination):
             'results': data
         })
 
-class TrackView(viewsets.ReadOnlyModelViewSet):
+class TrackViewSet(viewsets.ReadOnlyModelViewSet):
     """List all Tracks"""
     permission_classes = (IsAuthenticated,)
     pagination_class = StandardResultsSetPagination
