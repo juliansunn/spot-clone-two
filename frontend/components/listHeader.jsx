@@ -39,7 +39,7 @@ function ListHeader({ data, audioType }) {
 	}, []);
 	return (
 		<div
-			className={`bg-gradient-to-l ${color} from-gray-400 dark:from-gray-900 min-h-64 h-80 flex flex-row justify-start w-full relative`}
+			className={`bg-gradient-to-l ${color} from-gray-400 dark:from-gray-900 h-72 mt-10 flex flex-row justify-start w-full relative`}
 		>
 			<img
 				src={`/img/${backgroundImg}.jpg`}

@@ -100,7 +100,7 @@ function Song({ track, order, addedAt }) {
 
 			{addedAt && (
 				<td>
-					<p className="hidden md:inline">{addedAt}</p>
+					<p>{addedAt}</p>
 				</td>
 			)}
 

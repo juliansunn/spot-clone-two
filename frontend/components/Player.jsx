@@ -171,7 +171,7 @@ function Player() {
 			{/* Right side*/}
 			<div className="flex items-center space-x-3 md:space-x-4 justify-end pr-5">
 				<DeviceMobileIcon
-					className="button fill-gray-700 dark:fill-white"
+					className="button flex-none fill-gray-700 dark:fill-white"
 					onClick={toggleDeviceModal}
 				/>
 				<ReactModal
@@ -210,13 +210,13 @@ function Player() {
 
 				{muted ? (
 					<VolumeOffIcon
-						className="button stroke-gray-700 dark:stroke-white"
+						className="button flex-none stroke-gray-700 dark:stroke-white"
 						onClick={toggleMute}
 					/>
 				) : (
 					<VolumeUpIcon
 						onClick={toggleMute}
-						className="button stroke-gray-700 dark:stroke-white"
+						className="button flex-none stroke-gray-700 dark:stroke-white"
 					/>
 				)}
 

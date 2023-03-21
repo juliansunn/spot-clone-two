@@ -47,7 +47,7 @@ function History() {
 	return (
 		<Layout>
 			{showFilter && (
-				<div className="relative">
+				<div className="pt-16 ">
 					<div className="grid grid-cols-6">
 						<div className="col-start-1 col-end-7">
 							<MyDatePicker />
