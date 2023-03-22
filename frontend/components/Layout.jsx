@@ -7,7 +7,15 @@ import {
 	ArrowsExpandIcon,
 	ChevronDownIcon,
 	ChevronRightIcon,
-	ChevronLeftIcon
+	ChevronLeftIcon,
+	HomeIcon,
+	SearchIcon,
+	LibraryIcon,
+	BookOpenIcon,
+	HeartIcon,
+	RssIcon,
+	LogoutIcon,
+	MenuIcon
 } from '@heroicons/react/outline';
 import SearchBar from './SearchBar';
 import { ThemeProvider } from './Theme/ThemeContext';
@@ -15,37 +23,41 @@ import Background from './Theme/Background';
 import Theme from './Theme/Toggle';
 import { useRecoilState } from 'recoil';
 import { sidebarVisibilityState } from '../atoms/visibilityAtom';
+import Link from 'next/link';
+import ReactModal from 'react-modal';
 
 function Layout({ children }) {
 	const { data: session } = useSession();
-	const [sidebarVisibility, setSidebarVisibility] = useRecoilState(
-		sidebarVisibilityState
-	);
+	const [sidebarVisibility, setSidebarVisibility] = useState(false);
+
+	const toggleSidebar = () => {
+		setSidebarVisibility((prev) => !prev);
+	};
+	console.log('sidebarVisibility', sidebarVisibility);
 	return (
 		<ThemeProvider>
 			<Background>
-				<div className="bg-gray-200 dark:bg-gray-900 h-screen overflow-hidden">
-					<Head>
-						<title>Spotify 2.0</title>
-					</Head>
-					<main className="flex">
-						{sidebarVisibility && <Sidebar />}
+				<Head>
+					<title>Antefy</title>
+				</Head>
+				<div className="flex flex-col h-screen overflow-y-scroll scrollbar-hide border-zinc-200 dark:border-zinc-700">
+					<nav class="fixed top-0 z-50 w-full border-b border-zinc-200 bg-zinc-200 dark:bg-zinc-900 dark:border-zinc-700">
+						<div class="px-3 py-3 lg:px-5 lg:pl-3">
+							<div class="flex items-center justify-between">
+								<div class="flex items-center justify-start w-3/4">
+									<MenuIcon
+										className="inline-flex items-center p-2 mx-2 text-sm text-zinc-500 rounded-lg hover:bg-zinc-100 focus:outline-none focus:ring-2 focus:ring-zinc-200 dark:text-zinc-400 dark:hover:bg-zinc-700 dark:focus:ring-zinc-600 h-10 w-10"
+										onClick={toggleSidebar}
+									/>
 
-						<div className="flex-grow h-screen overflow-y-scroll overflow-hidden scrollbar-hide text-gray-800 dark:text-white w-full">
-							<header className="sticky top-0 z-30 w-full p-2 bg-gray-200 dark:bg-gray-900 sm:px-4 shadow-xl flex justify-between">
-								<button onClick={() => setSidebarVisibility(!sidebarVisibility)}>
-									{sidebarVisibility ? (
-										<ChevronLeftIcon className="h-5 w-5" />
-									) : (
-										<ChevronRightIcon className="h-5 w-5" />
-									)}
-								</button>
-								<div className="w-3/4 md:w-5/12">
-									<SearchBar />
+									<div className="w-3/4 md:w-5/12">
+										<SearchBar />
+									</div>
 								</div>
-								<div className="right-2 hidden md:inline-flex">
+
+								<div className="right-2 hidden md:inline-flex justify-end w-1/4">
 									<div
-										className="flex items-center sticky top-0 bg-gray-300 dark:bg-gray-700  space-x-3 opacity-90 hover:opacity-70 cursor-pointer rounded-full p-1 pr-2"
+										className="flex items-center sticky top-0 bg-zinc-300 dark:bg-zinc-700  space-x-3 opacity-90 hover:opacity-70 cursor-pointer rounded-full p-1 pr-2"
 										onClick={signOut}
 									>
 										<img
@@ -58,14 +70,24 @@ function Layout({ children }) {
 									</div>
 									<Theme />
 								</div>
-							</header>
-							{children}
+							</div>
 						</div>
-					</main>
-					<div className="sticky bottom-0">
+					</nav>
+					<div class="flex-grow w-full">{children}</div>
+					<div className="fixed bottom-0 z-5 w-full">
 						<Player />
 					</div>
 				</div>
+
+				{/* {sidebarVisibility && <Sidebar />} */}
+				<ReactModal
+					className="fixed top-0 left-0 z-40  h-screen bg-zinc-200 border-r border-zinc-200 dark:bg-zinc-900 dark:border-zinc-700 max-w-[12rem] sm:max-w-[12rem] lg:max-w-[15rem] sm:min-w-[12rem] lg:min-w-[15rem] pb-20 pt-12"
+					onRequestClose={toggleSidebar}
+					isOpen={sidebarVisibility}
+					ariaHideApp={false}
+				>
+					<Sidebar />
+				</ReactModal>
 			</Background>
 		</ThemeProvider>
 	);

@@ -25,6 +25,7 @@ import useDevice from '../hooks/useDevice';
 import useSongControls from '../hooks/useSongControls';
 import Image from 'next/image';
 import useDidMountEffect from '../hooks/useDidMountEffect';
+import useInterval from 'react-useinterval';
 
 function Player() {
 	const spotifyApi = useSpotify();
@@ -51,17 +52,20 @@ function Player() {
 		setIsOpen((prevState) => !prevState);
 	};
 
-	useEffect(() => {
-		const interval = setInterval(() => {
-			if (!seeking) {
-				spotifyApi.getMyCurrentPlayingTrack().then((data) => {
-					setDuration(data.body?.item?.duration_ms);
-					setProgress(data.body?.progress_ms);
-				});
-			}
-		}, 1000);
-		return () => clearInterval(interval);
-	}, [seeking]);
+	const increaseProgress = (amount) => {
+		const newProgress = progress + amount;
+		if (newProgress < duration && !seeking) {
+			setProgress(newProgress);
+		} else {
+			spotifyApi.getMyCurrentPlayingTrack().then((data) => {
+				setDuration(data.body?.item?.duration_ms);
+				setProgress(data.body?.progress_ms);
+			});
+		}
+		setProgress(progress + amount);
+	};
+
+	useInterval(increaseProgress, 1000, 1000);
 
 	const debouncedAdjustProgress = useCallback(
 		debounce((progress) => {
@@ -79,7 +83,7 @@ function Player() {
 		setManualChange(false);
 	}, [duration]);
 	return (
-		<div className="h-26 text-white grid grid-cols-5 text-xs md:text-base px-2 md:px-8 bg-gradient-to-b from-gray-200 to-gray-400 dark:from-gray-700 dark:to-gray-900  drop-shadow">
+		<div className="h-26 text-white grid grid-cols-5 text-xs md:text-base px-2 md:px-8 bg-gradient-to-b from-zinc-200 to-zinc-400 dark:from-zinc-900 dark:to-zinc-700  drop-shadow">
 			{/* left side */}
 			<div className="flex items-start space-x-4">
 				{songInfo && (
@@ -96,11 +100,11 @@ function Player() {
 					/>
 				)}
 				<div>
-					<h3 className="self-start flex text-sm md:text-lg truncate text-gray-900 dark:text-white font-semibold dark:font-normal">
+					<h3 className="self-start flex text-sm md:text-lg truncate text-zinc-900 dark:text-white font-semibold dark:font-normal">
 						{songInfo?.name}
 					</h3>
 
-					<p className="test-xs md:text:sm text-gray-900 dark:text-gray-500">
+					<p className="test-xs md:text:sm text-zinc-900 dark:text-zinc-500">
 						{songInfo?.artists?.[0]?.name}
 					</p>
 				</div>
@@ -111,7 +115,7 @@ function Player() {
 					<div className="flex items-center justify-center gap-x-4">
 						<SwitchHorizontalIcon
 							className={`button ${
-								isShuffle ? 'stroke-green-400' : 'stroke-gray-700 dark:stroke-white'
+								isShuffle ? 'stroke-green-400' : 'stroke-zinc-700 dark:stroke-white'
 							}`}
 							onClick={toggleShuffle}
 						/>
@@ -120,35 +124,35 @@ function Player() {
 							onClick={() => {
 								changeSong(-1, true);
 							}}
-							className="button fill-gray-700 dark:fill-white"
+							className="button fill-zinc-700 dark:fill-white"
 						/>
 						{isPlaying ? (
 							<PauseIcon
 								onClick={() => handlePlayPause()}
-								className="button w-10 h-10 fill-gray-700 dark:fill-white"
+								className="button w-10 h-10 fill-zinc-700 dark:fill-white"
 							/>
 						) : (
 							<PlayIcon
 								onClick={() => handlePlayPause()}
-								className="button w-10 h-10 fill-gray-700 dark:fill-white"
+								className="button w-10 h-10 fill-zinc-700 dark:fill-white"
 							/>
 						)}
 						<FastForwardIcon
 							onClick={() => {
 								changeSong(1, true);
 							}}
-							className="button fill-gray-700 dark:fill-white"
+							className="button fill-zinc-700 dark:fill-white"
 						/>
 
 						<ReplyIcon
 							className={`button ${
-								isRepeat ? 'stroke-green-400 ' : 'stroke-gray-700 dark:stroke-white'
+								isRepeat ? 'stroke-green-400 ' : 'stroke-zinc-700 dark:stroke-white'
 							} `}
 							onClick={toggleRepeat}
 						/>
 					</div>
 					<div className="flex items-center justify-center pb-2d">
-						<p className="text-gray-500">{millisToMinutesAndSeconds(progress)}</p>
+						<p className="text-zinc-500">{millisToMinutesAndSeconds(progress)}</p>
 						<input
 							className="w-7/12 h-1 text-xs accent-green-500 hover:accent-green-300 mx-2 "
 							type="range"
@@ -164,20 +168,20 @@ function Player() {
 								debouncedAdjustProgress(e.target.value);
 							}}
 						/>
-						<p className="text-gray-500">{millisToMinutesAndSeconds(duration)}</p>
+						<p className="text-zinc-500">{millisToMinutesAndSeconds(duration)}</p>
 					</div>
 				</div>
 			</div>
 			{/* Right side*/}
 			<div className="flex items-center space-x-3 md:space-x-4 justify-end pr-5">
 				<DeviceMobileIcon
-					className="button fill-gray-700 dark:fill-white"
+					className="button flex-none fill-zinc-700 dark:fill-white"
 					onClick={toggleDeviceModal}
 				/>
 				<ReactModal
 					ariaHideApp={false}
 					contentLabel="Change Playback Device"
-					className="h-30 w-30 bg-gray-900 absolute bottom-20 right-40 p-5 rounded"
+					className="h-30 w-30 bg-zinc-900 absolute bottom-20 right-40 p-5 rounded"
 					onRequestClose={toggleDeviceModal}
 					isOpen={modalIsOpen}
 				>
@@ -187,13 +191,13 @@ function Player() {
 							Current Device: {currentDevice ? currentDevice.name : 'No Active Device'}
 						</h4>
 					</div>
-					<hr className="border-t-[0.1px] border-gray-900" />
+					<hr className="border-t-[0.1px] border-zinc-900" />
 					<div>
 						{myDevices?.map((device) => (
 							<div
 								key={device.id}
 								onClick={() => activateDevice({ device })}
-								className="flex text-gray-500 hover:text-white cursor-pointer justify-evenly items-center p-2"
+								className="flex text-zinc-500 hover:text-white cursor-pointer justify-evenly items-center p-2"
 							>
 								{currentDevice?.id === device.id && (
 									<CheckCircleIcon className="button fill-white" />
@@ -210,13 +214,13 @@ function Player() {
 
 				{muted ? (
 					<VolumeOffIcon
-						className="button stroke-gray-700 dark:stroke-white"
+						className="button flex-none stroke-zinc-700 dark:stroke-white"
 						onClick={toggleMute}
 					/>
 				) : (
 					<VolumeUpIcon
 						onClick={toggleMute}
-						className="button stroke-gray-700 dark:stroke-white"
+						className="button flex-none stroke-zinc-700 dark:stroke-white"
 					/>
 				)}
 

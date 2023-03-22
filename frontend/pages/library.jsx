@@ -20,23 +20,25 @@ function Library() {
 	const { shows } = useShows();
 	return (
 		<Layout>
-			<div className="px-10">
-				<div className=" flex items-center justify-start px-20 w-full h-20 ">
+			<div className="px-10 mt-20">
+				<div className=" flex items-center justify-start px-20 w-full h-20 text-white">
 					{contentList.map((content, i) => (
 						<button
 							key={i}
 							onClick={() => {
 								setContentType(i);
 							}}
-							className={`hover:bg-gray-400 dark:hover:bg-gray-600 p-3 mx-1 rounded ${
-								contentType == i ? 'bg-gray-300 dark:bg-gray-600' : ''
+							className={`hover:bg-zinc-600 dark:hover:bg-zinc-600 p-3 mx-1 rounded ${
+								contentType == i
+									? 'bg-zinc-500 dark:bg-zinc-500'
+									: 'bg-zinc-300 dark:bg-zinc-800'
 							} cursor-pointer`}
 						>
 							{content}
 						</button>
 					))}
 				</div>
-				<h1 className="text-lg md:text-xl xl:text-2xl text-gray-800 dark:text-white">
+				<h1 className="text-lg md:text-xl xl:text-2xl text-zinc-800 dark:text-white">
 					{contentList[contentType]}
 				</h1>
 				<div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4  pb-24 pt-3">
