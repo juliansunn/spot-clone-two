@@ -21,7 +21,7 @@ function PlaylistDetails({ data }) {
 				<p className="whitespace-nowrap">{data?.tracks?.total} Songs</p>
 			</div>
 			{data?.description && (
-				<p className="text-sm text-gray-700 dark:text-gray-200 tracking-widest font-semibold flex-wrap">
+				<p className="text-sm text-zinc-700 dark:text-zinc-200 tracking-widest font-semibold flex-wrap">
 					Description: {data?.description}
 				</p>
 			)}
@@ -39,11 +39,11 @@ function ListHeader({ data, audioType }) {
 	}, []);
 	return (
 		<div
-			className={`bg-gradient-to-l ${color} from-gray-400 dark:from-gray-900 h-72 mt-10 flex flex-row justify-start w-full relative`}
+			className={`bg-gradient-to-l ${color} from-zinc-400 dark:from-zinc-900 h-72 mt-10 flex flex-row justify-start w-full relative`}
 		>
 			<img
 				src={`/img/${backgroundImg}.jpg`}
-				className="h-full w-full object-cover absolute mix-blend-overlay grayscale"
+				className="h-full w-full object-cover absolute mix-blend-overlay zincscale"
 				alt="cant find the photo"
 			/>
 			<div className=" flex items-center gap-x-2 p-5 relative">
@@ -53,10 +53,10 @@ function ListHeader({ data, audioType }) {
 					alt="no image"
 				/>
 				<div className="w-1/2">
-					<p className="tracking-[15px] text-gray-900 dark:text-gray-200 text-3xl">
+					<p className="tracking-[15px] text-zinc-900 dark:text-zinc-200 text-3xl">
 						{audioType}
 					</p>
-					<h1 className="text-2xl md:text-4xl  font-bold text-gray-900 dark:text-gray-200 drop-shadow-lg truncate pb-5">
+					<h1 className="text-2xl md:text-4xl  font-bold text-zinc-900 dark:text-zinc-200 drop-shadow-lg truncate pb-5">
 						{data?.name}
 					</h1>
 					{audioType === 'PLAYLIST' && <PlaylistDetails data={data} />}

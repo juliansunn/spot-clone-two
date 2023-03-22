@@ -44,11 +44,11 @@ function LikedSongs() {
 	return (
 		<Layout>
 			<div
-				className={`flex items-end  bg-gradient-to-l to-blue-100 from-gray-400  min-h-64 w-full relative pt-16`}
+				className={`flex items-end  bg-gradient-to-l to-blue-100 from-zinc-400  min-h-64 w-full relative pt-16`}
 			>
 				<img
 					src={`/img/${backgroundImg}.jpg`}
-					className="h-full w-full object-cover mix-blend-overlay absolute grayscale"
+					className="h-full w-full object-cover mix-blend-overlay absolute zincscale"
 					alt="cant find the photo"
 				/>
 				<div className=" flex items-center gap-x-2 p-5 relative">
@@ -58,7 +58,7 @@ function LikedSongs() {
 						alt="no image"
 					/>
 					<div className="flex flex-col h-44">
-						<h1 className="text-5xl md:text-3xl xl:text-6xl mb-5 text-gray-900 drop-shadow-lg truncate pb-5 capitalize tracking-[0.5rem]">
+						<h1 className="text-5xl md:text-3xl xl:text-6xl mb-5 text-zinc-900 drop-shadow-lg truncate pb-5 capitalize tracking-[0.5rem]">
 							MY LIKED SONGS
 						</h1>
 					</div>

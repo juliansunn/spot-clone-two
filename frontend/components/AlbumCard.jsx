@@ -20,15 +20,15 @@ function AlbumCard({ data }) {
 		<Link href="/album" key={data.id}>
 			<div
 				onClick={() => handleAlbum(data.id)}
-				className="p-2 bg-gray-200 dark:bg-gray-800 cursor-pointer rounded-md items-center shadow-2xl hover:bg-gray-300 dark:hover:bg-gray-600 text-xs"
+				className="p-2 bg-zinc-200 dark:bg-zinc-900 cursor-pointer rounded-md items-center shadow-2xl hover:bg-zinc-300 dark:hover:bg-zinc-600 text-xs"
 			>
 				<img
 					src={data?.images?.[0]?.url}
 					className="shadow-md shadow-neutral-500/50 mx-auto rounded-md"
 					alt="No Image"
 				/>
-				<h3 className="text-gray-800 dark:text-white truncate">{data?.name}</h3>
-				<p className="text-gray-500">{data?.artists?.[0].name}</p>
+				<h3 className="text-zinc-800 dark:text-white truncate">{data?.name}</h3>
+				<p className="text-zinc-500">{data?.artists?.[0].name}</p>
 			</div>
 		</Link>
 	);

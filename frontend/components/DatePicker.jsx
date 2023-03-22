@@ -9,13 +9,13 @@ const defaultOptions = {
 	todayBtn: false,
 	theme: {
 		cursor: 'pointer',
-		background: 'bg-gray-100 dark:bg-gray-500',
+		background: 'bg-zinc-300 dark:bg-zinc-500',
 		todayBtn: 'bg-green-500',
 		clearBtn: '',
 		icons: '',
-		text: 'text-gray-800 dark:text-gray-100',
-		disabledText: 'text-gray-400 dark:text-gray-600',
-		input: '',
+		text: 'text-zinc-800 dark:text-zinc-100',
+		disabledText: 'text-zinc-400 dark:text-zinc-600',
+		input: 'bg-zinc-300 dark:bg-zinc-600',
 		inputIcon: '',
 		selected: 'bg-green-500'
 	},
@@ -59,8 +59,8 @@ export default function MyDatePicker() {
 		...defaultOptions
 	};
 	return (
-		<div className="flex flex-col sm:flex-row">
-			<div className="max-w-30">
+		<div className="flex flex-col sm:flex-row mt-4">
+			<div>
 				<Datepicker
 					options={startOptions}
 					onChange={handleStartDateChange}
@@ -68,7 +68,7 @@ export default function MyDatePicker() {
 					setShow={handleStartClose}
 				/>
 			</div>
-			<div className="max-w-30">
+			<div>
 				<Datepicker
 					options={endOptions}
 					onChange={handleEndDateChange}

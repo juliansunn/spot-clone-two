@@ -14,13 +14,11 @@ function Center() {
 	return (
 		<div>
 			<ListHeader data={playlist} audioType="PLAYLIST" />
-			<div>
-				<SongTable
-					songs={playlist?.tracks?.items}
-					type="playlist"
-					headers={playlistHeaders}
-				/>
-			</div>
+			<SongTable
+				songs={playlist?.tracks?.items}
+				type="playlist"
+				headers={playlistHeaders}
+			/>
 		</div>
 	);
 }

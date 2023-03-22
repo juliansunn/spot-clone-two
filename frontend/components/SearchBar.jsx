@@ -15,18 +15,18 @@ function SearchBar({ toggleSidebar }) {
 	return (
 		<div>
 			<form>
-				<div className="relative w-full rounded-full border-gray-300 border-2 ">
+				<div className="relative w-full rounded-full border-zinc-300 border-2 ">
 					<input
 						ref={searchParams}
 						type="search"
 						id="search-dropdown"
-						className="opacity-60 block p-2.5 w-full z-60 text-sm text-gray-900 bg-white rounded-full focus:opacity-90  dark:placeholder-gray-900 dark:text-black"
+						className="opacity-60 block p-2.5 w-full z-60 text-sm text-zinc-900 bg-white rounded-full focus:opacity-90  dark:placeholder-zinc-900 dark:text-black"
 						placeholder="Search Artists, Albums, Podcasts..."
 						required
 					/>
 					<Link href="/search">
 						<button
-							className="absolute opacity-90 hover:opacity-70 top-0 right-0 p-2.5 text-sm font-medium text-white bg-gray-900 rounded-r-full"
+							className="absolute opacity-90 hover:opacity-70 top-0 right-0 p-2.5 text-sm font-medium text-white bg-zinc-900 rounded-r-full"
 							onClick={setSearchResults}
 						>
 							<svg

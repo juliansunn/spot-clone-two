@@ -118,7 +118,7 @@ export function getPageList(totalPages, page, maxLength) {
 }
 
 const defaultStyle =
-	'text-sm text-left font-medium bg-gray-200 dark:bg-gray-900 text-gray-800 dark:text-gray-500 py-4';
+	'text-sm font-medium bg-zinc-200 dark:bg-zinc-900 text-zinc-800 dark:text-zinc-500 py-4';
 
 export const playlistHeaders = [
 	{ name: '#', style: defaultStyle },

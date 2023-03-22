@@ -32,7 +32,7 @@ function Song({ track, order, addedAt }) {
 	return (
 		<tr
 			className={
-				'text-gray-800 dark:text-gray-200 mb-3 py-4 px-5 hover:bg-gradient-to-b to-gray-100 dark:to-gray-900 from-gray-200 dark:from-gray-700 text-sm' +
+				'text-zinc-800 dark:text-zinc-200 mb-3 py-4 px-5 hover:bg-gradient-to-b to-zinc-100 dark:to-zinc-900 from-zinc-200 dark:from-zinc-700 text-sm' +
 				(track?.id === currentTrackId ? (isPlaying ? ' animate-pulse ' : '') : '')
 			}
 			onDoubleClick={() => playSong(track, order)}
@@ -59,7 +59,7 @@ function Song({ track, order, addedAt }) {
 				</div>
 			</td>
 
-			<td className="flex items-center space-x-4 text-gray-800 dark:text-gray-500">
+			<td className="flex items-center space-x-4 text-zinc-800 dark:text-zinc-500">
 				{track?.album && (
 					<img
 						className="h-10 w-10"
@@ -69,7 +69,7 @@ function Song({ track, order, addedAt }) {
 				)}
 
 				<div>
-					<p className="w-36 lg:w-64 truncate font-semibold dark:font-normal text-gray-800 dark:text-white">
+					<p className="w-36 lg:w-64 truncate font-semibold dark:font-normal text-zinc-800 dark:text-white">
 						{track?.name}
 					</p>
 					<div className="flex space-x-2">

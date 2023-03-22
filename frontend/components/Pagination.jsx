@@ -11,7 +11,7 @@ const Pagination = ({ numPages, currentPage, pageChange }) => {
 					<button
 						onClick={() => pageChange(currentPage != 1 ? currentPage - 1 : 1)}
 						style={{ pointerEvents: currentPage === 1 ? 'none' : '' }}
-						className="block px-3 py-2 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+						className="block px-3 py-2 ml-0 leading-tight text-zinc-500 bg-white border border-zinc-300 rounded-l-lg hover:bg-zinc-100 hover:text-zinc-700 dark:bg-zinc-900 dark:border-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-700 dark:hover:text-white"
 					>
 						<ChevronLeftIcon className="h-5 w-5" />
 					</button>
@@ -21,9 +21,9 @@ const Pagination = ({ numPages, currentPage, pageChange }) => {
 						<button
 							onClick={() => pageChange(p)}
 							style={{ pointerEvents: p === 0 ? 'none' : '' }}
-							className={`px-3 py-2 leading-tight text-gray-500 ${
-								currentPage === p ? 'bg-gray-300 dark:bg-gray-700' : 'bg-white'
-							} border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white`}
+							className={`px-3 py-2 leading-tight text-zinc-500 ${
+								currentPage === p ? 'bg-zinc-300 dark:bg-zinc-700' : 'bg-white'
+							} border border-zinc-300 hover:bg-zinc-100 hover:text-zinc-700 dark:bg-zinc-900 dark:border-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-700 dark:hover:text-white`}
 						>
 							{p === 0 ? '...' : p}
 						</button>
@@ -35,7 +35,7 @@ const Pagination = ({ numPages, currentPage, pageChange }) => {
 							pageChange(currentPage != numPages ? currentPage + 1 : numPages)
 						}
 						style={{ pointerEvents: currentPage === numPages ? 'none' : '' }}
-						className="block px-3 py-2 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white "
+						className="block px-3 py-2 ml-0 leading-tight text-zinc-500 bg-white border border-zinc-300 rounded-r-lg hover:bg-zinc-100 hover:text-zinc-700 dark:bg-zinc-900 dark:border-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-700 dark:hover:text-white "
 					>
 						<ChevronRightIcon className="h-5 w-5" />
 					</button>

@@ -2,7 +2,9 @@ import React from 'react';
 
 const Background = ({ children }) => {
 	return (
-		<body className="bg-gray-50 dark:bg-black transition-all">{children}</body>
+		<body className="bg-zinc-200 bg- dark:bg-zinc-900 transition-all">
+			{children}
+		</body>
 	);
 };
 
