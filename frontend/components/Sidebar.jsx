@@ -26,13 +26,13 @@ function Sidebar() {
 
 	return (
 		<div>
-			<div class="h-full px-3 pb-4 relative space-y-4 text-zinc-900 dark:text-zinc-500 p-5 text-xs md:text-sm  border-zinc-600 ">
-				<ul class="space-y-1">
+			<div className="h-full px-3 pb-4 relative space-y-4 text-zinc-900 dark:text-zinc-500 p-5 text-xs md:text-sm  border-zinc-600 ">
+				<ul className="space-y-1">
 					<li>
 						<Link href="/login" onClick={() => signOut()}>
 							<a className="flex items-center p-2  font-normal text-zinc-900 rounded-lg dark:text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-700 hover:text-green-500 dark:hover:text-white transition duration-200">
 								<LogoutIcon className="w-6 h-6" />
-								<span class="ml-3">Logout</span>
+								<span className="ml-3">Logout</span>
 							</a>
 						</Link>
 					</li>
@@ -40,7 +40,7 @@ function Sidebar() {
 						<Link href="/">
 							<a className="flex items-center p-2  font-normal text-zinc-900 rounded-lg dark:text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-700 hover:text-green-500 dark:hover:text-white transition duration-200">
 								<HomeIcon className="w-6 h-6" />
-								<span class="ml-3">Home</span>
+								<span className="ml-3">Home</span>
 							</a>
 						</Link>
 					</li>
@@ -48,7 +48,7 @@ function Sidebar() {
 						<Link href="/search">
 							<a className="flex items-center p-2  font-normal text-zinc-900 rounded-lg dark:text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-700 hover:text-green-500 dark:hover:text-white transition duration-200">
 								<SearchIcon className="w-6 h-6" />
-								<span class="ml-3">Search</span>
+								<span className="ml-3">Search</span>
 							</a>
 						</Link>
 					</li>
@@ -56,7 +56,7 @@ function Sidebar() {
 						<Link href="/library">
 							<a className="flex items-center p-2  font-normal text-zinc-900 rounded-lg dark:text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-700 hover:text-green-500 dark:hover:text-white transition duration-200">
 								<LibraryIcon className="w-6 h-6" />
-								<span class="ml-3">Library</span>
+								<span className="ml-3">Library</span>
 							</a>
 						</Link>
 					</li>
@@ -64,7 +64,7 @@ function Sidebar() {
 						<Link href="/history">
 							<a className="flex items-center p-2  font-normal text-zinc-900 rounded-lg dark:text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-700 hover:text-green-500 dark:hover:text-white transition duration-200">
 								<BookOpenIcon className="w-6 h-6" />
-								<span class="ml-3">History</span>
+								<span className="ml-3">History</span>
 							</a>
 						</Link>
 					</li>
@@ -73,7 +73,7 @@ function Sidebar() {
 						<Link href="/liked-songs">
 							<a className="flex items-center p-2  font-normal text-zinc-900 rounded-lg dark:text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-700 hover:text-green-500 dark:hover:text-white transition duration-200">
 								<HeartIcon className="w-6 h-6" />
-								<span class="ml-3">Liked Songs</span>
+								<span className="ml-3">Liked Songs</span>
 							</a>
 						</Link>
 					</li>
@@ -81,7 +81,7 @@ function Sidebar() {
 						<Link href="/episodes">
 							<a className="flex items-center p-2  font-normal text-zinc-900 rounded-lg dark:text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-700 hover:text-green-500 dark:hover:text-white transition duration-200">
 								<RssIcon className="w-6 h-6" />
-								<span class="ml-3">Your Episodes</span>
+								<span className="ml-3">Your Episodes</span>
 							</a>
 						</Link>
 					</li>
