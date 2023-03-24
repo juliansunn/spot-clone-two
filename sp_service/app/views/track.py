@@ -1,35 +1,14 @@
-from datetime import timedelta
-from django.utils import timezone
+
 from rest_framework import viewsets
-from app.models import Track, play_history
+from app.models import Track
 from app.serializers import TrackSerializer
-from django.db.models import Count
 from rest_framework.response import Response
-from app.pagination import StandardResultsSetPagination
-from rest_framework.pagination import PageNumberPagination
-from rest_framework.permissions import IsAuthenticated
-class StandardResultsSetPagination(PageNumberPagination):
-    
-    page_size = 100
-    page_size_query_param = 'page_size'
-    max_page_size = 1000
+from app.views.mixins import PaginatedAuthMixin
 
-    def get_paginated_response(self, data):
-        return Response({
-            'links': {
-                'next': self.get_next_link(),
-                'previous': self.get_previous_link()
-            },
-            'count': self.page.paginator.count,
-            'total_pages': self.page.paginator.num_pages,
-            "type": "history",
-            'results': data
-        })
 
-class TrackViewSet(viewsets.ReadOnlyModelViewSet):
+class TrackViewSet(viewsets.ReadOnlyModelViewSet, PaginatedAuthMixin):
     """List all Tracks"""
-    permission_classes = (IsAuthenticated,)
-    pagination_class = StandardResultsSetPagination
+    
     serializer_class = TrackSerializer
 
     def get_queryset(self):
