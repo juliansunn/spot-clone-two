@@ -41,10 +41,10 @@ function Layout({ children }) {
 					<title>Antefy</title>
 				</Head>
 				<div className="flex flex-col h-screen overflow-y-scroll scrollbar-hide border-zinc-200 dark:border-zinc-700">
-					<nav class="fixed top-0 z-50 w-full border-b border-zinc-200 bg-zinc-200 dark:bg-zinc-900 dark:border-zinc-700">
-						<div class="px-3 py-3 lg:px-5 lg:pl-3">
-							<div class="flex items-center justify-between">
-								<div class="flex items-center justify-start w-3/4">
+					<nav className="fixed top-0 z-50 w-full border-b border-zinc-200 bg-zinc-200 dark:bg-zinc-900 dark:border-zinc-700">
+						<div className="px-3 py-3 lg:px-5 lg:pl-3">
+							<div className="flex items-center justify-between">
+								<div className="flex items-center justify-start w-3/4">
 									<MenuIcon
 										className="inline-flex items-center p-2 mx-2 text-sm text-zinc-500 rounded-lg hover:bg-zinc-100 focus:outline-none focus:ring-2 focus:ring-zinc-200 dark:text-zinc-400 dark:hover:bg-zinc-700 dark:focus:ring-zinc-600 h-10 w-10"
 										onClick={toggleSidebar}
@@ -73,7 +73,7 @@ function Layout({ children }) {
 							</div>
 						</div>
 					</nav>
-					<div class="flex-grow w-full">{children}</div>
+					<div className="flex-grow w-full">{children}</div>
 					<div className="fixed bottom-0 z-5 w-full">
 						<Player />
 					</div>
