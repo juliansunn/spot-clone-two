@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3.9'
 
 services:
     sp_service:
@@ -16,7 +16,7 @@ services:
             - db
             - redis
 
-        command: bash -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+        command: sh -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
         ports:
             - "8000:8000" # webserver
             - "8888:8888" # iptyhon notebook
@@ -25,7 +25,7 @@ services:
         build: 
             context: ./sp_service/
             dockerfile: Dockerfile.dev
-        command: bash -c " celery -A proj worker --loglevel=info --scheduler django_celery_beat.schedulers:DatabaseScheduler"
+        command: sh -c " celery -A proj worker --loglevel=info --scheduler django_celery_beat.schedulers:DatabaseScheduler"
         container_name: celery
         volumes:
             - ./sp_service:/sp_service
@@ -53,7 +53,7 @@ services:
             - db
             - redis
             - celery
-        command: bash -c "celery -A proj worker --beat --scheduler django --loglevel=info"
+        command: sh -c "celery -A proj worker --beat --scheduler django --loglevel=info"
 
     db:
         image: postgres

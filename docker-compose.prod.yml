@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3.9'
 
 services:
     sp_service:
@@ -21,7 +21,7 @@ services:
         build: 
             context: ./sp_service/
             dockerfile: Dockerfile.prod
-        command: bash -c " celery -A proj worker --loglevel=info --scheduler django_celery_beat.schedulers:DatabaseScheduler"
+        command: sh -c " celery -A proj worker --loglevel=info --scheduler django_celery_beat.schedulers:DatabaseScheduler"
         container_name: celery
         volumes:
             - ./sp_service:/sp_service
@@ -50,7 +50,7 @@ services:
             - db
             - redis
             - celery
-        command: bash -c "celery -A proj worker --beat --scheduler django --loglevel=info"
+        command: sh -c "celery -A proj worker --beat --scheduler django --loglevel=info"
 
     db:
         image: postgres
