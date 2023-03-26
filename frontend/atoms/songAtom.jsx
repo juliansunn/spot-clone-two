@@ -20,6 +20,16 @@ export const isPlayingState = atom({
 	default: false
 });
 
+export const progressState = atom({
+	key: 'progressState',
+	default: 0
+});
+
+export const durationState = atom({
+	key: 'durationState',
+	default: 0
+});
+
 export const isShuffleState = atom({
 	key: 'isShuffleState',
 	default: false

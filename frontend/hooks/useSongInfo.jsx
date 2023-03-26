@@ -1,6 +1,11 @@
 import useSpotify from './useSpotify';
-import { useRecoilValue } from 'recoil';
-import { currentTrackIdState } from '../atoms/songAtom';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import {
+	currentTrackIdState,
+	durationState,
+	isPlayingState,
+	progressState
+} from '../atoms/songAtom';
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 
@@ -9,6 +14,9 @@ function useSongInfo() {
 	const currentTrackId = useRecoilValue(currentTrackIdState);
 	const { data: session } = useSession();
 	const [songInfo, setSongInfo] = useState(null);
+	const [isPlaying, setIsPlaying] = useRecoilState(isPlayingState);
+	const [progress, setProgress] = useRecoilState(progressState);
+	const [duration, setDuration] = useRecoilState(durationState);
 	useEffect(() => {
 		const url = currentTrackId
 			? `https://api.spotify.com/v1/tracks/${currentTrackId}`
@@ -19,7 +27,10 @@ function useSongInfo() {
 					Authorization: `Bearer ${spotifyApi.getAccessToken()}`
 				}
 			}).then((res) => res.json());
-			setSongInfo(!currentTrackId ? trackInfo?.item : trackInfo);
+			setSongInfo(!currentTrackId ? trackInfo.item : trackInfo);
+			setIsPlaying(trackInfo?.is_playing);
+			setProgress(trackInfo?.progress_ms);
+			setDuration(trackInfo?.item?.duration_ms);
 		};
 		fetchSongInfo();
 	}, [currentTrackId, session]);

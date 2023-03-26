@@ -33,7 +33,6 @@ function Layout({ children }) {
 	const toggleSidebar = () => {
 		setSidebarVisibility((prev) => !prev);
 	};
-	console.log('sidebarVisibility', sidebarVisibility);
 	return (
 		<ThemeProvider>
 			<Background>

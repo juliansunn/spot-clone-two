@@ -54,7 +54,7 @@ function Player() {
 
 	const increaseProgress = (amount) => {
 		const newProgress = progress + amount;
-		if (newProgress < duration && !seeking) {
+		if (newProgress < duration && !seeking && isPlaying) {
 			setProgress(newProgress);
 		} else {
 			spotifyApi.getMyCurrentPlayingTrack().then((data) => {
@@ -62,7 +62,6 @@ function Player() {
 				setProgress(data.body?.progress_ms);
 			});
 		}
-		setProgress(progress + amount);
 	};
 
 	useInterval(increaseProgress, 1000, 1000);
