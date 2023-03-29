@@ -4,8 +4,6 @@ on:
   branches:
    - '*'
 
-env_file:
-
 jobs:
  build:
   runs-on: ubuntu-latest
