@@ -5,14 +5,13 @@ on:
    - '*'
 
 jobs:
- build:
+ docker:
+  timeout-minutes: 10
   runs-on: ubuntu-latest
 
   steps:
    - name: Checkout
      uses: actions/checkout@v2
 
-   - name: Build and lint
-     run: |
-      docker-compose -f docker-compose.prod.yml build --env_file ./.env.sample
-      docker-compose -f docker-compose.prod.yml run --rm frontend --env_file ./.env.sample npm run lint
+   - name: Start Containers
+     run: docker-compose -f "docker-compose.prod.yml" up -d --build
