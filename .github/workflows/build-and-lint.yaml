@@ -14,4 +14,4 @@ jobs:
      uses: actions/checkout@v2
 
    - name: Start Containers
-     run: docker-compose -f "docker-compose.prod.yml" up -d
+     run: docker-compose -f "docker-compose.prod.yml" up -d --env_file ./.env.sample
