@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
-import { playlistIdState, playlistsState } from '../atoms/playlistAtom';
+import { useRecoilState, useSetRecoilState } from 'recoil';
+import { playlistIdState, playlistState } from '../atoms/playlistAtom';
 import useSpotify from './useSpotify';
 
 const usePlaylists = () => {
 	const spotifyApi = useSpotify();
 	const [playlists, setPlaylists] = useState([]);
 	const [playlistId, setPlaylistId] = useRecoilState(playlistIdState);
+	const setPlaylist = useSetRecoilState(playlistState);
 
 	useEffect(() => {
 		const getPlaylistData = async () => {
@@ -42,6 +43,7 @@ const usePlaylists = () => {
 			// Set the playlistId to the ID of the first playlist in the array
 			if (plsts.length > 0 && !playlistId) {
 				setPlaylistId(plsts[0].id);
+				setPlaylist(plsts[0]);
 			}
 		};
 

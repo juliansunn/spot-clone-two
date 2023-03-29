@@ -3,43 +3,17 @@ import React, { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { songListState } from '../atoms/songAtom';
 import Layout from '../components/Layout';
+import Loading from '../components/Loading';
 import SongTable from '../components/SongTable';
+import useLikedSongs from '../hooks/useLikedSongs';
 import useSpotify from '../hooks/useSpotify';
 import { getRandomInt, historyHeaders } from '../lib/utility';
 
 function LikedSongs() {
 	const { data: session } = useSession();
-	const spotifyApi = useSpotify();
-	const [songs, setSongs] = useRecoilState(songListState);
-
-	const [backgroundImg, setBackgroundImg] = useState(null);
-
-	const getLikedSongs = async (offset) => {
-		const likedSongs = [];
-		for (let i = 0; i < 20; ++i) {
-			likedSongs.push(
-				spotifyApi.getMySavedTracks({
-					offset: i * offset
-				})
-			);
-		}
-		Promise.all(likedSongs)
-			.then((data) => {
-				const d = data[0];
-				for (let j = 1; j < Math.ceil(d.body.total / offset); j++) {
-					d.body.items.push(...data[j].body.items);
-				}
-				setSongs(d.body?.items);
-			})
-			.catch((e) => {
-				console.log('Error Fetching LikedSongs: ', e);
-			});
-	};
-
-	useEffect(() => {
-		getLikedSongs(20);
-		setBackgroundImg(getRandomInt(1, 14));
-	});
+	const backgroundImg = getRandomInt(1, 14);
+	const { likedSongs } = useLikedSongs();
+	const loading = !likedSongs?.length;
 
 	return (
 		<Layout>
@@ -65,7 +39,11 @@ function LikedSongs() {
 				</div>
 			</div>
 			<div>
-				<SongTable songs={songs} type="playlist" headers={historyHeaders} />
+				{loading ? (
+					<Loading />
+				) : (
+					<SongTable songs={likedSongs} type="playlist" headers={historyHeaders} />
+				)}
 			</div>
 		</Layout>
 	);

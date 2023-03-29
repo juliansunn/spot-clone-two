@@ -2,7 +2,6 @@ import Link from 'next/link';
 import React, { useRef, useState } from 'react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { searchQueryState } from '../atoms/searchAtom';
-import { sidebarVisibilityState } from '../atoms/visibilityAtom';
 import { ArrowsExpandIcon } from '@heroicons/react/outline';
 
 function SearchBar({ toggleSidebar }) {

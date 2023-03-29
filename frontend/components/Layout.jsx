@@ -3,28 +3,13 @@ import Head from 'next/head';
 import Sidebar from './Sidebar';
 import Player from './Player';
 import { signOut, useSession } from 'next-auth/react';
-import {
-	ArrowsExpandIcon,
-	ChevronDownIcon,
-	ChevronRightIcon,
-	ChevronLeftIcon,
-	HomeIcon,
-	SearchIcon,
-	LibraryIcon,
-	BookOpenIcon,
-	HeartIcon,
-	RssIcon,
-	LogoutIcon,
-	MenuIcon
-} from '@heroicons/react/outline';
+import { ChevronDownIcon, MenuIcon } from '@heroicons/react/outline';
 import SearchBar from './SearchBar';
 import { ThemeProvider } from './Theme/ThemeContext';
 import Background from './Theme/Background';
 import Theme from './Theme/Toggle';
-import { useRecoilState } from 'recoil';
-import { sidebarVisibilityState } from '../atoms/visibilityAtom';
-import Link from 'next/link';
 import ReactModal from 'react-modal';
+import useSpotify from '../hooks/useSpotify';
 
 function Layout({ children }) {
 	const { data: session } = useSession();

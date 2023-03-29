@@ -12,13 +12,11 @@ import {
 } from '@heroicons/react/outline';
 import { useRecoilValue } from 'recoil';
 
-import { sidebarVisibilityState } from '../atoms/visibilityAtom';
 import usePlaylists from '../hooks/usePlaylists';
 import { PlayIcon } from '@heroicons/react/solid';
 
 function Sidebar() {
 	const { playlists, playlistId, setPlaylistId } = usePlaylists();
-	const isOpen = useRecoilValue(sidebarVisibilityState);
 
 	const handleSelected = (playlistId) => {
 		setPlaylistId(playlistId);

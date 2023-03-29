@@ -15,7 +15,7 @@ const colors = [
 function PlaylistDetails({ data }) {
 	return (
 		<>
-			<div className="flex flex-row space-x-2">
+			<div className="flex flex-row space-x-2 text-zinc-800 dark:text-zinc-200">
 				<a href="#">{data?.owner?.display_name}</a>
 				<p className="whitespace-nowrap">{data?.followers?.total} Likes</p>
 				<p className="whitespace-nowrap">{data?.tracks?.total} Songs</p>

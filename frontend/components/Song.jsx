@@ -1,4 +1,4 @@
-import { useSetRecoilState } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import useSpotify from '../hooks/useSpotify';
 import { millisToMinutesAndSeconds } from '../lib/utility';
 import { PauseIcon, PlayIcon } from '@heroicons/react/outline';
@@ -6,14 +6,13 @@ import Link from 'next/link';
 import { albumState } from '../atoms/albumAtom';
 import useSongControls from '../hooks/useSongControls';
 import useSongs from '../hooks/useSongs';
+import { isPlayingState } from '../atoms/songAtom';
 
 function Song({ track, order, addedAt }) {
 	const spotifyApi = useSpotify();
-	const { isPlaying, handlePlayPause, playSong, currentTrackId } =
-		useSongControls();
-
+	const { handlePlayPause, playSong, currentTrackId } = useSongControls();
+	const isPlaying = useRecoilValue(isPlayingState);
 	const { setSongs } = useSongs();
-
 	const setAlbum = useSetRecoilState(albumState);
 
 	const handleAlbum = () => {
@@ -26,9 +25,6 @@ function Song({ track, order, addedAt }) {
 				setSongs(data.body?.tracks?.items);
 			});
 	};
-	if (track?.id === currentTrackId) {
-	}
-
 	return (
 		<tr
 			className={
