@@ -24,7 +24,6 @@ const useAxios = () => {
 			const tokens = localStorage.getItem('authTokens')
 				? JSON.parse(localStorage.getItem('authTokens'))
 				: null;
-			console.log('tokens', tokens);
 			if (!tokens) {
 				return req;
 			}

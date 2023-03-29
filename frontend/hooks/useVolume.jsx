@@ -4,8 +4,8 @@ import useSpotify from './useSpotify';
 import useDevice from './useDevice';
 
 const useVolume = (debounceTime = 200) => {
-	const spotifyApi = useSpotify();
 	const { initialVolume } = useDevice();
+	const spotifyApi = useSpotify();
 	const [volume, setVolume] = useState(null);
 	const [muted, setMuted] = useState(false);
 

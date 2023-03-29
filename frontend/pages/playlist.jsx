@@ -1,15 +1,24 @@
-// import { Center } from '@chakra-ui/react';
-import React from 'react'
-import Center from '../components/Center';
+import React from 'react';
 import Layout from '../components/Layout';
 
-function Playlist() {
+import ListHeader from '../components/listHeader';
+import SongTable from '../components/SongTable';
+import usePlaylist from '../hooks/usePlaylist';
+import { playlistHeaders } from '../lib/utility';
 
-    return (
-        <Layout>
-            <Center />
-        </Layout>
-    );
+function Playlist() {
+	const { playlist } = usePlaylist();
+
+	return (
+		<Layout>
+			<ListHeader data={playlist} audioType="PLAYLIST" />
+			<SongTable
+				songs={playlist?.tracks?.items}
+				type="playlist"
+				headers={playlistHeaders}
+			/>
+		</Layout>
+	);
 }
 
-export default Playlist
+export default Playlist;

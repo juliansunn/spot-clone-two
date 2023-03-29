@@ -30,7 +30,6 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 DEBUG = bool(int(os.environ.get("DEBUG", 0)))
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
 ALLOWED_HOSTS = []
 ALLOWED_HOSTS.extend(
@@ -156,6 +155,11 @@ CELERY_ACCEPT_CONTENT = ["application/json"]
 CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
 
+AUTHENTICATION_BACKENDS = [
+    "core.auth.auth_backend.PasswordlessAuthBackend",
+    # "django.contrib.auth.backends.ModelBackend",
+]
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
@@ -196,7 +200,7 @@ SIMPLE_JWT = {
 
 
 SHELL_PLUS_PRE_IMPORTS = (
-    ("app.utils.spotify_settings", "V2SpotifyConn"),
+    ("app.utils.spotify_settings", "SpotifyConn"),
     ("pprint", "pprint"),
 )
 

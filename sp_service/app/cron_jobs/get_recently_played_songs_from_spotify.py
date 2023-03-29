@@ -1,6 +1,6 @@
 from django_cron import CronJobBase, Schedule
 import logging
-from app.utils.spotify_settings import V2SpotifyConn
+from app.utils.spotify_settings import SpotifyConn
 
 logger = logging.getLogger(__name__)
 
@@ -16,13 +16,13 @@ class RecentlyPlayedSongs(CronJobBase):
     def do(self):
 
         print("Starting Cron to get songs from Spotify.")
-        conn = V2SpotifyConn()
+        conn = SpotifyConn()
         conn.add_data_to_db()
         print("Finished Cron to get songs from Spotify.")
 
 
 def recently_played_songs():
     print("Starting Cron to get songs from Spotify.")
-    conn = V2SpotifyConn()
+    conn = SpotifyConn()
     conn.add_data_to_db()
     print("Finished Cron to get songs from Spotify.")

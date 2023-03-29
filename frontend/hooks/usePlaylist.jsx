@@ -1,27 +1,47 @@
+import { useSession } from 'next-auth/react';
 import { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
-import { playlistState } from '../atoms/playlistAtom';
+import { playlistIdState, playlistState } from '../atoms/playlistAtom';
+import useDidMountEffect from './useDidMountEffect';
 import useSongs from './useSongs';
 import useSpotify from './useSpotify';
 
-const usePlaylist = (playlistId) => {
-	const [playlist, setPlaylist] = useRecoilState(playlistState);
+const usePlaylist = () => {
 	const spotifyApi = useSpotify();
+	const { data: session } = useSession();
+	const [playlistId, setPlaylistId] = useRecoilState(playlistIdState);
+	const [playlist, setPlaylist] = useRecoilState(playlistState);
 	const { setSongs } = useSongs();
 
+	const handleSetPlaylist = (id) => {
+		spotifyApi
+			.getPlaylist(id)
+			.then((data) => {
+				const playlist = data.body;
+				setPlaylist(playlist);
+				setPlaylistId(playlist.id);
+				setSongs(playlist?.tracks?.items);
+			})
+			.catch((error) => console.log('something went wrong: ', error));
+	};
+
 	useEffect(() => {
-		const selectPlaylist = () => {
+		if (!playlistId) {
 			spotifyApi
-				.getPlaylist(playlistId)
+				.getUserPlaylists()
 				.then((data) => {
-					const playlist = data.body;
-					setPlaylist(playlist);
-					setSongs(playlist?.tracks?.items);
+					const idTofetch = data?.body?.items?.[0]?.id;
+					if (idTofetch) {
+						handleSetPlaylist(idTofetch);
+					}
 				})
-				.catch((error) => console.log('something went wrong: ', error));
-		};
-		selectPlaylist();
-	}, [playlistId]);
+				.catch((error) => {
+					console.log('error fetching playlists', error);
+				});
+		} else {
+			handleSetPlaylist(playlistId);
+		}
+	}, [playlistId, session]);
 	return { playlist };
 };
 

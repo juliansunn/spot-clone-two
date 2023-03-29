@@ -1,11 +1,14 @@
 import { shuffle } from 'lodash';
 import { useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import {
 	currentTrackIdState,
 	currentTrackLocState,
+	durationState,
 	isPlayingState,
-	manualChangeState
+	isShuffleState,
+	manualChangeState,
+	progressState
 } from '../atoms/songAtom';
 import useSongs from './useSongs';
 import useSpotify from './useSpotify';
@@ -13,14 +16,16 @@ import { mapSongsForQueue } from '../lib/utility';
 
 const useSongControls = () => {
 	const spotifyApi = useSpotify();
-	const [isShuffle, setIsShuffle] = useState(false);
+	const [isShuffle, setIsShuffle] = useRecoilState(isShuffleState);
 	const [isRepeat, setIsRepeat] = useState(false);
 	const [currentTrackLoc, setCurrentTrackLoc] =
 		useRecoilState(currentTrackLocState);
 	const [currentTrackId, setCurrentTrackId] =
 		useRecoilState(currentTrackIdState);
 	const [manualChange, setManualChange] = useRecoilState(manualChangeState);
-	const [isPlaying, setIsPlaying] = useRecoilState(isPlayingState);
+	const setIsPlaying = useSetRecoilState(isPlayingState);
+	const setProgress = useSetRecoilState(progressState);
+	const setDuration = useSetRecoilState(durationState);
 
 	const { songs, songQueue, setSongQueue } = useSongs();
 
@@ -30,17 +35,17 @@ const useSongControls = () => {
 		} else {
 			setSongQueue(shuffle(songQueue));
 		}
+		spotifyApi.setShuffle(!isShuffle);
 		setIsShuffle((prevState) => !prevState);
 	};
-
 	const toggleRepeat = () => {
 		setIsRepeat((prevState) => !prevState);
 	};
 
-	const changeSong = (direction, manual = false) => {
+	const changeSong = (direction, manual = false, index = null) => {
 		const queue = mapSongsForQueue(songQueue);
 		if (songQueue) {
-			var newLoc = currentTrackLoc + direction;
+			var newLoc = !index ? currentTrackLoc + direction : index;
 			if (newLoc >= queue?.length) {
 				if (isRepeat) {
 					newLoc = 0;
@@ -69,21 +74,28 @@ const useSongControls = () => {
 					? songQueue[newLoc].track.id
 					: songQueue[newLoc].spotify_id
 			);
-			// setCurrentTrackId(trackInfo ? trackInfo[newLoc]?.id : null);
 		}
 	};
 
 	const playSong = (track, order) => {
-		setCurrentTrackId(track?.id);
-		setCurrentTrackLoc(order);
-		setSongQueue(songs);
-		setIsPlaying(true);
-		setManualChange(true);
-		const uris = mapSongsForQueue(songs).map(({ uri }) => uri);
+		let mySongs = songs;
+		let myOrder = order;
+		if (isShuffle) {
+			mySongs = shuffle(songs);
+			myOrder = mySongs.findIndex((item) => item?.track?.id === track.id);
+		}
+		const uris = mapSongsForQueue(mySongs).map(({ uri }) => uri);
 		spotifyApi.play({
 			uris: uris,
-			offset: { position: order }
+			offset: { position: myOrder }
 		});
+
+		setSongQueue(mySongs);
+		setManualChange(true);
+		setProgress(0);
+		setDuration(track.duration_ms);
+		setCurrentTrackLoc(myOrder);
+		setCurrentTrackId(track.id);
 	};
 
 	const handlePlayPause = () => {
@@ -100,16 +112,15 @@ const useSongControls = () => {
 
 	return {
 		isShuffle,
+		setIsShuffle,
 		isRepeat,
 		toggleShuffle,
 		toggleRepeat,
 		changeSong,
 		manualChange,
 		setManualChange,
-		isPlaying,
 		handlePlayPause,
 		playSong,
-		currentTrackLoc,
 		currentTrackId
 	};
 };

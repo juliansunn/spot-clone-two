@@ -30,7 +30,6 @@ const useUser = () => {
 
 			if (storage) {
 				const tokenData = JSON.parse(storage);
-				console.log('tokenData', tokenData);
 			} else {
 				const response = await axios(config);
 				if (typeof window !== 'undefined') {
