@@ -4,15 +4,7 @@ on:
   branches:
    - '*'
 
-env:
- NEXTAUTH_URL: http://127.0.0.1
- NODE_TLS_REJECT_UNAUTHORIZED: '0'
- NEXTAUTH_URL_INTERNAL: http://localhost:3000
- NEXT_PUBLIC_CLIENT_SECRET: next_public_client_secret
- NEXT_PUBLIC_CLIENT_ID: next_public_client_id
- NEXTAUTH_SECRET: 'some_super_secret_value'
- NEXT_PUBLIC_API_URL: http://127.0.0.1:8000/sp-api
- NODE_ENV: production
+env_file:
 
 jobs:
  build:
@@ -24,5 +16,5 @@ jobs:
 
    - name: Build and lint
      run: |
-      docker-compose -f docker-compose.prod.yml build
-      docker-compose -f docker-compose.prod.yml run --rm frontend npm run lint
+      docker-compose -f docker-compose.prod.yml build --env_file ./.env.sample
+      docker-compose -f docker-compose.prod.yml run --rm frontend --env_file ./.env.sample npm run lint
