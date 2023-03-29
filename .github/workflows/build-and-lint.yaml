@@ -15,3 +15,7 @@ jobs:
 
    - name: Start Containers
      run: docker-compose -f "docker-compose.prod.yml" up -d --env_file ./.env.sample
+   - name: Frontend Packages
+     run: cd frontend && npm install
+   - name: Frontend Linting
+     run: cd frontend && npm run lint
