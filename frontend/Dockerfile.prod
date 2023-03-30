@@ -2,14 +2,19 @@ FROM node:14-alpine
 
 RUN mkdir -p /frontend
 
+# Copy .env file from root directory to frontend directory
+COPY /.env /frontend/
+
 WORKDIR /frontend
 
+
 # copy all content from current working dir to the workdir
-COPY . .
+COPY ./frontend .
 
 RUN npm install --global pm2
 # Copy package.json and package-lock.json before other files
 # Utilise Docker cache to save re-installing dependencies if unchangeddoc
+
 COPY ./package*.json ./
 
 # Install dependencies
