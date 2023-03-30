@@ -9,7 +9,6 @@ import {
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import useSongControls from './useSongControls';
-import useSongs from './useSongs';
 
 function useSongInfo() {
 	const spotifyApi = useSpotify();
@@ -17,7 +16,6 @@ function useSongInfo() {
 		useRecoilState(currentTrackIdState);
 	const { data: session } = useSession();
 	const [songInfo, setSongInfo] = useState(null);
-	const { songs, songQueue, setSongQueue } = useSongs();
 	const setIsPlaying = useSetRecoilState(isPlayingState);
 	const setProgress = useSetRecoilState(progressState);
 	const setDuration = useSetRecoilState(durationState);
