@@ -19,11 +19,12 @@ const useSongs = () => {
 					}
 				}
 			).then((res) => res.json());
-			setSongs(queuedTracks.queue);
-			setSongQueue(queuedTracks.queue);
+			if (queuedTracks) {
+				setSongs(queuedTracks?.queue);
+				setSongQueue(queuedTracks?.queue);
+			}
 		};
-
-		if (!songs) {
+		if (!songQueue?.length) {
 			fetchQueuedSongs();
 		}
 	}, [session]);
