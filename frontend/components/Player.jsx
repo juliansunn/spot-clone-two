@@ -53,6 +53,7 @@ function Player() {
 	const [progress, setProgress] = useRecoilState(progressState);
 	const [duration, setDuration] = useRecoilState(durationState);
 	const [seeking, setSeeking] = useState(false);
+	const [updated, setUpdated] = useState(false);
 	const toggleDeviceModal = () => {
 		setIsOpen((prevState) => !prevState);
 	};
@@ -60,11 +61,15 @@ function Player() {
 		const newProgress = progress + amount;
 		if (newProgress < duration && !seeking && isPlaying) {
 			setProgress(newProgress);
+			setUpdated(false);
 		} else {
-			spotifyApi.getMyCurrentPlayingTrack().then((data) => {
-				setDuration(data.body?.item?.duration_ms);
-				setProgress(data.body?.progress_ms);
-			});
+			if (!updated) {
+				spotifyApi.getMyCurrentPlayingTrack().then((data) => {
+					setDuration(data.body?.item?.duration_ms);
+					setProgress(data.body?.progress_ms);
+					setUpdated(true);
+				});
+			}
 		}
 	};
 

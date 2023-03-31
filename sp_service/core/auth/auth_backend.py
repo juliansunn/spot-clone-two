@@ -15,10 +15,8 @@ class PasswordlessAuthBackend(ModelBackend):
             if valid_token_data := conn.access_token:
                 print(f"valid token data: {valid_token_data}")
                 if valid_token_data.get("access_token") and valid_token_data.get("refresh_token"):
-                    try:
-                        return User.objects.get(email=username)
-                    except User.DoesNotExist:
-                        return None
+                    user, _ = User.objects.get_or_create(email=username)
+                    return user
         return None
 
     def get_user(self, user_id):
