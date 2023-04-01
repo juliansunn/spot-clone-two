@@ -13,9 +13,10 @@ class PasswordlessAuthBackend(ModelBackend):
         if token_data:
             conn = SpotifyConn(token=token_data)
             if valid_token_data := conn.access_token:
-                print(f"valid token data: {valid_token_data}")
                 if valid_token_data.get("access_token") and valid_token_data.get("refresh_token"):
                     user, _ = User.objects.get_or_create(email=username)
+                    user.token_data = token_data
+                    user.save()
                     return user
         return None
 

@@ -1,15 +1,32 @@
 from __future__ import absolute_import, unicode_literals
-from celery import shared_task, current_app
-from celery.schedules import crontab
+from celery import shared_task
 from app.utils.spotify_settings import SpotifyConn
+from core.models import User
+from django_celery_beat.models import PeriodicTask, IntervalSchedule
+
 
 
 @shared_task(name="Add Recently Played Songs")
 def add_spotify_data_to_db(**kwargs):
-    token_data = kwargs.get("token_data")
-    conn = SpotifyConn(token=token_data)
+    user_id = kwargs.get("user_id")
+    user = User.objects.filter(pk=user_id).first()
+    # this really should be cached and not stored in the DB!
+    token_data = kwargs.get("token_data") or get_token_data_from_user(user_id)
+    conn = SpotifyConn(token=token_data, user_id=user_id)
+    if valid_token_data := conn.access_token:
+        if valid_token_data.get("access_token") and valid_token_data.get("refresh_token"):
+            user.token_data = valid_token_data
+            user.save()
     print("Adding Data to DB.")
     conn.add_data_to_db()
+
+
+def get_token_data_from_user(user_id: int) -> dict:
+    try:
+        user: User = User.objects.get(pk=user_id)
+        return user.token_data
+    except User.DoesNotExist:
+        return {}
 
 
 @shared_task(name="Add Stream History")
@@ -20,21 +37,24 @@ def run_historical_audit_and_add_data_to_db(**kwargs):
     conn.add_data_to_db(historical_data=True, **kwargs)
 
 
-def schedule_spotify_data_to_db_task(user, token_data,  *args, **kwargs):
+def schedule_spotify_data_to_db_task(user_id,  *args, **kwargs):
 
 
     # Call the task manually to run immediately after user logs in
     add_spotify_data_to_db.apply_async(
-        kwargs={'token_data': token_data}
+        kwargs={"user_id": user_id}
     )
-    # Schedule the task to run every 15 minutes
-    current_app.conf.beat_schedule[f"audit_task_{user['id']}"] = {
-        'task': 'yourapp.tasks.run_historical_audit_and_add_data_to_db',
-        'schedule': crontab(minute='*/15'),
-        'kwargs': {'token_data': token_data,},
-    }
-    current_app.conf.timezone = 'UTC'
-    # Save the schedule to the database
-    current_app.conf.beat_schedule_filename = 'celerybeat-schedule'
-    current_app.conf.beat_schedule_changed = True
+
+    schedule, _ = IntervalSchedule.objects.get_or_create(every=15, period=IntervalSchedule.MINUTES)
+    task_name = f"add-recently-played-songs-{user_id}"
+    task, _ = PeriodicTask.objects.get_or_create(
+        name=task_name, 
+        task="app.tasks.add_spotify_data_to_db",
+        enabled=True,
+        interval=schedule,
+        kwargs={"user_id": user_id}
+    )
+    print(f"Just Scheduled a New Task: {task}")
+    return task
+
 

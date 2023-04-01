@@ -220,7 +220,7 @@ function Player() {
 								<div
 									key={device.id}
 									onClick={() => activateDevice({ device })}
-									className="flex text-zinc-500 hover:text-white cursor-pointer justify-evenly items-center p-2"
+									className="flex text-zinc-500 hover:text-white cursor-pointer justify-start items-center p-2"
 								>
 									{currentDevice?.id === device.id && (
 										<CheckCircleIcon className="button fill-white" />

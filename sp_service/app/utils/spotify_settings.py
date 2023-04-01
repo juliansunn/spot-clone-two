@@ -6,12 +6,12 @@ import pickle
 from dotenv import load_dotenv
 from app.utils.parser import Parser, ParsedTrack
 from app.utils.db_utils import create_track
+from core.models import User
 from django.utils import timezone
 from tqdm import tqdm
 import time
 import logging
 
-import json
 from requests_oauthlib import OAuth2Session
 from requests.auth import HTTPBasicAuth
 
@@ -36,7 +36,8 @@ class SpotifyConn:
         username=os.getenv("CLIENT_USERNAME"),
         api_base_url="https://api.spotify.com/v1",
         scope=None,
-        token = None
+        token=None,
+        user_id=None
     ):
         if scope is None:
             scope = [
@@ -63,6 +64,7 @@ class SpotifyConn:
         self.picklefile = picklefile
         self.username = username
         self.scope = scope
+        self.user_id = user_id
         self.sp_client = OAuth2Session(
             self.client_id, scope=self.scope, redirect_uri=self.redirect_uri
         )
@@ -110,6 +112,7 @@ class SpotifyConn:
 
     def add_data_to_db(self, historical_data=False, **kwargs):
         tracks = self.parsed.track_list
+        user = User.objects.filter(pk=self.user_id)
         not_found = {}
 
         if historical_data:
@@ -119,7 +122,7 @@ class SpotifyConn:
                 print("_" * 40)
         for track in tracks:
             try:
-                t, created = create_track(track)
+                t, created = create_track(track, user)
                 if created:
                     print(f"Created :{t} | Time: {timezone.now()}")
             except Exception as e:

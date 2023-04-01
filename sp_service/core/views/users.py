@@ -54,5 +54,7 @@ def user_login(request: Request, **kwargs):
         return Response(status=HTTP_401_UNAUTHORIZED, data="Your user does not exist.")
 
     auth.login(request, user)
-    schedule_spotify_data_to_db_task(user=user.__dict__, token_data=token_data)
+    task = schedule_spotify_data_to_db_task(user_id=user.pk)
+    task.enabled = True
+    task.save()
     return Response(status=HTTP_200_OK, data=f"You are logged in as {user.email}, {user.id}!")
