@@ -17,6 +17,9 @@ if (dotEnvExists) {
 		path: '../.env'
 	}).parsed;
 }
+console.log('envConfig', envConfig);
+console.log('dotEnvExists', dotEnvExists);
+console.log('dotEnvPath', dotEnvPath);
 
 const nextConfig = {
 	reactStrictMode: true,
