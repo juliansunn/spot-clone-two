@@ -15,7 +15,7 @@ RUN npm install --global pm2
 # Copy package.json and package-lock.json before other files
 # Utilise Docker cache to save re-installing dependencies if unchangeddoc
 
-COPY ./package*.json ./
+COPY ./frontend/package*.json ./
 
 # Install dependencies
 RUN npm install

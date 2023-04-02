@@ -49,6 +49,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         help_text=_('Designates whether the user can log into this admin site.'),
     )
     avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
+    token_data = models.JSONField(default=dict)
 
     objects = UserManager()
 

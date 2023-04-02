@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from app.views.mixins import PaginatedAuthMixin
 
 
-class TrackViewSet(viewsets.ReadOnlyModelViewSet, PaginatedAuthMixin):
+class TrackViewSet(PaginatedAuthMixin):
     """List all Tracks"""
     
     serializer_class = TrackSerializer

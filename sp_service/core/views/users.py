@@ -4,8 +4,10 @@ from rest_framework.authentication import SessionAuthentication
 from rest_framework.decorators import api_view, permission_classes, schema
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
+from rest_framework.status import HTTP_401_UNAUTHORIZED, HTTP_200_OK
 from rest_framework.generics import get_object_or_404
 from rest_framework.request import Request
+from app.tasks import schedule_spotify_data_to_db_task
 
 
 from core.auth.serializers import UserSerializer
@@ -48,5 +50,11 @@ def user_login(request: Request, **kwargs):
     username = request.data.get("username")
     token_data = request.data.get("token_data")
     user = auth.authenticate(request, username=username, token_data=token_data, **kwargs)
+    if not user:
+        return Response(status=HTTP_401_UNAUTHORIZED, data="Your user does not exist.")
+
     auth.login(request, user)
-    return Response("You are logged in!")
+    task = schedule_spotify_data_to_db_task(user_id=user.pk)
+    task.enabled = True
+    task.save()
+    return Response(status=HTTP_200_OK, data=f"You are logged in as {user.email}, {user.id}!")

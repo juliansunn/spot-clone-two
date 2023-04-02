@@ -2,7 +2,7 @@ import pytz
 from django.utils import timezone
 
 
-def create_track(track):
+def create_track(track, user):
     from app.models import Track, PlayHistory
 
     album = create_album(track.album)
@@ -21,7 +21,7 @@ def create_track(track):
     track_artists = [create_artist(t) for t in track.artists]
     for ta in track_artists:
         db_track.artist_tracks.add(ta)
-    PlayHistory.objects.get_or_create(played_at=track.played_at, track=db_track)
+    PlayHistory.objects.get_or_create(played_at=track.played_at, track=db_track, user=user)
     album.album_tracks.add(db_track)
     return db_track, created
 
