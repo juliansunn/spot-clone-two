@@ -2,7 +2,8 @@ import {
 	ReplyIcon,
 	SwitchHorizontalIcon,
 	VolumeUpIcon,
-	VolumeOffIcon
+	VolumeOffIcon,
+	PlusIcon
 } from '@heroicons/react/outline';
 import {
 	RewindIcon,
@@ -32,12 +33,13 @@ import {
 	progressState
 } from '../atoms/songAtom';
 import useDevice from '../hooks/useDevice';
+import Link from 'next/link';
 
 function Player() {
-	const spotifyApi = useSpotify();
+	const { spotifyApi, loading } = useSpotify();
 	const { volume, adjustVolume, muted, toggleMute } = useVolume();
 	const { currentDevice, myDevices, activateDevice } = useDevice();
-	const songInfo = useSongInfo();
+	const { songInfo } = useSongInfo();
 	const {
 		isShuffle,
 		isRepeat,
@@ -46,7 +48,8 @@ function Player() {
 		changeSong,
 		manualChange,
 		setManualChange,
-		handlePlayPause
+		handlePlayPause,
+		likeSong
 	} = useSongControls();
 	const [modalIsOpen, setIsOpen] = useState(false);
 	const isPlaying = useRecoilValue(isPlayingState);
@@ -58,17 +61,19 @@ function Player() {
 		setIsOpen((prevState) => !prevState);
 	};
 	const increaseProgress = (amount) => {
-		const newProgress = progress + amount;
-		if (newProgress < duration && !seeking && isPlaying) {
-			setProgress(newProgress);
-			setUpdated(false);
-		} else {
-			if (!updated) {
-				spotifyApi.getMyCurrentPlayingTrack().then((data) => {
-					setDuration(data.body?.item?.duration_ms);
-					setProgress(data.body?.progress_ms);
-					setUpdated(true);
-				});
+		if (!loading) {
+			const newProgress = progress + amount;
+			if (newProgress < duration && !seeking && isPlaying) {
+				setProgress(newProgress);
+				setUpdated(false);
+			} else {
+				if (!updated) {
+					spotifyApi.getMyCurrentPlayingTrack().then((data) => {
+						setDuration(data.body?.item?.duration_ms);
+						setProgress(data.body?.progress_ms);
+						setUpdated(true);
+					});
+				}
 			}
 		}
 	};
@@ -109,6 +114,7 @@ function Player() {
 								height={80}
 								width={80}
 							/>
+
 							<div>
 								<div className="flex overflow-x-hidden items-center justify-center">
 									<div
@@ -125,6 +131,10 @@ function Player() {
 								<p className="test-xs md:text:sm text-zinc-900 dark:text-zinc-500">
 									{songInfo?.artists?.[0]?.name}
 								</p>
+								<PlusIcon
+									className="button hover:text-green-500"
+									onClick={() => likeSong(songInfo?.id)}
+								/>
 							</div>
 						</>
 					)}
@@ -209,6 +219,12 @@ function Player() {
 					>
 						<div className="flex justify-start  space-x-2">
 							<DesktopComputerIcon className="button fill-white" />
+							{!myDevices && (
+								<Link href="https://www.spotify.com">
+									Click Here to activate your Spotify acct. All you have to do is click
+									play
+								</Link>
+							)}
 							<h4 className="text-white pb-3">
 								Current Device:{' '}
 								{currentDevice ? currentDevice.name : 'No Active Device'}

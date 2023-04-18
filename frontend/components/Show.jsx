@@ -10,7 +10,7 @@ import {
 import useSpotify from '../hooks/useSpotify';
 
 function Show({ show }) {
-	const spotifyApi = useSpotify();
+	const { spotifyApi } = useSpotify();
 	const [podcastShowId, setPodcastShowId] = useRecoilState(podcastShowIdState);
 	const [manualChange, setManualChange] = useRecoilState(manualChangeState);
 	const [isPlaying, setIsPlaying] = useRecoilState(isPlayingState);

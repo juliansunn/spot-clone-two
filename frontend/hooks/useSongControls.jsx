@@ -1,4 +1,4 @@
-import { shuffle } from 'lodash';
+import { shuffle, toSafeInteger } from 'lodash';
 import { useState } from 'react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import {
@@ -13,9 +13,10 @@ import {
 import useSongs from './useSongs';
 import useSpotify from './useSpotify';
 import { mapSongsForQueue } from '../lib/utility';
+import { toast } from 'react-toastify';
 
 const useSongControls = () => {
-	const spotifyApi = useSpotify();
+	const { spotifyApi } = useSpotify();
 	const [isShuffle, setIsShuffle] = useRecoilState(isShuffleState);
 	const [isRepeat, setIsRepeat] = useState(false);
 	const [currentTrackLoc, setCurrentTrackLoc] =
@@ -68,6 +69,7 @@ const useSongControls = () => {
 				});
 				setManualChange(true);
 			}
+			setProgress(0);
 			setCurrentTrackLoc(newLoc);
 			setCurrentTrackId(
 				songQueue[newLoc].track
@@ -110,6 +112,13 @@ const useSongControls = () => {
 		});
 	};
 
+	const likeSong = (trackId) => {
+		if (trackId) {
+			spotifyApi.addToMySavedTracks(trackId);
+			toast(`Added ${trackId} to your Liked Songs!`);
+		}
+	};
+
 	return {
 		isShuffle,
 		setIsShuffle,
@@ -121,7 +130,8 @@ const useSongControls = () => {
 		setManualChange,
 		handlePlayPause,
 		playSong,
-		currentTrackId
+		currentTrackId,
+		likeSong
 	};
 };
 
