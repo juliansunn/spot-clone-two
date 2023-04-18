@@ -8,20 +8,22 @@ const useSongs = () => {
 	const { data: session } = useSession();
 	const [songs, setSongs] = useRecoilState(songListState);
 	const [songQueue, setSongQueue] = useRecoilState(songQueueState);
-	const spotifyApi = useSpotify();
+	const { spotifyApi, loading } = useSpotify();
 	useEffect(() => {
 		const fetchQueuedSongs = async () => {
-			const queuedTracks = await fetch(
-				'https://api.spotify.com/v1/me/player/queue',
-				{
-					headers: {
-						Authorization: `Bearer ${spotifyApi.getAccessToken()}`
+			if (!loading) {
+				const queuedTracks = await fetch(
+					'https://api.spotify.com/v1/me/player/queue',
+					{
+						headers: {
+							Authorization: `Bearer ${spotifyApi.getAccessToken()}`
+						}
 					}
+				).then((res) => res.json());
+				if (queuedTracks) {
+					setSongs(queuedTracks?.queue);
+					setSongQueue(queuedTracks?.queue);
 				}
-			).then((res) => res.json());
-			if (queuedTracks) {
-				setSongs(queuedTracks?.queue);
-				setSongQueue(queuedTracks?.queue);
 			}
 		};
 		if (!songQueue?.length) {

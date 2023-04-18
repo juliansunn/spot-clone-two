@@ -6,21 +6,23 @@ import useSpotify from './useSpotify';
 const DEFAULT_VOLUME = 50;
 
 const useDevice = () => {
-	const spotifyApi = useSpotify();
+	const { spotifyApi, loading } = useSpotify();
 	const { data: session } = useSession();
 	const [myDevices, setMyDevices] = useRecoilState(myDevicesState);
 	const [currentDevice, setCurrentDevice] = useRecoilState(currentDeviceState);
 	const [initialVolume, setInitialVolume] = useState(null);
 	const getCurrentDevices = async () => {
-		const data = await spotifyApi.getMyDevices();
-		const devices = data?.body?.devices;
-		const deviceToActivate = devices && devices.find((d) => d.is_active);
-		if (!currentDevice) {
-			activateDevice(deviceToActivate);
-		}
-		if (devices) {
-			setMyDevices(devices);
-			setInitialVolume(currentDevice?.volume_percent);
+		if (!loading) {
+			const data = await spotifyApi.getMyDevices();
+			const devices = data?.body?.devices;
+			const deviceToActivate = devices && devices.find((d) => d.is_active);
+			if (!currentDevice && deviceToActivate) {
+				activateDevice(deviceToActivate);
+			}
+			if (devices) {
+				setMyDevices(devices);
+				setInitialVolume(currentDevice?.volume_percent);
+			}
 		}
 	};
 

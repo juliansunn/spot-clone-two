@@ -9,7 +9,8 @@ import { ThemeProvider } from './Theme/ThemeContext';
 import Background from './Theme/Background';
 import Theme from './Theme/Toggle';
 import ReactModal from 'react-modal';
-import useSpotify from '../hooks/useSpotify';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function Layout({ children }) {
 	const { data: session } = useSession();
@@ -59,11 +60,22 @@ function Layout({ children }) {
 					</nav>
 					<div className="flex-grow w-full">{children}</div>
 					<div className="fixed bottom-0 z-5 w-full">
+						<ToastContainer
+							position="bottom-center"
+							autoClose={3000}
+							hideProgressBar={false}
+							newestOnTop={false}
+							closeOnClick
+							rtl={false}
+							pauseOnFocusLoss
+							draggable
+							pauseOnHover
+							theme="dark"
+						/>
 						<Player />
 					</div>
 				</div>
 
-				{/* {sidebarVisibility && <Sidebar />} */}
 				<ReactModal
 					className="fixed top-0 left-0 z-40  h-screen bg-zinc-200 border-r border-zinc-200 dark:bg-zinc-900 dark:border-zinc-700 max-w-[12rem] sm:max-w-[12rem] lg:max-w-[15rem] sm:min-w-[12rem] lg:min-w-[15rem] pb-20 pt-12"
 					onRequestClose={toggleSidebar}

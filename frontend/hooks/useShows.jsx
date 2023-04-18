@@ -4,7 +4,7 @@ import useSpotify from './useSpotify';
 
 const useShows = () => {
 	const [shows, setShows] = useState([]);
-	const spotifyApi = useSpotify();
+	const { spotifyApi } = useSpotify();
 	useEffect(() => {
 		const getShows = async () => {
 			var config = {

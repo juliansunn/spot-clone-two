@@ -1,7 +1,7 @@
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import useSpotify from '../hooks/useSpotify';
 import { millisToMinutesAndSeconds } from '../lib/utility';
-import { PauseIcon, PlayIcon } from '@heroicons/react/outline';
+import { PauseIcon, PlayIcon, PlusIcon } from '@heroicons/react/outline';
 import Link from 'next/link';
 import { albumState } from '../atoms/albumAtom';
 import useSongControls from '../hooks/useSongControls';
@@ -9,8 +9,9 @@ import useSongs from '../hooks/useSongs';
 import { isPlayingState } from '../atoms/songAtom';
 
 function Song({ track, order, addedAt }) {
-	const spotifyApi = useSpotify();
-	const { handlePlayPause, playSong, currentTrackId } = useSongControls();
+	const { spotifyApi } = useSpotify();
+	const { handlePlayPause, playSong, currentTrackId, likeSong } =
+		useSongControls();
 	const isPlaying = useRecoilValue(isPlayingState);
 	const { setSongs } = useSongs();
 	const setAlbum = useSetRecoilState(albumState);
@@ -86,10 +87,11 @@ function Song({ track, order, addedAt }) {
 					<Link
 						href="/album"
 						className="flex items-center justify-between ml-auto md:ml-0 cursor-pointer"
+						onClick={handleAlbum}
 					>
-						<a onClick={handleAlbum}>
+						<>
 							<p className="w-40 truncate">{track?.album?.name}</p>
-						</a>
+						</>
 					</Link>
 				</td>
 			)}
@@ -104,6 +106,12 @@ function Song({ track, order, addedAt }) {
 				<div>
 					<p>{millisToMinutesAndSeconds(track?.duration_ms)}</p>
 				</div>
+			</td>
+			<td>
+				<PlusIcon
+					className="button hover:text-green-500"
+					onClick={() => likeSong(track?.id)}
+				/>
 			</td>
 		</tr>
 	);

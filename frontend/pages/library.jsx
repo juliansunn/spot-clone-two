@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
 import Layout from '../components/Layout';
+import Loading from '../components/Loading';
 import PlaylistCard from '../components/PlaylistCard';
 import PodcastCard from '../components/PodcastCard';
 import AlbumCard from '../components/AlbumCard';
@@ -14,10 +15,10 @@ function Library() {
 	const [contentType, setContentType] = useState(0);
 
 	const contentList = ['Playlists', 'Podcasts', 'Artists', 'Albums'];
-	const { playlists } = usePlaylists();
-	const { artists } = useArtists();
-	const { albums } = useAlbums();
-	const { shows } = useShows();
+	const { playlists, loading: playlistLoading } = usePlaylists();
+	const { artists, loading: artistLoading } = useArtists();
+	const { albums, loading: albumLoading } = useAlbums();
+	const { shows, loading: showLoading } = useShows();
 	return (
 		<Layout>
 			<div className="px-10 mt-20">
@@ -41,22 +42,26 @@ function Library() {
 				<h1 className="text-lg md:text-xl xl:text-2xl text-zinc-800 dark:text-white">
 					{contentList[contentType]}
 				</h1>
-				<div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4  pb-24 pt-3">
-					{contentType === 0 &&
-						playlists?.map((playlist) => (
-							<PlaylistCard key={playlist.id} data={playlist} />
-						))}
-					{contentType === 1 &&
-						shows?.map((show) => (
-							<PodcastCard key={show.show?.id} data={show.show} />
-						))}
-					{contentType === 2 &&
-						artists.map((artist) => <ArtistCard key={artist.id} data={artist} />)}
-					{contentType === 3 &&
-						albums?.map((album) => (
-							<AlbumCard key={album?.album.id} data={album?.album} />
-						))}
-				</div>
+				{playlistLoading ? (
+					<Loading />
+				) : (
+					<div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4  pb-24 pt-3">
+						{contentType === 0 &&
+							playlists?.map((playlist) => (
+								<PlaylistCard key={playlist.id} data={playlist} />
+							))}
+						{contentType === 1 &&
+							shows?.map((show) => (
+								<PodcastCard key={show.show?.id} data={show.show} />
+							))}
+						{contentType === 2 &&
+							artists.map((artist) => <ArtistCard key={artist.id} data={artist} />)}
+						{contentType === 3 &&
+							albums?.map((album) => (
+								<AlbumCard key={album?.album.id} data={album?.album} />
+							))}
+					</div>
+				)}
 			</div>
 		</Layout>
 	);

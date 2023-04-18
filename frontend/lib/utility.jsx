@@ -1,3 +1,4 @@
+import { PlusIcon } from '@heroicons/react/outline';
 import { ClockIcon } from '@heroicons/react/solid';
 
 export function millisToMinutesAndSeconds(millis) {
@@ -134,6 +135,10 @@ export const playlistHeaders = [
 	{
 		name: <ClockIcon className="button" />,
 		style: defaultStyle
+	},
+	{
+		name: <PlusIcon className="button" />,
+		style: defaultStyle
 	}
 ];
 export const albumHeaders = [
@@ -141,6 +146,10 @@ export const albumHeaders = [
 	{ name: 'TITLE', style: defaultStyle },
 	{
 		name: <ClockIcon className="button" />,
+		style: defaultStyle
+	},
+	{
+		name: <PlusIcon className="button" />,
 		style: defaultStyle
 	}
 ];
@@ -157,6 +166,10 @@ export const historyHeaders = [
 	},
 	{
 		name: <ClockIcon className="button" />,
+		style: defaultStyle
+	},
+	{
+		name: <PlusIcon className="button" />,
 		style: defaultStyle
 	}
 ];

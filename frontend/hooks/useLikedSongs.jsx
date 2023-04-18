@@ -5,7 +5,7 @@ import { songListState } from '../atoms/songAtom';
 import useSpotify from './useSpotify';
 
 const useLikedSongs = () => {
-	const spotifyApi = useSpotify();
+	const { spotifyApi } = useSpotify();
 	const { data: session } = useSession();
 	const [likedSongs, setLikedSongs] = useRecoilState(songListState);
 
@@ -44,7 +44,7 @@ const useLikedSongs = () => {
 		};
 
 		getLikedSongs();
-	}, []);
+	}, [session]);
 
 	return { likedSongs };
 };
