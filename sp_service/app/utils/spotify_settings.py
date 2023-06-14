@@ -70,6 +70,18 @@ class SpotifyConn:
         )
         self.token = token
         self.access_token = self._get_token_info()
+    
+    def get_user(self):
+        try:
+            return User.objects.get(pk=self.user_id)
+        except User.DoesNotExist:
+            return None
+    
+    def get_token_data(self):
+        if not self.token:
+            if user := self.get_user():
+                self.token = user.token_data
+        return self.token
 
     def refresh_token(self, cached_token_data: dict):
         return self.sp_client.refresh_token(
@@ -80,7 +92,8 @@ class SpotifyConn:
         )
 
     def _get_token_info(self):
-        return self.refresh_token(self.token) if self.token else self.get_token()
+        t = self.get_token_data()
+        return self.refresh_token(t) if t else self.get_token()
 
 
     def get_token(self):
@@ -112,7 +125,7 @@ class SpotifyConn:
 
     def add_data_to_db(self, historical_data=False, **kwargs):
         tracks = self.parsed.track_list
-        user = User.objects.filter(pk=self.user_id)
+        user = User.objects.filter(pk=self.user_id).first()
         not_found = {}
 
         if historical_data:

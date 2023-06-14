@@ -23,11 +23,19 @@ export const AuthProvider = ({ children }) => {
 
 	let loginUser = async (e) => {
 		e.preventDefault();
-		let response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login/`, {
+		let response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/login`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
 			},
+			body: JSON.stringify({
+				username: authTokens.username,
+				token_data: {
+					access_token: authTokens?.access_token,
+					refresh_token: authTokens?.refresh_token,
+					token_type: 'Bearer'
+				}
+			}),
 			body: JSON.stringify({
 				username: e.target.username.value,
 				password: e.target.password.value
