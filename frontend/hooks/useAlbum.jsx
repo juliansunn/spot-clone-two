@@ -11,7 +11,6 @@ const useAlbum = (albumId) => {
 			if (!spotifyLoading) {
 				const albumRes = await spotifyApi.getAlbum(albumId);
 				setAlbum(albumRes?.body);
-
 				setLoading(false);
 			}
 		};

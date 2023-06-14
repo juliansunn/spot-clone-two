@@ -13,7 +13,6 @@ const useArtist = (artistId) => {
 			if (!spotifyLoading) {
 				const artistRes = await spotifyApi.getArtist(artistId);
 				setArtist(artistRes.body);
-				// spotifyApi.getArtistData;
 
 				const albumRes = await spotifyApi.getArtistAlbums(artistId, {
 					include_groups: 'album',

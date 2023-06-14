@@ -191,27 +191,27 @@ SIMPLE_JWT = {
 }
 
 
-# SHELL_PLUS_PRE_IMPORTS = (
-#     ("app.utils.spotify_settings", "SpotifyConn"),
-#     ("pprint", "pprint"),
-# )
+SHELL_PLUS_PRE_IMPORTS = (
+    ("app.utils.spotify_settings", "SpotifyConn"),
+    ("pprint", "pprint"),
+)
 
-# SHELL_PLUS = "ipython"
+SHELL_PLUS = "ipython"
 
-# NOTEBOOK_ARGUMENTS = [
-#     "--ip",
-#     "0.0.0.0",
-#     "--port",
-#     "8888",
-#     "--allow-root",
-#     "--no-browser",
-# ]
+NOTEBOOK_ARGUMENTS = [
+    "--ip",
+    "0.0.0.0",
+    "--port",
+    "8888",
+    "--allow-root",
+    "--no-browser",
+]
 
-# IPYTHON_ARGUMENTS = [
-#     "--ext",
-#     "django_extensions.management.notebook_extension",
-#     "--debug",
-# ]
+IPYTHON_ARGUMENTS = [
+    "--ext",
+    "django_extensions.management.notebook_extension",
+    "--debug",
+]
 
 IPYTHON_KERNEL_DISPLAY_NAME = "Django Shell-Plus"
 
