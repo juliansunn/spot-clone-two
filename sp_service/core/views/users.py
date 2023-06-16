@@ -16,12 +16,12 @@ from core.models import User
 
 class UserViewSet(viewsets.ModelViewSet):
     authentication_classes = [SessionAuthentication]
-    http_method_names = ['get']
+    http_method_names = ["get"]
     serializer_class = UserSerializer
     permission_classes = (IsAuthenticated,)
     filter_backends = [filters.OrderingFilter]
-    ordering_fields = ['date_joined']
-    ordering = ['-date_joined']
+    ordering_fields = ["date_joined"]
+    ordering = ["-date_joined"]
 
     def get_queryset(self):
         if self.request.user.is_superuser:
@@ -34,7 +34,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
         return obj
 
-    
+
 @api_view()
 @permission_classes((AllowAny,))
 @schema(None)
@@ -44,12 +44,15 @@ def logout(request: Request, **kwargs):
     request.session.flush()
     return Response("You are logged out!")
 
+
 @api_view(("POST",))
 @permission_classes((AllowAny,))
 def user_login(request: Request, **kwargs):
     username = request.data.get("username")
     token_data = request.data.get("token_data")
-    user = auth.authenticate(request, username=username, token_data=token_data, **kwargs)
+    user = auth.authenticate(
+        request, username=username, token_data=token_data, **kwargs
+    )
     if not user:
         return Response(status=HTTP_401_UNAUTHORIZED, data="Your user does not exist.")
 
@@ -57,4 +60,6 @@ def user_login(request: Request, **kwargs):
     task = schedule_spotify_data_to_db_task(user_id=user.pk)
     task.enabled = True
     task.save()
-    return Response(status=HTTP_200_OK, data=f"You are logged in as {user.email}, {user.id}!")
+    return Response(
+        status=HTTP_200_OK, data=f"You are logged in as {user.email}, {user.id}!"
+    )
