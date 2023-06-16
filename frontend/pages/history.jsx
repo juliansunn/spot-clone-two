@@ -21,28 +21,25 @@ function History() {
 	const endDate = useRecoilValue(endDateState);
 	const [showFilter, setShowFilter] = useState(true);
 	const format = 'yyyy-MM-dd';
-	const { axiosInstance, user } = useAxios();
-
+	const { axiosInstance } = useAxios();
 	const { error, isLoading } = useQuery(
 		['sp-api', currentPage, startDate, endDate],
 		async () => {
-			axiosInstance.instance
-				.get('/play-history/', {
+			try {
+				const response = await axiosInstance.get('/play-history/', {
 					params: {
 						page: currentPage,
 						start_date: formatDate(startDate, format),
 						end_date: formatDate(endDate, format)
 					}
-				})
-				.then((response) => {
-					if (response.status === 200) {
-						setSongs(response.data.results);
-						setTotalPages(response.data.total_pages);
-					}
-				})
-				.catch((error) => {
-					console.log(error);
 				});
+				if (response.status === 200) {
+					setSongs(response.data.results);
+					setTotalPages(response.data.total_pages);
+				}
+			} catch (err) {
+				console.error(err);
+			}
 		}
 	);
 	const toggleFilter = () => {
