@@ -111,7 +111,7 @@ function Sidebar() {
 							<Loading />
 						) : (
 							playlists?.map((playlist) => (
-								<Link href="/playlist" key={playlist.id}>
+								<Link href={`/playlist/${playlist.id}`} key={playlist.id}>
 									<div className="flex space-x-1 mb-2">
 										{playlistId === playlist.id && (
 											<PlayIcon className="h-5 w-5 text-green-500" />

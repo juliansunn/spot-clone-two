@@ -73,7 +73,7 @@ function Song({ track, order, addedAt }) {
 						{track?.artist?.map((a) => (
 							<Link
 								key={a.id}
-								href="/artist"
+								href={`/artist/${a.id}`}
 								className="truncate cursor-pointer tranistion"
 							>
 								{a?.name}
@@ -85,7 +85,8 @@ function Song({ track, order, addedAt }) {
 			{track?.album && (
 				<td>
 					<Link
-						href="/album"
+						href={`album/${track.album.spotify_id}`}
+						key={track.album.id}
 						className="flex items-center justify-between ml-auto md:ml-0 cursor-pointer"
 						onClick={handleAlbum}
 					>
