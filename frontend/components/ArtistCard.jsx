@@ -6,7 +6,7 @@ import { artistIdState } from '../atoms/artistAtom';
 function ArtistCard({ data }) {
 	const [artistId, setArtistId] = useRecoilState(artistIdState);
 	return (
-		<Link href="/artist" key={data.id}>
+		<Link href={`/artist/${data.id}`} key={data.id}>
 			<div
 				onClick={() => setArtistId(data.id)}
 				className="p-2 bg-zinc-200 dark:bg-zinc-900 cursor-pointer rounded-md flex flex-col justify-center items-center shadow-2xl hover:bg-zinc-300 dark:hover:bg-zinc-600 text-xs  "

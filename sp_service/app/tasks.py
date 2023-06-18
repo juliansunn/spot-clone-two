@@ -1,4 +1,5 @@
 from __future__ import absolute_import, unicode_literals
+import json
 from celery import shared_task
 from app.utils.spotify_settings import SpotifyConn
 from core.models import User
@@ -37,24 +38,20 @@ def run_historical_audit_and_add_data_to_db(**kwargs):
     conn.add_data_to_db(historical_data=True, **kwargs)
 
 
-def schedule_spotify_data_to_db_task(user_id,  *args, **kwargs):
-
-
-    # Call the task manually to run immediately after user logs in
-    add_spotify_data_to_db.apply_async(
-        kwargs={"user_id": user_id}
-    )
-
+def schedule_spotify_data_to_db_task(user_id, **kwargs):
+    kwargs_str = json.dumps({"user_id": user_id})
     schedule, _ = IntervalSchedule.objects.get_or_create(every=15, period=IntervalSchedule.MINUTES)
-    task_name = f"add-recently-played-songs-{user_id}"
+    task_name = f"add-spotify-data-to-db-{user_id}"
     task, _ = PeriodicTask.objects.get_or_create(
         name=task_name, 
-        task="app.tasks.add_spotify_data_to_db",
-        enabled=True,
+        task="Add Recently Played Songs",
         interval=schedule,
-        kwargs={"user_id": user_id}
+        kwargs=kwargs_str
     )
+    task.enabled = True
+    task.save()
+    
     print(f"Just Scheduled a New Task: {task}")
-    return task
+    return task 
 
 
