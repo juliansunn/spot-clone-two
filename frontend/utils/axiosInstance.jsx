@@ -9,8 +9,8 @@ const useAxios = () => {
 		baseURL,
 		headers: {
 			'Content-Type': 'application/json',
-			email: session?.user.email,
-			Authorization: `${session?.user.accessToken}|${session.user.refreshToken}`
+			email: session?.user?.email,
+			Authorization: `${session?.user?.accessToken}|${session.user?.refreshToken}`
 		}
 	});
 
