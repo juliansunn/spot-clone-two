@@ -94,24 +94,13 @@ function Sidebar() {
 							</>
 						</Link>
 					</li>
-					<li>
-						<Link
-							href="/episodes"
-							className="flex items-center p-2  font-normal text-zinc-900 rounded-lg dark:text-zinc-500 hover:bg-zinc-100 dark:hover:bg-zinc-700 hover:text-green-500 dark:hover:text-white transition duration-200"
-						>
-							<>
-								<RssIcon className="w-6 h-6" />
-								<span className="ml-3">Your Episodes</span>
-							</>
-						</Link>
-					</li>
 					<hr className="border-t[0.1px] border-zinc-900 dark:border-zinc-400" />
 					<div className="space-y-4 h-screen overflow-y-scroll scrollbar-hide pb-96">
 						{loading ? (
 							<Loading />
 						) : (
 							playlists?.map((playlist) => (
-								<Link href="/playlist" key={playlist.id}>
+								<Link href={`/playlist/${playlist.id}`} key={playlist.id}>
 									<div className="flex space-x-1 mb-2">
 										{playlistId === playlist.id && (
 											<PlayIcon className="h-5 w-5 text-green-500" />

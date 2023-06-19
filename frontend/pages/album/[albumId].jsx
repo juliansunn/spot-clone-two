@@ -14,6 +14,7 @@ const AlbumDetails = () => {
 	return (
 		<Layout>
 			<ListHeader data={album} audioType="ALBUM" />
+
 			{loading ? (
 				<Loading />
 			) : (

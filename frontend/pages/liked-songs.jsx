@@ -1,12 +1,9 @@
 import { useSession } from 'next-auth/react';
-import React, { useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
-import { songListState } from '../atoms/songAtom';
+
 import Layout from '../components/Layout';
 import Loading from '../components/Loading';
 import SongTable from '../components/SongTable';
 import useLikedSongs from '../hooks/useLikedSongs';
-import useSpotify from '../hooks/useSpotify';
 import { getRandomInt, historyHeaders } from '../lib/utility';
 
 function LikedSongs() {

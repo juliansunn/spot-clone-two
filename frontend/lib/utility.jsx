@@ -153,6 +153,18 @@ export const albumHeaders = [
 		style: defaultStyle
 	}
 ];
+export const artistSongHeaders = [
+	{ name: '#', style: defaultStyle },
+	{ name: 'TITLE', style: defaultStyle },
+	{
+		name: <ClockIcon className="button" />,
+		style: defaultStyle
+	},
+	{
+		name: <PlusIcon className="button" />,
+		style: defaultStyle
+	}
+];
 export const historyHeaders = [
 	{ name: '#', style: defaultStyle },
 	{ name: 'TITLE', style: defaultStyle },
