@@ -1,7 +1,13 @@
+import { useEffect } from 'react';
+import useSongs from '../hooks/useSongs';
 import { parseDate, parseDateTime } from '../lib/utility';
 import Song from './Song';
 
 function SongTable({ songs, type, headers }) {
+	const { setSongs } = useSongs();
+	useEffect(() => {
+		setSongs(songs);
+	}, [songs]);
 	return (
 		<div className="flex flex-col spacy-y-1 pb-28">
 			<table className="w-full table-auto [border-spacing:0.50rem] lg:[border-spaceing:0.70rem] ">
@@ -29,6 +35,10 @@ function SongTable({ songs, type, headers }) {
 						))}
 
 					{type === 'album' &&
+						songs?.map((track, i) => (
+							<Song key={i} id={track?.id} track={track} order={i} />
+						))}
+					{type === 'artist' &&
 						songs?.map((track, i) => (
 							<Song key={i} id={track?.id} track={track} order={i} />
 						))}

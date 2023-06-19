@@ -116,13 +116,13 @@ function Player() {
 							/>
 
 							<div>
-								<div className="flex overflow-x-hidden items-center justify-center">
+								<div className="flex overflow-x-hidden items-center justify-center min-w-max">
 									<div
 										className={`flex ${
 											songInfo?.name?.length > 15 ? 'animate-marquee2' : ''
 										}`}
 									>
-										<h3 className="text-sm md:text-lg text-zinc-900 dark:text-white font-semibold dark:font-normal">
+										<h3 className="text-sm md:text-lg text-zinc-900 dark:text-white font-semibold dark:font-normal w-100">
 											{songInfo?.name}
 										</h3>
 									</div>

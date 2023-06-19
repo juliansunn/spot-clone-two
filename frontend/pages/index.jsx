@@ -13,7 +13,6 @@ export default function Home() {
 	const { songInfo, context } = useSongInfo();
 	const { spotifyApi, loading } = useSpotify();
 	const [currentlyPlaying, setCurrentlyPlaying] = useState();
-	console.log('currentlyPlaying', currentlyPlaying);
 
 	useEffect(() => {
 		if (context && !loading) {

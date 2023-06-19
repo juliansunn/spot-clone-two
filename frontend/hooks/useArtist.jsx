@@ -22,14 +22,14 @@ const useArtist = (artistId) => {
 				setArtistAlbums(albums);
 
 				const topSongsRes = await spotifyApi.getArtistTopTracks(artistId, 'US');
-				const { items: tracks } = topSongsRes.body;
-				setTopArtistSongs(tracks);
+				const { tracks } = topSongsRes.body;
 
+				setTopArtistSongs(tracks);
 				setLoading(false);
 			}
 		};
 		getArtistData();
-	}, [spotifyLoading]);
+	}, [spotifyLoading, artistId]);
 
 	return { artist, artistAlbums, topArtistSongs, loading };
 };

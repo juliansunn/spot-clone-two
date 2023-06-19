@@ -29,7 +29,7 @@ function Song({ track, order, addedAt }) {
 	return (
 		<tr
 			className={
-				'text-zinc-800 dark:text-zinc-200 mb-3 py-4 px-5 hover:bg-gradient-to-b to-zinc-100 dark:to-zinc-900 from-zinc-200 dark:from-zinc-700 text-sm' +
+				'text-zinc-800 dark:text-zinc-200 mb-3 py-4 px-5 hover:bg-gradient-to-b to-zinc-100 dark:to-zinc-900 from-zinc-200 dark:from-zinc-700 text-sm h-10' +
 				(track?.id === currentTrackId ? (isPlaying ? ' animate-pulse ' : '') : '')
 			}
 			onDoubleClick={() => playSong(track, order)}
@@ -73,7 +73,7 @@ function Song({ track, order, addedAt }) {
 						{track?.artist?.map((a) => (
 							<Link
 								key={a.id}
-								href="/artist"
+								href={`/artist/${a.id}`}
 								className="truncate cursor-pointer tranistion"
 							>
 								{a?.name}
@@ -85,7 +85,10 @@ function Song({ track, order, addedAt }) {
 			{track?.album && (
 				<td>
 					<Link
-						href="/album"
+						href={`/album/${
+							track.album.spotify_id ? track.album.spotify_id : track.album.id
+						}`}
+						key={track.album.id}
 						className="flex items-center justify-between ml-auto md:ml-0 cursor-pointer"
 						onClick={handleAlbum}
 					>

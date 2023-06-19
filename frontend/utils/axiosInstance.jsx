@@ -1,7 +1,4 @@
 import axios from 'axios';
-import jwt_decode from 'jwt-decode';
-import dayjs from 'dayjs';
-import { useEffect, useState, useMemo } from 'react';
 import { useSession } from 'next-auth/react';
 
 const useAxios = () => {
@@ -11,9 +8,12 @@ const useAxios = () => {
 	const axiosInstance = axios.create({
 		baseURL,
 		headers: {
-			email: session?.user.email
+			'Content-Type': 'application/json',
+			email: session?.user.email,
+			Authorization: `${session?.user.accessToken}|${session.user.refreshToken}`
 		}
 	});
+
 	return { axiosInstance };
 };
 
