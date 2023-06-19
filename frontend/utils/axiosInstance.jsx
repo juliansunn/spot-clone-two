@@ -8,13 +8,12 @@ const useAxios = () => {
 	const axiosInstance = axios.create({
 		baseURL,
 		headers: {
+			'Content-Type': 'application/json',
 			email: session?.user.email,
-			expires_at: session?.expires,
-			access_token: session?.user.accessToken,
-			refresh_token: session?.user.refreshToken,
-			token_type: 'Bearer'
+			Authorization: `${session?.user.accessToken}|${session.user.refreshToken}`
 		}
 	});
+
 	return { axiosInstance };
 };
 

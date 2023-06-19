@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { shuffle } from 'lodash';
-import { getRandomInt } from '../lib/utility';
+import { getRandomInt, parseDate } from '../lib/utility';
+import Link from 'next/link';
 
 const colors = [
 	'to-indigo-100',
@@ -25,6 +26,28 @@ function PlaylistDetails({ data }) {
 					Description: {data?.description}
 				</p>
 			)}
+		</>
+	);
+}
+function AlbumDetails({ data }) {
+	return (
+		<>
+			<p className="tracking-[10px] text-zinc-800 dark:text-zinc-400 text-xl">
+				ARTIST:
+			</p>
+			<div className="flex row">
+				{data?.artists?.map((artist) => (
+					<Link
+						href={`/artist/${artist.id}`}
+						className="text-xl font-bold text-zinc-600 dark:text-zinc-200 drop-shadow-lg truncate pb-5"
+					>
+						{artist.name}
+					</Link>
+				))}
+			</div>
+			<p className="text-zinc-800 dark:text-zinc-300">
+				Release Date: {parseDate(data?.release_date)}
+			</p>
 		</>
 	);
 }
@@ -53,13 +76,14 @@ function ListHeader({ data, audioType }) {
 					alt="no image"
 				/>
 				<div className="w-1/2">
-					<p className="tracking-[15px] text-zinc-900 dark:text-zinc-200 text-3xl">
+					<p className="tracking-[15px] text-zinc-800 dark:text-zinc-400 text-3xl">
 						{audioType}
 					</p>
 					<h1 className="text-2xl md:text-4xl  font-bold text-zinc-900 dark:text-zinc-200 drop-shadow-lg truncate pb-5">
 						{data?.name}
 					</h1>
 					{audioType === 'PLAYLIST' && <PlaylistDetails data={data} />}
+					{audioType === 'ALBUM' && <AlbumDetails data={data} />}
 				</div>
 			</div>
 		</div>

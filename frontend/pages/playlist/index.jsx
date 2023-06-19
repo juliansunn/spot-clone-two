@@ -4,7 +4,9 @@ import Layout from '../../components/Layout';
 const Playlists = () => {
 	return (
 		<Layout>
-			<div>Playlists</div>
+			<div className="text-white h-full flex justify-center items-center text-6xl">
+				Playlists
+			</div>
 		</Layout>
 	);
 };

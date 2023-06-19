@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     "django_extensions",
     "django_celery_beat",
     "django_celery_results",
+    "django_pdb",
     "corsheaders",
     "rest_framework",
     "rest_framework_simplejwt.token_blacklist",
@@ -64,6 +65,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "django_pdb.middleware.PdbMiddleware",
 ]
 
 ROOT_URLCONF = "proj.urls"
@@ -233,10 +235,6 @@ CORS_ALLOW_HEADERS = [
     "x-csrftoken",
     "x-requested-with",
     "email",
-    "expires_at",
-    "access_token",
-    "refresh_token",
-    "token_type",
 ]
 
 CORS_ALLOWED_ORIGINS = [

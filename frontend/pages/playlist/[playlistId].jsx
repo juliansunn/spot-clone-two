@@ -10,6 +10,7 @@ const Playlist = () => {
 	const router = useRouter();
 	const { playlistId } = router.query;
 	const { playlist } = usePlaylist(playlistId);
+
 	return (
 		<Layout>
 			<ListHeader data={playlist} audioType="PLAYLIST" />
