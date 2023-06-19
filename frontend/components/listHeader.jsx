@@ -39,6 +39,7 @@ function AlbumDetails({ data }) {
 				{data?.artists?.map((artist) => (
 					<Link
 						href={`/artist/${artist.id}`}
+						key={artist.id}
 						className="text-xl font-bold text-zinc-600 dark:text-zinc-200 drop-shadow-lg truncate pb-5"
 					>
 						{artist.name}
