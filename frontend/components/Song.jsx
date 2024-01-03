@@ -56,7 +56,12 @@ function Song({ track, order, addedAt }) {
 				</div>
 			</td>
 
-			<td className="flex items-center space-x-4 text-zinc-800 dark:text-zinc-500">
+			<td
+				className={
+					(track.album ? 'flex items-center justify-start ' : '') +
+					'space-x-4 text-zinc-800 dark:text-zinc-500'
+				}
+			>
 				{track?.album && (
 					<img
 						className="h-10 w-10"

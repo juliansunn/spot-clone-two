@@ -5,6 +5,11 @@ export const currentTrackIdState = atom({
 	default: null
 });
 
+export const currentTrackTypeState = atom({
+	key: 'currentTrackTypeState',
+	default: 'track'
+});
+
 export const currentTrackLocState = atom({
 	key: 'currentTrackLocState',
 	default: 0

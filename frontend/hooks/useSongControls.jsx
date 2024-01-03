@@ -1,9 +1,10 @@
 import { shuffle, toSafeInteger } from 'lodash';
 import { useState } from 'react';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import {
 	currentTrackIdState,
 	currentTrackLocState,
+	currentTrackTypeState,
 	durationState,
 	isPlayingState,
 	isShuffleState,
@@ -24,6 +25,7 @@ const useSongControls = () => {
 	const [currentTrackId, setCurrentTrackId] =
 		useRecoilState(currentTrackIdState);
 	const [manualChange, setManualChange] = useRecoilState(manualChangeState);
+	const setCurrentTrackType = useSetRecoilState(currentTrackTypeState);
 	const setIsPlaying = useSetRecoilState(isPlayingState);
 	const setProgress = useSetRecoilState(progressState);
 	const setDuration = useSetRecoilState(durationState);
@@ -71,6 +73,10 @@ const useSongControls = () => {
 			}
 			setProgress(0);
 			setCurrentTrackLoc(newLoc);
+			console.log('songQueue[newLoc]', songQueue[newLoc]);
+			setCurrentTrackType(
+				songQueue[newLoc].track ? songQueue[newLoc].track.type : 'track'
+			);
 			setCurrentTrackId(
 				songQueue[newLoc].track
 					? songQueue[newLoc].track.id
@@ -91,6 +97,7 @@ const useSongControls = () => {
 			uris: uris,
 			offset: { position: myOrder }
 		});
+		console.log('track', track);
 
 		setSongQueue(mySongs);
 		setManualChange(true);
