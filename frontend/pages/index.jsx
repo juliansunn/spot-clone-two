@@ -1,37 +1,74 @@
-import { getSession } from 'next-auth/react';
-import { useEffect, useState } from 'react';
+import React, { useState } from 'react';
+
 import Layout from '../components/Layout';
-import useSongInfo from '../hooks/useSongInfo';
-import useSpotify from '../hooks/useSpotify';
+import Loading from '../components/Loading';
+import PlaylistCard from '../components/PlaylistCard';
+import PodcastCard from '../components/PodcastCard';
+import AlbumCard from '../components/AlbumCard';
+import ArtistCard from '../components/ArtistCard';
+import usePlaylists from '../hooks/usePlaylists';
+import useArtists from '../hooks/useArtists';
+import useAlbums from '../hooks/useAlbums';
+import useShows from '../hooks/useShows';
+import { getSession } from 'next-auth/react';
 
-function getIdFromUri(uri) {
-	const uriArray = uri.split(':');
-	return uriArray[uriArray.length - 1];
-}
+function Home() {
+	const [contentType, setContentType] = useState(0);
 
-export default function Home() {
-	const { songInfo, context } = useSongInfo();
-	const { spotifyApi, loading } = useSpotify();
-	const [currentlyPlaying, setCurrentlyPlaying] = useState();
-
-	useEffect(() => {
-		if (context && !loading) {
-			console.log('context', context);
-			if (context?.type === 'playlist')
-				spotifyApi
-					.getPlaylist(getIdFromUri(context?.uri))
-					.then((res) => setCurrentlyPlaying(res.data));
-		}
-	}, [context]);
-
+	const contentList = ['Playlists', 'Podcasts', 'Artists', 'Albums'];
+	const { playlists, loading: playlistLoading } = usePlaylists();
+	const { artists, loading: artistLoading } = useArtists();
+	const { albums, loading: albumLoading } = useAlbums();
+	const { shows, loading: showLoading } = useShows();
 	return (
 		<Layout>
-			<div className="flex items-center justify-center h-screen text-zinc-300">
-				{context?.type}
+			<div className="px-10 mt-20">
+				<div className=" flex items-center justify-start px-20 w-full h-20 text-white">
+					{contentList.map((content, i) => (
+						<button
+							key={i}
+							onClick={() => {
+								setContentType(i);
+							}}
+							className={`hover:bg-zinc-600 dark:hover:bg-zinc-600 p-3 mx-1 rounded ${
+								contentType == i
+									? 'bg-zinc-500 dark:bg-zinc-500'
+									: 'bg-zinc-300 dark:bg-zinc-800'
+							} cursor-pointer`}
+						>
+							{content}
+						</button>
+					))}
+				</div>
+				<h1 className="text-lg md:text-xl xl:text-2xl text-zinc-800 dark:text-white">
+					{contentList[contentType]}
+				</h1>
+				{playlistLoading ? (
+					<Loading />
+				) : (
+					<div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4  pb-24 pt-3">
+						{contentType === 0 &&
+							playlists?.map((playlist) => (
+								<PlaylistCard key={playlist.id} data={playlist} />
+							))}
+						{contentType === 1 &&
+							shows?.map((show) => (
+								<PodcastCard key={show.show?.id} data={show.show} />
+							))}
+						{contentType === 2 &&
+							artists.map((artist) => <ArtistCard key={artist.id} data={artist} />)}
+						{contentType === 3 &&
+							albums?.map((album) => (
+								<AlbumCard key={album?.album.id} data={album?.album} />
+							))}
+					</div>
+				)}
 			</div>
 		</Layout>
 	);
 }
+
+export default Home;
 
 export async function getServerSideProps(context) {
 	const session = await getSession(context);

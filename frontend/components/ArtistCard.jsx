@@ -1,16 +1,10 @@
 import Link from 'next/link';
 import React from 'react';
-import { useRecoilState } from 'recoil';
-import { artistIdState } from '../atoms/artistAtom';
 
 function ArtistCard({ data }) {
-	const [artistId, setArtistId] = useRecoilState(artistIdState);
 	return (
 		<Link href={`/artist/${data.id}`} key={data.id}>
-			<div
-				onClick={() => setArtistId(data.id)}
-				className="p-2 bg-zinc-200 dark:bg-zinc-900 cursor-pointer rounded-md flex flex-col justify-center items-center shadow-2xl hover:bg-zinc-300 dark:hover:bg-zinc-600 text-xs  "
-			>
+			<div className="p-2 bg-zinc-200 dark:bg-zinc-900 cursor-pointer rounded-md flex flex-col justify-center items-center shadow-2xl hover:bg-zinc-300 dark:hover:bg-zinc-600 text-xs  ">
 				<img
 					src={data?.images?.[0]?.url}
 					className="shadow-md shadow-neutral-500/50 object-contain rounded-lg"

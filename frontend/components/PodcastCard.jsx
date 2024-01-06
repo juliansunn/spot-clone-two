@@ -7,14 +7,8 @@ function PodcastCard({ data }) {
 	const [podcastId, setPodcastId] = useRecoilState(podcastIdState);
 	const [podcast, setPodcast] = useRecoilState(podcastState);
 	return (
-		<Link href="/podcast" key={data.id}>
-			<div
-				onClick={() => {
-					setPodcastId(data.id);
-					setPodcast(data);
-				}}
-				className=" p-2 bg-zinc-200 dark:bg-zinc-900 cursor-pointer rounded-md items-center shadow-2xl hover:bg-zinc-300 dark:hover:bg-zinc-600 text-xs "
-			>
+		<Link href={`/podcast/${data.id}`} key={data.id}>
+			<div className=" p-2 bg-zinc-200 dark:bg-zinc-900 cursor-pointer rounded-md items-center shadow-2xl hover:bg-zinc-300 dark:hover:bg-zinc-600 text-xs ">
 				<img
 					src={data?.images?.[0]?.url}
 					className="shadow-md shadow-neutral-500/50 mx-auto rounded-md"
