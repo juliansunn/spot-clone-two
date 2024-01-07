@@ -1,6 +1,6 @@
-import { shuffle, toSafeInteger } from 'lodash';
+import { shuffle } from 'lodash';
 import { useState } from 'react';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import {
 	currentTrackIdState,
 	currentTrackLocState,
@@ -119,10 +119,19 @@ const useSongControls = () => {
 		});
 	};
 
-	const likeSong = (trackId) => {
-		if (trackId) {
-			spotifyApi.addToMySavedTracks(trackId);
-			toast(`Added ${trackId} to your Liked Songs!`);
+	const likeSong = (track) => {
+		if (track) {
+			spotifyApi.addToMySavedTracks(track.id);
+			toast.success(`Added ${track.name} to your Liked Songs!`, {
+				position: 'bottom-center',
+				autoClose: 5000,
+				hideProgressBar: false,
+				closeOnClick: true,
+				pauseOnHover: true,
+				draggable: true,
+				progress: undefined,
+				theme: 'dark'
+			});
 		}
 	};
 

@@ -58,7 +58,7 @@ function Song({ track, order, addedAt }) {
 
 			<td
 				className={
-					(track.album ? 'flex items-center justify-start ' : '') +
+					(track?.album ? 'flex items-center justify-start ' : '') +
 					'space-x-4 text-zinc-800 dark:text-zinc-500'
 				}
 			>
@@ -118,7 +118,7 @@ function Song({ track, order, addedAt }) {
 			<td>
 				<PlusIcon
 					className="button hover:text-green-500"
-					onClick={() => likeSong(track?.id)}
+					onClick={() => likeSong(track)}
 				/>
 			</td>
 		</tr>
