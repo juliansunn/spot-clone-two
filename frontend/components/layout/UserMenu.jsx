@@ -47,7 +47,7 @@ export default function UserMenu() {
 				<Dropdown.Content
 					align="end"
 					sideOffset={8}
-					className="z-[60] min-w-[14rem] animate-fade-in rounded-xl border border-line bg-elevated p-1.5 text-fg shadow-2xl"
+					className="z-[60] min-w-[14rem] animate-fade-in rounded-xl border border-line bg-elevated outline-none focus-visible:ring-0 p-1.5 text-fg shadow-2xl"
 				>
 					{user?.name && <div className="truncate px-3 pb-2 pt-1.5 text-xs text-muted">Signed in as {user.name}</div>}
 					<Dropdown.Item

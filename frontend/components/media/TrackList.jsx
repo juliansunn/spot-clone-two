@@ -6,6 +6,7 @@ import { Spinner } from '@/components/ui/States';
 import ArtistLinks from './ArtistLinks';
 import Equalizer from './Equalizer';
 import LikeButton from './LikeButton';
+import TrackMenu from './TrackMenu';
 import { cn } from '@/lib/cn';
 import { formatAddedAt, formatDuration, formatPlayedAt } from '@/lib/format';
 import { useNowPlaying, usePlayFrom } from '@/hooks/usePlayback';
@@ -66,7 +67,7 @@ export default function TrackList({
 						{dateColumn === 'played' ? 'Last played' : 'Date added'}
 					</span>
 				)}
-				<span role="columnheader" className="flex w-[5.5rem] justify-end pr-1">
+				<span role="columnheader" className="flex w-[7.5rem] justify-end pr-9">
 					<Clock3 className="h-4 w-4" aria-label="Duration" />
 				</span>
 			</div>
@@ -179,7 +180,7 @@ const TrackRow = memo(function TrackRow({ row, index, grid, showAlbum, showCover
 				</div>
 			)}
 
-			<div role="cell" className="flex w-[5.5rem] items-center justify-end gap-2">
+			<div role="cell" className="flex w-[7.5rem] items-center justify-end gap-1.5">
 				<LikeButton
 					uri={track.uri?.startsWith('spotify:track:') ? track.uri : null}
 					name={track.name}
@@ -187,6 +188,7 @@ const TrackRow = memo(function TrackRow({ row, index, grid, showAlbum, showCover
 					className={cn(!saved && 'opacity-0 focus-visible:opacity-100 group-hover:opacity-100')}
 				/>
 				<span className="w-10 text-right tabular-nums">{formatDuration(track.duration_ms)}</span>
+				<TrackMenu track={track} className="opacity-0 focus-visible:opacity-100 group-hover:opacity-100" />
 			</div>
 		</div>
 	);

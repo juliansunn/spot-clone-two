@@ -71,6 +71,7 @@ export default function App({ Component, pageProps: { session, ...pageProps } })
 						position="bottom-center"
 						offset={110}
 						toastOptions={{
+							classNames: { description: '!text-muted', actionButton: '!bg-accent !text-accent-fg !font-semibold' },
 							className:
 								'!bg-elevated !text-fg !border !border-line !shadow-2xl !rounded-xl !font-sans'
 						}}
