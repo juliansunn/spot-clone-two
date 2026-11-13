@@ -21,5 +21,5 @@ export async function proxy(req) {
 
 export const config = {
 	// Everything except Next internals, API routes and static files.
-	matcher: ['/((?!api|_next/static|_next/image|favicon.ico|img/|.*\\.(?:png|jpg|jpeg|svg|webp|ico)$).*)']
+	matcher: ['/((?!api|_next/static|_next/image|favicon.ico|img/|.*\\.(?:png|jpg|jpeg|svg|webp|ico|webmanifest)$).*)']
 };
