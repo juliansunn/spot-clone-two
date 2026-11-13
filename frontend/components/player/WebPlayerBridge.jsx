@@ -12,7 +12,9 @@ export default function WebPlayerBridge() {
 	const queryClient = useQueryClient();
 	const webStatus = useUiStore((s) => s.webPlayer.status);
 	const setWebPlayer = useUiStore((s) => s.setWebPlayer);
-	const missingScope = session?.scope ? !session.scope.split(' ').includes('streaming') : false;
+	// Sessions created before scopes were recorded have no `scope` at all; they
+	// predate the `streaming` permission too, so treat them as missing it.
+	const missingScope = status === 'authenticated' && !session?.scope?.split(' ').includes('streaming');
 
 	useEffect(() => {
 		if (status !== 'authenticated') return;
