@@ -108,3 +108,8 @@
 		transition-duration: 0.01ms !important;
 	}
 }
+
+/* Music visualizer: layout surfaces turn translucent while the northern lights are on. */
+html[data-aurora='on'] [data-surface] {
+	background-color: rgb(var(--surface) / 0.78);
+}
