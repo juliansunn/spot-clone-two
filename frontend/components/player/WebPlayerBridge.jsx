@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { signIn, useSession } from 'next-auth/react';
 import { toast } from 'sonner';
 import { useUiStore } from '@/lib/store';
+import { hasScopes } from '@/lib/scopes';
 import { useQueryClient } from '@tanstack/react-query';
 import { PLAYBACK_KEY } from '@/hooks/usePlayback';
 import { onWebPlayerStateChange, startWebPlayer } from '@/lib/webPlayer';
@@ -13,8 +14,8 @@ export default function WebPlayerBridge() {
 	const webStatus = useUiStore((s) => s.webPlayer.status);
 	const setWebPlayer = useUiStore((s) => s.setWebPlayer);
 	// Sessions created before scopes were recorded have no `scope` at all; they
-	// predate the `streaming` permission too, so treat them as missing it.
-	const missingScope = status === 'authenticated' && !session?.scope?.split(' ').includes('streaming');
+	// predate the newer permissions too, so treat them as missing.
+	const missingScope = status === 'authenticated' && !hasScopes(session);
 
 	useEffect(() => {
 		if (status !== 'authenticated') return;
@@ -25,9 +26,9 @@ export default function WebPlayerBridge() {
 
 	useEffect(() => {
 		if (webStatus !== 'needs-reauth') return;
-		toast('Play music on this computer?', {
+		toast('New features need one more permission', {
 			id: 'web-player-reauth',
-			description: 'Re-authorize Spotify once to enable the in-browser player.',
+			description: 'Re-authorize Spotify once to play music in this browser and save radio mixes as playlists.',
 			duration: 15000,
 			action: { label: 'Re-authorize', onClick: () => signIn('spotify', { callbackUrl: window.location.href }) }
 		});

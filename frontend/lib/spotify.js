@@ -234,6 +234,7 @@ export async function getPlaylistItems(id, offset = 0, limit = 100) {
 	return { ...page, items: (page?.items ?? []).map(normalizePlaylistItem) };
 }
 
+export const getTrack = (id) => spotifyFetch(`/tracks/${id}`, { query: { market: 'from_token' } });
 export const getAlbum = (id) => spotifyFetch(`/albums/${id}`);
 export const getAlbumTracks = (id, offset = 0, limit = 50) =>
 	spotifyFetch(`/albums/${id}/tracks`, { query: { offset, limit } });
@@ -264,6 +265,30 @@ export const getShowEpisodes = (id, offset = 0, limit = 50) =>
 /** Dev Mode apps are capped at limit=10 per type; keep requests within that. */
 export const search = (q, types = ['track', 'artist', 'album', 'playlist', 'show'], { limit = 10, offset = 0 } = {}) =>
 	spotifyFetch('/search', { query: { q, type: types.join(','), limit: Math.min(limit, 10), offset } });
+
+// ---------------------------------------------------------------------------
+// Playlists (write)
+// ---------------------------------------------------------------------------
+/** Create a playlist for the current user. `/users/{id}/playlists` was replaced by `/me/playlists` in 2026. */
+export function createPlaylist(userId, { name, description = '', isPublic = false }) {
+	const body = { name, description, public: isPublic };
+	return withFallback(
+		'playlist-create',
+		() => spotifyFetch('/me/playlists', { method: 'POST', body }),
+		() => spotifyFetch(`/users/${encodeURIComponent(userId)}/playlists`, { method: 'POST', body })
+	);
+}
+
+/** Add tracks in batches of 100 (the API limit). `/tracks` was renamed `/items` in 2026. */
+export async function addTracksToPlaylist(playlistId, uris) {
+	for (const group of chunk(uris, 100)) {
+		await withFallback(
+			'playlist-add',
+			() => spotifyFetch(`/playlists/${playlistId}/items`, { method: 'POST', body: { uris: group } }),
+			() => spotifyFetch(`/playlists/${playlistId}/tracks`, { method: 'POST', body: { uris: group } })
+		);
+	}
+}
 
 // ---------------------------------------------------------------------------
 // Player

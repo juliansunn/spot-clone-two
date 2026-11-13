@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import Link from 'next/link';
-import { Pause, Play, Repeat, Repeat1, Shuffle, SkipBack, SkipForward } from 'lucide-react';
+import { Pause, Play, Radio, Repeat, Repeat1, Shuffle, SkipBack, SkipForward } from 'lucide-react';
 import Cover from '@/components/ui/Cover';
 import IconButton from '@/components/ui/IconButton';
 import ArtistLinks from '@/components/media/ArtistLinks';
@@ -51,6 +51,16 @@ function NowPlaying({ item, context }) {
 				</p>
 			</div>
 			{!isEpisode && <LikeButton uri={uri} name={item.name} saved={isSaved(uri)} className="hidden sm:inline-flex" />}
+			{!isEpisode && item.id && (
+				<Link
+					href={`/radio/${item.id}`}
+					aria-label={`Song radio for ${item.name}`}
+					title="Song radio"
+					className="hidden shrink-0 rounded-full p-1 text-muted transition hover:scale-110 hover:text-fg sm:inline-flex"
+				>
+					<Radio className="h-4 w-4" />
+				</Link>
+			)}
 		</div>
 	);
 }

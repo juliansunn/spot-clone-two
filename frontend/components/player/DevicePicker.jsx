@@ -55,7 +55,7 @@ export default function DevicePicker() {
 					align="end"
 					sideOffset={12}
 					collisionPadding={12}
-					className="z-[60] w-80 animate-fade-in rounded-xl border border-line bg-elevated p-2 text-sm shadow-2xl"
+					className="z-[60] w-80 animate-fade-in rounded-xl border border-line bg-elevated outline-none focus-visible:ring-0 p-2 text-sm shadow-2xl"
 				>
 					<div className="px-3 pb-2 pt-2">
 						<h3 className="font-bold">Connect to a device</h3>

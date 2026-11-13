@@ -15,7 +15,10 @@ export const SPOTIFY_SCOPES = [
 	'user-library-read',
 	'user-library-modify',
 	'playlist-read-private',
-	'playlist-read-collaborative'
+	'playlist-read-collaborative',
+	// Saving radio mixes as playlists.
+	'playlist-modify-private',
+	'playlist-modify-public'
 ].join(' ');
 
 const clientId = process.env.SPOTIFY_CLIENT_ID || '';

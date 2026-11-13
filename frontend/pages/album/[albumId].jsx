@@ -69,7 +69,7 @@ export default function AlbumPage() {
 							<Dot />
 							<span>{pluralize(a.total_tracks, 'song')}</span>
 							{totalMs > 0 && !hasMore && (
-								<span className="text-white/70">, {formatLongDuration(totalMs)}</span>
+								<span className="-ml-1.5 text-white/70">, {formatLongDuration(totalMs)}</span>
 							)}
 						</>
 					)
