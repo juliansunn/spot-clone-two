@@ -34,7 +34,7 @@ export default function Sidebar({ className }) {
 
 	return (
 		<aside className={cn('flex min-h-0 flex-col gap-2', className)} aria-label="Sidebar">
-			<nav className="rounded-xl bg-surface px-3 py-4">
+			<nav data-surface className="rounded-xl bg-surface px-3 py-4">
 				<Logo className="mb-4 px-3" />
 				<ul className="space-y-0.5">
 					{NAV.map(({ href, label, icon: Icon }) => {
@@ -58,7 +58,7 @@ export default function Sidebar({ className }) {
 				</ul>
 			</nav>
 
-			<section className="flex min-h-0 flex-1 flex-col rounded-xl bg-surface">
+			<section data-surface className="flex min-h-0 flex-1 flex-col rounded-xl bg-surface">
 				<div className="flex items-center justify-between px-6 pb-2 pt-4">
 					<h2 className="text-sm font-bold text-muted">Your playlists</h2>
 					{playlists?.length > 0 && <span className="text-xs text-subtle">{playlists.length}</span>}

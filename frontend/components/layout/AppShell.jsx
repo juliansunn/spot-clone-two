@@ -5,6 +5,8 @@ import * as Dialog from '@radix-ui/react-dialog';
 import { Home, Library, Search } from 'lucide-react';
 import PlayerBar from '@/components/player/PlayerBar';
 import WebPlayerBridge from '@/components/player/WebPlayerBridge';
+import AuroraBackground from '@/components/visualizer/AuroraBackground';
+import VisualizerController from '@/components/visualizer/VisualizerController';
 import Sidebar from './Sidebar';
 import TopBar from './TopBar';
 import { cn } from '@/lib/cn';
@@ -34,7 +36,8 @@ export default function AppShell({ children }) {
 	}, [router.events, setSidebarOpen]);
 
 	return (
-		<div className="flex h-[100dvh] flex-col overflow-hidden bg-bg">
+		<div className="isolate flex h-[100dvh] flex-col overflow-hidden bg-bg">
+			<AuroraBackground />
 			<a
 				href="#main"
 				className="sr-only z-[100] rounded bg-accent px-3 py-2 text-accent-fg focus:not-sr-only focus:fixed focus:left-3 focus:top-3"
@@ -61,6 +64,7 @@ export default function AppShell({ children }) {
 					id="main"
 					ref={mainRef}
 					tabIndex={-1}
+					data-surface
 					className="scroll-area relative min-w-0 flex-1 overflow-y-auto overflow-x-hidden bg-surface outline-none lg:rounded-xl"
 				>
 					<TopBar scrollRef={mainRef} />
@@ -69,9 +73,10 @@ export default function AppShell({ children }) {
 			</div>
 
 			<WebPlayerBridge />
+			<VisualizerController />
 			<PlayerBar />
 
-			<nav aria-label="Primary" className="grid grid-cols-3 border-t border-line bg-surface lg:hidden">
+			<nav aria-label="Primary" data-surface className="grid grid-cols-3 border-t border-line bg-surface lg:hidden">
 				{MOBILE_TABS.map(({ href, label, icon: Icon }) => {
 					const active = href === '/' ? router.pathname === '/' : router.pathname.startsWith(href);
 					return (

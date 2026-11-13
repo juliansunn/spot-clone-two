@@ -9,6 +9,8 @@ import { DeviceIcon } from './DevicePicker';
 import DevicePicker from './DevicePicker';
 import ProgressBar from './ProgressBar';
 import VolumeControl from './VolumeControl';
+import PlayerWave from '@/components/visualizer/PlayerWave';
+import VisualizerSettings from '@/components/visualizer/VisualizerSettings';
 import { cn } from '@/lib/cn';
 import { usePlaybackState, usePlayerControls, useProgress } from '@/hooks/usePlayback';
 import { useSavedStatus } from '@/hooks/useLibrary';
@@ -103,8 +105,10 @@ export default function PlayerBar() {
 		<footer
 			className="relative z-40 border-t border-line bg-surface px-2 pb-[env(safe-area-inset-bottom)] sm:px-4"
 			aria-label="Player"
+			data-surface
 		>
-			<div className="grid h-[72px] grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-2 md:h-[var(--player-h)] md:grid-cols-[minmax(0,1fr)_minmax(0,2fr)_minmax(0,1fr)] md:gap-4">
+			<PlayerWave />
+			<div className="relative grid h-[72px] grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-2 md:h-[var(--player-h)] md:grid-cols-[minmax(0,1fr)_minmax(0,2fr)_minmax(0,1fr)] md:gap-4">
 				<NowPlaying item={item} context={state?.context} />
 
 				<div className="flex flex-col items-center gap-1">
@@ -158,6 +162,7 @@ export default function PlayerBar() {
 				</div>
 
 				<div className="flex items-center justify-end gap-1">
+					<VisualizerSettings />
 					<DevicePicker />
 					<div className="hidden md:block">
 						<VolumeControl />
