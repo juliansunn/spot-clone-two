@@ -4,6 +4,7 @@ import { useSession } from 'next-auth/react';
 import { toast } from 'sonner';
 import * as spotify from '@/lib/spotify';
 import { useUiStore } from '@/lib/store';
+import { activateWebPlayer } from '@/lib/webPlayer';
 
 export const PLAYBACK_KEY = ['playback'];
 
@@ -128,8 +129,9 @@ export function usePlayerControls() {
 	);
 
 	/**
-	 * Run a command; if Spotify says there's no active device, wake one up
-	 * (last used, else the first available) and retry once. If there are no
+	 * Run a command; if Spotify says there's no active device, wake one up and
+	 * retry once. Preference: this browser (web player), then the last device
+	 * used, then any computer, then whatever is available. If there are no
 	 * devices at all, open the device picker with guidance.
 	 */
 	const withDevice = async (command) => {
@@ -137,16 +139,20 @@ export function usePlayerControls() {
 			return await command(undefined);
 		} catch (e) {
 			if (!isNoDevice(e)) throw e;
+			const webDeviceId = useUiStore.getState().webPlayer.deviceId;
 			const devices = (await spotify.getDevices().catch(() => null))?.devices ?? [];
-			const target =
-				devices.find((d) => d.id === lastDeviceId && !d.is_restricted) ??
-				devices.find((d) => !d.is_restricted);
-			if (!target) {
+			const usable = devices.filter((d) => d.id && !d.is_restricted);
+			const targetId =
+				webDeviceId ??
+				usable.find((d) => d.id === lastDeviceId)?.id ??
+				usable.find((d) => d.type?.toLowerCase() === 'computer')?.id ??
+				usable[0]?.id;
+			if (!targetId) {
 				setDevicePickerOpen(true);
 				throw e;
 			}
-			setLastDeviceId(target.id);
-			return command(target.id);
+			setLastDeviceId(targetId);
+			return command(targetId);
 		}
 	};
 
@@ -157,7 +163,11 @@ export function usePlayerControls() {
 
 	const playMutation = useMutation({
 		mutationFn: (opts) => withDevice((deviceId) => spotify.play({ ...opts, deviceId: opts?.deviceId ?? deviceId })),
-		onMutate: () => patch((s) => ({ ...s, is_playing: true })),
+		onMutate: () => {
+			// Must run inside the click's user-activation window or the browser blocks audio.
+			activateWebPlayer();
+			return patch((s) => ({ ...s, is_playing: true }));
+		},
 		onError: (e, v, prev) => {
 			rollback(e, v, prev);
 			toast.error(spotify.describeError(e));
@@ -224,6 +234,7 @@ export function usePlayerControls() {
 
 	const transferMutation = useMutation({
 		mutationFn: ({ id, play }) => spotify.transferPlayback(id, play),
+		onMutate: () => activateWebPlayer(),
 		onSuccess: (_d, { id, name }) => {
 			setLastDeviceId(id);
 			toast.success(`Playing on ${name ?? 'device'}`);

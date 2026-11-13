@@ -5,6 +5,8 @@ import { Spinner } from '@/components/ui/States';
 import { cn } from '@/lib/cn';
 import { useDevices, usePlaybackState, usePlayerControls } from '@/hooks/usePlayback';
 import { useUiStore } from '@/lib/store';
+import { signIn } from 'next-auth/react';
+import { WEB_PLAYER_NAME } from '@/lib/webPlayer';
 
 const ICONS = {
 	computer: Laptop,
@@ -29,6 +31,10 @@ export default function DevicePicker() {
 	const { data: playback } = usePlaybackState();
 	const { transfer } = usePlayerControls();
 	const activeId = playback?.device?.id ?? devices?.find((d) => d.is_active)?.id;
+	const webPlayer = useUiStore((s) => s.webPlayer);
+	const webActive = webPlayer.deviceId && webPlayer.deviceId === activeId;
+	// The web player is listed separately at the top as "This computer".
+	const others = (devices ?? []).filter((d) => d.id !== webPlayer.deviceId && d.name !== WEB_PLAYER_NAME);
 
 	return (
 		<Popover.Root
@@ -60,13 +66,23 @@ export default function DevicePicker() {
 							</p>
 						)}
 					</div>
+					<ThisComputer
+						webPlayer={webPlayer}
+						active={webActive}
+						onSelect={() => {
+							if (!webActive) transfer({ id: webPlayer.deviceId, name: 'this computer', play: Boolean(playback?.is_playing) });
+							setOpen(false);
+						}}
+					/>
+					<div className="mx-3 my-2 h-px bg-line" />
+					<p className="px-3 pb-1 text-xs font-semibold uppercase tracking-wider text-subtle">Other devices</p>
 					{isLoading ? (
 						<div className="flex justify-center py-6">
 							<Spinner />
 						</div>
-					) : devices?.length ? (
+					) : others.length ? (
 						<ul className="space-y-0.5">
-							{devices.map((d) => {
+							{others.map((d) => {
 								const active = d.id === activeId;
 								return (
 									<li key={d.id ?? d.name}>
@@ -95,17 +111,64 @@ export default function DevicePicker() {
 							})}
 						</ul>
 					) : (
-						<div className="space-y-2 px-3 pb-3 text-muted">
-							<p>No devices found.</p>
-							<p className="text-xs">
-								Open the Spotify app on your phone, computer or speaker (Premium required), then come back. It will show
-								up here automatically.
-							</p>
-						</div>
+						<p className="px-3 pb-3 text-xs text-muted">
+							Open the Spotify app on your phone, desktop or a speaker and it will appear here.
+						</p>
 					)}
 					<Popover.Arrow className="fill-elevated" />
 				</Popover.Content>
 			</Popover.Portal>
 		</Popover.Root>
+	);
+}
+
+const WEB_STATUS = {
+	idle: 'Starting…',
+	loading: 'Connecting…',
+	unsupported: 'This browser can’t play Spotify audio',
+	'premium-required': 'Requires Spotify Premium',
+	error: 'Couldn’t start the web player'
+};
+
+function ThisComputer({ webPlayer, active, onSelect }) {
+	const { status, message } = webPlayer;
+	if (status === 'needs-reauth') {
+		return (
+			<div className="mx-1 rounded-lg bg-hover/60 p-3">
+				<p className="flex items-center gap-2 font-medium">
+					<Laptop className="h-5 w-5" /> This computer
+				</p>
+				<p className="mt-1 text-xs text-muted">Sign in again to allow playback in this browser.</p>
+				<button
+					type="button"
+					onClick={() => signIn('spotify', { callbackUrl: window.location.href })}
+					className="mt-2 rounded-full bg-accent px-3 py-1.5 text-xs font-bold text-accent-fg hover:brightness-110"
+				>
+					Re-authorize Spotify
+				</button>
+			</div>
+		);
+	}
+	const ready = status === 'ready' && webPlayer.deviceId;
+	return (
+		<button
+			type="button"
+			disabled={!ready}
+			onClick={onSelect}
+			title={!ready ? message ?? undefined : undefined}
+			className={cn(
+				'flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left transition hover:bg-hover disabled:cursor-not-allowed disabled:opacity-60',
+				active && 'text-accent'
+			)}
+		>
+			<Laptop className="h-5 w-5 shrink-0" />
+			<span className="min-w-0 flex-1">
+				<span className="block truncate font-medium">This computer</span>
+				<span className="block text-xs text-muted">
+					{active ? 'Playing here' : ready ? 'Antefy web player' : WEB_STATUS[status] ?? 'Unavailable'}
+				</span>
+			</span>
+			{!ready && (status === 'idle' || status === 'loading') && <Spinner className="h-4 w-4" />}
+		</button>
 	);
 }

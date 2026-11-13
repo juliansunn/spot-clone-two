@@ -22,6 +22,12 @@ export function setAccessToken(token) {
 	accessToken = token ?? null;
 }
 
+/** Current token, refreshing first if we don't have one (used by the Web Playback SDK). */
+export async function getAccessToken({ forceRefresh = false } = {}) {
+	if (!accessToken || forceRefresh) await refreshToken();
+	return accessToken;
+}
+
 export class SpotifyApiError extends Error {
 	constructor(status, message, reason) {
 		super(message || `Spotify request failed (${status})`);

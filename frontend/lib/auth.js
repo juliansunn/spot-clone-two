@@ -1,6 +1,8 @@
 import SpotifyProvider from 'next-auth/providers/spotify';
 
 export const SPOTIFY_SCOPES = [
+	// Required by the Web Playback SDK so this browser can be a playback device.
+	'streaming',
 	'user-read-email',
 	'user-read-private',
 	'user-read-playback-state',
@@ -76,6 +78,7 @@ export const authOptions = {
 					accessToken: account.access_token,
 					refreshToken: account.refresh_token,
 					spotifyId: account.providerAccountId,
+					scope: account.scope,
 					accessTokenExpires: account.expires_at
 						? account.expires_at * 1000
 						: Date.now() + 3600 * 1000
@@ -94,6 +97,7 @@ export const authOptions = {
 			session.accessToken = token.accessToken;
 			session.accessTokenExpires = token.accessTokenExpires;
 			session.error = token.error;
+			session.scope = token.scope;
 			session.user = { ...session.user, id: token.spotifyId };
 			return session;
 		}

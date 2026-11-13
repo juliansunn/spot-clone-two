@@ -30,6 +30,11 @@ export const useUiStore = create((set) => ({
 		set({ lastDeviceId });
 	},
 
+	// Web Playback SDK device ("this browser").
+	// status: 'idle' | 'loading' | 'ready' | 'unsupported' | 'needs-reauth' | 'premium-required' | 'error'
+	webPlayer: { status: 'idle', deviceId: null, message: null },
+	setWebPlayer: (patch) => set((s) => ({ webPlayer: { ...s.webPlayer, ...patch } })),
+
 	// Volume to restore after unmuting.
 	volumeBeforeMute: null,
 	setVolumeBeforeMute: (volumeBeforeMute) => set({ volumeBeforeMute })

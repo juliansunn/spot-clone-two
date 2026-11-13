@@ -5,6 +5,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { ExternalLink, LogOut, Moon, Sun } from 'lucide-react';
 import { getStoredTheme, storeTheme } from '@/lib/store';
 import { setAccessToken } from '@/lib/spotify';
+import { stopWebPlayer } from '@/lib/webPlayer';
 
 function useTheme() {
 	// Only rendered inside the (closed-by-default) menu, so reading storage
@@ -71,6 +72,7 @@ export default function UserMenu() {
 					<Dropdown.Item
 						className={itemClass}
 						onSelect={() => {
+							stopWebPlayer();
 							queryClient.clear();
 							setAccessToken(null);
 							signOut({ callbackUrl: '/login' });

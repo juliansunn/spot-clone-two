@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import * as Dialog from '@radix-ui/react-dialog';
 import { Home, Library, Search } from 'lucide-react';
 import PlayerBar from '@/components/player/PlayerBar';
+import WebPlayerBridge from '@/components/player/WebPlayerBridge';
 import Sidebar from './Sidebar';
 import TopBar from './TopBar';
 import { cn } from '@/lib/cn';
@@ -67,6 +68,7 @@ export default function AppShell({ children }) {
 				</main>
 			</div>
 
+			<WebPlayerBridge />
 			<PlayerBar />
 
 			<nav aria-label="Primary" className="grid grid-cols-3 border-t border-line bg-surface lg:hidden">
