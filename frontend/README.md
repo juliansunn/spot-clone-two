@@ -1,34 +1,39 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Antefy frontend
 
-## Getting Started
+Next.js (pages router) client for browsing your Spotify library and controlling playback, plus a
+listening-history view backed by the Django service in `../sp_service`.
 
-First, run the development server:
+## Setup
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+1. Create an app at <https://developer.spotify.com/dashboard> and add this redirect URI:
+   `http://127.0.0.1:3000/api/auth/callback/spotify`
+   (Spotify no longer accepts `localhost`; use `127.0.0.1` in the browser too.)
+2. Copy `../.env.sample` to `../.env` and fill in `SPOTIFY_CLIENT_ID`, `SPOTIFY_CLIENT_SECRET` and
+   `NEXTAUTH_SECRET` (`openssl rand -base64 32`).
+3. `npm install && npm run dev`, then open <http://127.0.0.1:3000>.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Playback control needs Spotify Premium and an open Spotify app (phone, desktop or speaker). Pick it
+from the device menu in the player bar.
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+## Architecture
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+| Area | Where |
+| --- | --- |
+| Auth (NextAuth + Spotify, token refresh) | `lib/auth.js`, `pages/api/auth/[...nextauth].js` |
+| Route protection | `middleware.js` (rewrites signed-out requests to `/login`) |
+| Spotify Web API client | `lib/spotify.js`: fetch wrapper with 401 refresh, 429 retry, and fallbacks for the Feb 2026 API changes |
+| Server state | `@tanstack/react-query` hooks in `hooks/` |
+| Playback | `hooks/usePlayback.js`: polls `/me/player`, interpolates progress, optimistic controls |
+| UI state | `lib/store.js` (zustand) |
+| History proxy | `pages/api/history.js`: calls Django server-side so tokens never reach the browser |
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+## Scripts
 
-## Learn More
+- `npm run dev`: dev server
+- `npm run lint`: ESLint (zero warnings allowed)
+- `npm run build && npm start`: production build
 
-To learn more about Next.js, take a look at the following resources:
+## Keyboard shortcuts
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- `Space`: play / pause
+- `/`: focus search

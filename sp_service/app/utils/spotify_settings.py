@@ -26,10 +26,10 @@ logger = logging.getLogger(__name__)
 class SpotifyConn:
     def __init__(
         self,
-        client_id=os.getenv("NEXT_PUBLIC_CLIENT_ID"),
-        client_secret=os.getenv("NEXT_PUBLIC_CLIENT_SECRET"),
-        token_url=os.getenv("AUTH_TOKEN_URL"),
-        auth_url=os.getenv("AUTH_URL"),
+        client_id=os.getenv("SPOTIFY_CLIENT_ID") or os.getenv("NEXT_PUBLIC_CLIENT_ID"),
+        client_secret=os.getenv("SPOTIFY_CLIENT_SECRET") or os.getenv("NEXT_PUBLIC_CLIENT_SECRET"),
+        token_url=os.getenv("AUTH_TOKEN_URL", "https://accounts.spotify.com/api/token"),
+        auth_url=os.getenv("AUTH_URL", "https://accounts.spotify.com/authorize"),
         redirect_uri=os.getenv("REDIRECT_URI"),
         data_path="my_data",
         picklefile="ids_added_in_db",

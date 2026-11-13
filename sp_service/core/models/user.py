@@ -50,6 +50,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     )
     avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
     token_data = models.JSONField(default=dict)
+    spotify_id = models.CharField(max_length=64, unique=True, null=True, blank=True)
 
     objects = UserManager()
 

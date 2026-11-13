@@ -25,4 +25,7 @@ class PlayHistory(models.Model):
         unique_together = ("track", "played_at")
 
     def __str__(self):
-        return f"{self.track.name} | {self.track.artists.first().name}"
+        if not self.track:
+            return f"Play at {self.played_at}"
+        artist = self.track.artist_tracks.first()
+        return f"{self.track.name} | {artist.name if artist else 'Unknown artist'}"

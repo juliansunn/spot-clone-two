@@ -1,6 +1,5 @@
 from django.contrib.auth.backends import ModelBackend
 from core.models import User
-from app.utils.spotify_settings import SpotifyConn
 
 
 class PasswordlessAuthBackend(ModelBackend):
@@ -10,14 +9,9 @@ class PasswordlessAuthBackend(ModelBackend):
     def authenticate(self, request, username=None, password=None, token_data=None, **kwargs):
         if password:
             return super().authenticate(request, username, password)
-        if token_data:
-            conn = SpotifyConn(token=token_data)
-            if valid_token_data := conn.access_token:
-                if valid_token_data.get("access_token") and valid_token_data.get("refresh_token"):
-                    user, _ = User.objects.get_or_create(email=username)
-                    user.token_data = token_data
-                    user.save()
-                    return user
+        # Token-based login is handled by core.auth.spotify_auth, which verifies
+        # the token with Spotify. Never create/return a user from an unverified
+        # username + token pair.
         return None
 
     def get_user(self, user_id):

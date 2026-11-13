@@ -76,6 +76,14 @@ services:
             context: ./
             dockerfile: frontend/Dockerfile.prod
         container_name: frontend
+        restart: always
+        env_file:
+            - .env
+        environment:
+            # Server-side calls from the Next.js container to Django.
+            - SP_API_URL=http://sp_service:8000/sp-api
+        depends_on:
+            - sp_service
     
     nginx:
         build:

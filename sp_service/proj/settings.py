@@ -155,7 +155,7 @@ CELERY_RESULT_SERIALIZER = "json"
 
 AUTHENTICATION_BACKENDS = [
     "core.auth.auth_backend.PasswordlessAuthBackend",
-    # "django.contrib.auth.backends.ModelBackend",
+    "django.contrib.auth.backends.ModelBackend",
 ]
 
 REST_FRAMEWORK = {
@@ -234,7 +234,7 @@ CORS_ALLOW_HEADERS = [
     "user-agent",
     "x-csrftoken",
     "x-requested-with",
-    "email",
+    "x-spotify-refresh-token",
 ]
 
 CORS_ALLOWED_ORIGINS = [

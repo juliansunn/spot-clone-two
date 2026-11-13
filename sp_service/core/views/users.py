@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_401_UNAUTHORIZED, HTTP_200_OK
 from rest_framework.generics import get_object_or_404
 from rest_framework.request import Request
-from app.tasks import schedule_spotify_data_to_db_task
+from core.auth.spotify_auth import fetch_spotify_profile, user_from_profile
 
 
 from core.auth.serializers import UserSerializer
@@ -26,10 +26,11 @@ class UserViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         if self.request.user.is_superuser:
             return User.objects.all()
+        return User.objects.filter(pk=self.request.user.pk)
 
     def get_object(self):
         user_id = self.kwargs.get("pk")
-        obj = get_object_or_404(User, pk=user_id)
+        obj = get_object_or_404(self.get_queryset(), pk=user_id)
         self.check_object_permissions(self.request, obj)
 
         return obj
@@ -48,18 +49,18 @@ def logout(request: Request, **kwargs):
 @api_view(("POST",))
 @permission_classes((AllowAny,))
 def user_login(request: Request, **kwargs):
-    username = request.data.get("username")
-    token_data = request.data.get("token_data")
-    user = auth.authenticate(
-        request, username=username, token_data=token_data, **kwargs
-    )
-    if not user:
-        return Response(status=HTTP_401_UNAUTHORIZED, data="Your user does not exist.")
+    """Session login with Spotify tokens.
 
-    auth.login(request, user)
-    task = schedule_spotify_data_to_db_task(user_id=user.pk)
-    task.enabled = True
-    task.save()
-    return Response(
-        status=HTTP_200_OK, data=f"You are logged in as {user.email}, {user.id}!"
-    )
+    The account is derived from the verified token, never from a client-supplied
+    username (which previously allowed logging in as anyone).
+    """
+    token_data = request.data.get("token_data") or {}
+    access_token = token_data.get("access_token") if isinstance(token_data, dict) else None
+    if not access_token:
+        return Response(status=HTTP_401_UNAUTHORIZED, data="token_data.access_token is required.")
+    profile = fetch_spotify_profile(access_token)
+    if not profile:
+        return Response(status=HTTP_401_UNAUTHORIZED, data="Invalid or expired Spotify token.")
+    user = user_from_profile(profile, access_token, token_data.get("refresh_token"))
+    auth.login(request, user, backend="django.contrib.auth.backends.ModelBackend")
+    return Response(status=HTTP_200_OK, data={"id": user.id, "email": user.email})

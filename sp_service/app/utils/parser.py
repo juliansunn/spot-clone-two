@@ -1,4 +1,3 @@
-from this import d
 import pytz
 from datetime import datetime
 

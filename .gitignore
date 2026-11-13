@@ -185,3 +185,6 @@ next-env.d.ts
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml
 !.elasticbeanstalk/*.global.yml
+
+# spotipy token caches (contain OAuth tokens)
+.cache-*
