@@ -7,7 +7,7 @@ import ArtistLinks from './ArtistLinks';
 import Equalizer from './Equalizer';
 import LikeButton from './LikeButton';
 import { cn } from '@/lib/cn';
-import { formatAddedAt, formatDateTime, formatDuration } from '@/lib/format';
+import { formatAddedAt, formatDuration, formatPlayedAt } from '@/lib/format';
 import { useNowPlaying, usePlayFrom } from '@/hooks/usePlayback';
 import { useSavedStatus } from '@/hooks/useLibrary';
 import { useInView } from '@/hooks/useInView';
@@ -108,7 +108,7 @@ const TrackRow = memo(function TrackRow({ row, index, grid, showAlbum, showCover
 	const isCurrent = nowPlaying.id === track.id || (track.linked_from && nowPlaying.id === track.linked_from.id);
 	const isPlaying = isCurrent && nowPlaying.isPlaying;
 	const playable = track.is_playable !== false && !track.is_local;
-	const date = dateColumn === 'played' ? formatDateTime(row.playedAt) : formatAddedAt(row.addedAt);
+	const date = dateColumn === 'played' ? formatPlayedAt(row.playedAt) : formatAddedAt(row.addedAt);
 
 	const play = () => playable && onPlay(track);
 

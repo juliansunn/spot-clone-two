@@ -15,9 +15,13 @@ export default function SearchInput({ className, autoFocus }) {
 	const onSearchPage = router.pathname === '/search';
 
 	// Keep the input in sync with back/forward, and clear it when leaving search.
-	useEffect(() => {
+	// (Adjusting state during render avoids an extra effect-driven render.)
+	const syncKey = `${onSearchPage}|${urlQuery}`;
+	const [lastSyncKey, setLastSyncKey] = useState(syncKey);
+	if (syncKey !== lastSyncKey) {
+		setLastSyncKey(syncKey);
 		setValue(onSearchPage ? urlQuery : '');
-	}, [urlQuery, onSearchPage]);
+	}
 
 	useEffect(() => {
 		const trimmed = value.trim();

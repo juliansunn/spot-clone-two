@@ -14,7 +14,7 @@ const NAV = [
 	{ href: '/search', label: 'Search', icon: Search },
 	{ href: '/library', label: 'Your Library', icon: Library },
 	{ href: '/liked-songs', label: 'Liked Songs', icon: Heart },
-	{ href: '/history', label: 'Listening History', icon: History }
+	{ href: '/recent', label: 'Recently Played', icon: History }
 ];
 
 function isActive(router, href) {

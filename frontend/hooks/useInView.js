@@ -1,10 +1,12 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 
 /** Calls `onVisible` whenever the returned ref's element scrolls into view. */
 export function useInView(onVisible, { rootMargin = '600px', enabled = true } = {}) {
 	const ref = useRef(null);
 	const cb = useRef(onVisible);
-	cb.current = onVisible;
+	useLayoutEffect(() => {
+		cb.current = onVisible;
+	});
 
 	useEffect(() => {
 		const el = ref.current;

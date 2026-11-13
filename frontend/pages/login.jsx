@@ -55,7 +55,7 @@ export default function Login() {
 					<LogoMark className="mx-auto h-14 w-14" />
 					<h1 className="mt-5 text-3xl font-extrabold tracking-tight">Antefy</h1>
 					<p className="mt-2 text-sm text-muted">
-						Your Spotify library, a cleaner player, and a listening history that actually remembers.
+						Your Spotify library and a cleaner player, all in one place.
 					</p>
 
 					{error && (

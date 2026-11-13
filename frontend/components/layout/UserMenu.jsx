@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import * as Dropdown from '@radix-ui/react-dropdown-menu';
 import { signOut, useSession } from 'next-auth/react';
 import { useQueryClient } from '@tanstack/react-query';
@@ -7,8 +7,9 @@ import { getStoredTheme, storeTheme } from '@/lib/store';
 import { setAccessToken } from '@/lib/spotify';
 
 function useTheme() {
-	const [theme, setTheme] = useState('dark');
-	useEffect(() => setTheme(getStoredTheme()), []);
+	// Only rendered inside the (closed-by-default) menu, so reading storage
+	// on the client can't cause a hydration mismatch.
+	const [theme, setTheme] = useState(() => (typeof window === 'undefined' ? 'dark' : getStoredTheme()));
 	const toggle = () => {
 		const next = theme === 'dark' ? 'light' : 'dark';
 		setTheme(next);

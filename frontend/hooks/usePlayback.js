@@ -266,7 +266,7 @@ function interpolatedProgress(s, updatedAt) {
  * Play a track from a list, or toggle it if it's already the current track.
  * `context` is one of:
  *   { contextUri }                 – playlist / album / show / liked songs collection
- *   { uris }                       – ad-hoc list (search results, top tracks, history)
+ *   { uris }                       – ad-hoc list (search results, top tracks, recently played)
  */
 export function usePlayFrom() {
 	const queryClient = useQueryClient();
