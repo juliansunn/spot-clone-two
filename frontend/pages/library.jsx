@@ -1,70 +1,105 @@
-import React, { useState } from 'react';
+import { useMemo, useState } from 'react';
+import Head from 'next/head';
+import { useRouter } from 'next/router';
+import { ArrowDownAZ, Clock, Library as LibraryIcon, Search } from 'lucide-react';
+import MediaCard, { MediaCardSkeleton } from '@/components/media/MediaCard';
+import { CARD_GRID } from '@/components/media/Shelf';
+import Chip from '@/components/ui/Chip';
+import IconButton from '@/components/ui/IconButton';
+import { EmptyState, ErrorState } from '@/components/ui/States';
+import { useFollowedArtists, useMyPlaylists, useSavedAlbums, useSavedShows } from '@/hooks/useLibrary';
 
-import Layout from '../components/Layout';
-import Loading from '../components/Loading';
-import PlaylistCard from '../components/PlaylistCard';
-import PodcastCard from '../components/PodcastCard';
-import AlbumCard from '../components/AlbumCard';
-import ArtistCard from '../components/ArtistCard';
-import usePlaylists from '../hooks/usePlaylists';
-import useArtists from '../hooks/useArtists';
-import useAlbums from '../hooks/useAlbums';
-import useShows from '../hooks/useShows';
+const TABS = [
+	{ id: 'playlists', label: 'Playlists', noun: 'playlists' },
+	{ id: 'albums', label: 'Albums', noun: 'albums' },
+	{ id: 'artists', label: 'Artists', noun: 'artists you follow' },
+	{ id: 'podcasts', label: 'Podcasts', noun: 'podcasts' }
+];
 
-function Library() {
-	const [contentType, setContentType] = useState(0);
+function secondaryText(item) {
+	return [item.owner?.display_name, item.artists?.map((a) => a.name).join(' '), item.publisher].filter(Boolean).join(' ');
+}
 
-	const contentList = ['Playlists', 'Podcasts', 'Artists', 'Albums'];
-	const { playlists, loading: playlistLoading } = usePlaylists();
-	const { artists, loading: artistLoading } = useArtists();
-	const { albums, loading: albumLoading } = useAlbums();
-	const { shows, loading: showLoading } = useShows();
+export default function LibraryPage() {
+	const router = useRouter();
+	const tabId = TABS.some((t) => t.id === router.query.tab) ? router.query.tab : 'playlists';
+	const [filter, setFilter] = useState('');
+	const [sort, setSort] = useState('recent');
+
+	// Hooks must run unconditionally; react-query caches each list.
+	const results = { playlists: useMyPlaylists(), albums: useSavedAlbums(), artists: useFollowedArtists(), podcasts: useSavedShows() };
+	const tab = TABS.find((t) => t.id === tabId);
+	const { data, isLoading, error, refetch } = results[tabId];
+
+	const items = useMemo(() => {
+		const q = filter.trim().toLowerCase();
+		let list = data ?? [];
+		if (q) list = list.filter((i) => i.name?.toLowerCase().includes(q) || secondaryText(i).toLowerCase().includes(q));
+		if (sort === 'alpha') list = [...list].sort((a, b) => (a.name ?? '').localeCompare(b.name ?? ''));
+		return list;
+	}, [data, filter, sort]);
+
+	const setTab = (id) => {
+		setFilter('');
+		router.replace({ pathname: '/library', query: { tab: id } }, undefined, { shallow: true, scroll: false });
+	};
+
 	return (
-		<Layout>
-			<div className="px-10 mt-20">
-				<div className=" flex items-center justify-start px-20 w-full h-20 text-white">
-					{contentList.map((content, i) => (
-						<button
-							key={i}
-							onClick={() => {
-								setContentType(i);
-							}}
-							className={`hover:bg-zinc-600 dark:hover:bg-zinc-600 p-3 mx-1 rounded ${
-								contentType == i
-									? 'bg-zinc-500 dark:bg-zinc-500'
-									: 'bg-zinc-300 dark:bg-zinc-800'
-							} cursor-pointer`}
+		<>
+			<Head>
+				<title>Your Library · Antefy</title>
+			</Head>
+			<div className="px-1 sm:px-3">
+				<h1 className="px-3 pb-4 pt-2 text-3xl font-extrabold tracking-tight">Your Library</h1>
+				<div className="flex flex-wrap items-center gap-3 px-3 pb-4">
+					<div className="no-scrollbar -mx-1 flex gap-2 overflow-x-auto px-1" role="tablist" aria-label="Library sections">
+						{TABS.map((t) => (
+							<Chip key={t.id} role="tab" aria-selected={t.id === tabId} active={t.id === tabId} onClick={() => setTab(t.id)}>
+								{t.label}
+								{results[t.id].data && <span className="ml-1.5 text-xs opacity-60">{results[t.id].data.length}</span>}
+							</Chip>
+						))}
+					</div>
+					<div className="ml-auto flex items-center gap-1">
+						<div className="relative">
+							<Search className="pointer-events-none absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-subtle" />
+							<input
+								value={filter}
+								onChange={(e) => setFilter(e.target.value)}
+								placeholder={`Search ${tab.label.toLowerCase()}`}
+								aria-label={`Search ${tab.label.toLowerCase()}`}
+								className="h-9 w-44 rounded-md bg-elevated pl-8 pr-2 text-sm placeholder:text-subtle focus:outline-none focus:ring-1 focus:ring-line sm:w-56"
+							/>
+						</div>
+						<IconButton
+							label={sort === 'recent' ? 'Sort alphabetically' : 'Sort by recently added'}
+							onClick={() => setSort((s) => (s === 'recent' ? 'alpha' : 'recent'))}
 						>
-							{content}
-						</button>
-					))}
+							{sort === 'recent' ? <Clock className="h-[18px] w-[18px]" /> : <ArrowDownAZ className="h-[18px] w-[18px]" />}
+						</IconButton>
+					</div>
 				</div>
-				<h1 className="text-lg md:text-xl xl:text-2xl text-zinc-800 dark:text-white">
-					{contentList[contentType]}
-				</h1>
-				{playlistLoading ? (
-					<Loading />
+
+				{error ? (
+					<ErrorState error={error} onRetry={refetch} />
+				) : isLoading ? (
+					<div className={CARD_GRID}>
+						{Array.from({ length: 14 }, (_, i) => (
+							<MediaCardSkeleton key={i} />
+						))}
+					</div>
+				) : items.length === 0 ? (
+					<EmptyState icon={LibraryIcon} title={filter ? 'No matches' : `No ${tab.noun} yet`}>
+						{filter ? `Nothing in your ${tab.label.toLowerCase()} matches “${filter}”.` : 'Things you save on Spotify show up here.'}
+					</EmptyState>
 				) : (
-					<div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4  pb-24 pt-3">
-						{contentType === 0 &&
-							playlists?.map((playlist) => (
-								<PlaylistCard key={playlist.id} data={playlist} />
-							))}
-						{contentType === 1 &&
-							shows?.map((show) => (
-								<PodcastCard key={show.show?.id} data={show.show} />
-							))}
-						{contentType === 2 &&
-							artists.map((artist) => <ArtistCard key={artist.id} data={artist} />)}
-						{contentType === 3 &&
-							albums?.map((album) => (
-								<AlbumCard key={album?.album.id} data={album?.album} />
-							))}
+					<div className={CARD_GRID}>
+						{items.map((item, i) => (
+							<MediaCard key={item.id} item={item} priority={i < 6} />
+						))}
 					</div>
 				)}
 			</div>
-		</Layout>
+		</>
 	);
 }
-
-export default Library;
