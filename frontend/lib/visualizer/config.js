@@ -45,8 +45,7 @@ export const DEFAULTS = {
 	presetId: 'arctic',
 	customColors: ['#3ef0a0', '#19c4b4', '#8b5cf6'],
 	reduceMotion: null, // null = follow the OS setting
-	micEnabled: false, // user opted in to listening via the microphone
-	micHintShown: false,
+	micEnabled: true, // listen via the microphone while music plays (browser asks once)
 	brightness: 90,
 	reactivity: 55,
 	speed: 40,

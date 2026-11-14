@@ -23,11 +23,9 @@ export default function VisualizerController() {
 	const enabled = useVisualizerStore((s) => s.enabled);
 	const glass = useVisualizerStore((s) => s.glass);
 	const micEnabled = useVisualizerStore((s) => s.micEnabled);
-	const micHintShown = useVisualizerStore((s) => s.micHintShown);
 	const colorMode = useVisualizerStore((s) => s.colorMode);
 	const presetId = useVisualizerStore((s) => s.presetId);
 	const customColors = useVisualizerStore((s) => s.customColors);
-	const set = useVisualizerStore((s) => s.set);
 
 	// Palette follows the chosen colors (or the current cover).
 	useEffect(() => {
@@ -63,17 +61,17 @@ export default function VisualizerController() {
 		return () => clearTimeout(t);
 	}, [want, isPlaying]);
 
-	// One-time invitation the first time music plays.
+	// If the browser blocked the mic, say why the lights are still (once per page load).
+	const mic = useVisualizerStore((s) => s.mic);
 	useEffect(() => {
-		if (!isPlaying || !enabled || micEnabled || micHintShown) return;
-		set({ micHintShown: true });
-		toast('Make the background move with your music', {
-			id: 'visualizer-mic',
-			description: 'The northern lights react to the music through your microphone, on any speaker. Audio never leaves this device.',
+		if (mic !== 'denied' || !enabled) return;
+		toast('The northern lights can’t hear the music', {
+			id: 'visualizer-mic-denied',
+			description: 'They react through your microphone, and it’s blocked. Allow it for this site in your browser settings. Audio never leaves this device.',
 			duration: 12000,
-			action: { label: 'Turn on', onClick: () => enableMic() }
+			action: { label: 'Try again', onClick: () => enableMic() }
 		});
-	}, [isPlaying, enabled, micEnabled, micHintShown, set]);
+	}, [mic, enabled]);
 
 	return null;
 }
