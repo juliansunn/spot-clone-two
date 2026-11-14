@@ -53,14 +53,17 @@ export function createAurora(canvas) {
 		low.height = Math.ceil(H / SCALE);
 	}
 
-	function buildSprites(pal) {
-		const key = pal.map((c) => c.map((v) => v | 0).join(',')).join('|');
+	// Light mode: deepen the colors a touch so pastel lights still read on a pale sky.
+	const tone = (c, dark) => c.map((v) => (dark ? v : v * 0.8) | 0);
+
+	function buildSprites(pal, dark) {
+		const key = pal.map((c) => c.map((v) => v | 0).join(',')).join('|') + dark;
 		if (key === spriteKey) return;
 		spriteKey = key;
 		sprites.forEach((c, i) => {
 			const x = c.getContext('2d');
-			const lo = pal[i].map((v) => v | 0);
-			const hi = pal[(i + 2) % 3].map((v) => v | 0);
+			const lo = tone(pal[i], dark);
+			const hi = tone(pal[(i + 2) % 3], dark);
 			x.clearRect(0, 0, 1, 128);
 			const gr = x.createLinearGradient(0, 0, 0, 128);
 			gr.addColorStop(0, `rgba(${hi},0)`);
@@ -136,7 +139,7 @@ export function createAurora(canvas) {
 	}
 
 	function pulse(w, h, o) {
-		const { glow, I, soft, pal, mute } = o;
+		const { glow, I, soft, pal, mute, dark } = o;
 		lg.globalAlpha = 1;
 		PATCHES.forEach((p, i) => {
 			const s = Math.max(0, Math.sin(tt * p.sp + p.ph));
@@ -145,7 +148,7 @@ export function createAurora(canvas) {
 			const r = h * p.r * (1 + soft.bass * 0.3 * I);
 			const x = p.x * w + Math.sin(tt * 0.1 + i) * w * 0.02;
 			const y = p.y * h;
-			const c = pal[i % 3].map((v) => v | 0);
+			const c = tone(pal[i % 3], dark);
 			const rg = lg.createRadialGradient(x, y, 0, x, y, r * 1.6);
 			rg.addColorStop(0, `rgba(${c},${Math.min(1, 0.55 * glow * b * mute)})`);
 			rg.addColorStop(1, `rgba(${c},0)`);
@@ -178,18 +181,19 @@ export function createAurora(canvas) {
 	function draw(f) {
 		const { s, dt, t, dark, still, soft, signal, pal } = f;
 		g.clearRect(0, 0, W, H);
-		if (!s.enabled || !s.lightsOn) return;
-		buildSprites(pal);
+		if (!s.enabled) return;
+		buildSprites(pal, dark);
 		const I = SLIDERS.reactivity.map(s.reactivity);
 		g.globalAlpha = SLIDERS.brightness.map(s.brightness);
 
+		// Sky tint: a faint wash of the lights' top color (stronger on a pale sky).
+		const top = tone(pal[2], dark);
+		const sky = g.createLinearGradient(0, 0, 0, H);
+		sky.addColorStop(0, `rgba(${top},${dark ? 0.08 : 0.14})`);
+		sky.addColorStop(0.7, `rgba(${top},0)`);
+		g.fillStyle = sky;
+		g.fillRect(0, 0, W, H);
 		if (dark) {
-			const top = pal[2].map((v) => v | 0);
-			const sky = g.createLinearGradient(0, 0, 0, H);
-			sky.addColorStop(0, `rgba(${top},0.08)`);
-			sky.addColorStop(0.7, 'rgba(0,0,0,0)');
-			g.fillStyle = sky;
-			g.fillRect(0, 0, W, H);
 			if (s.stars) {
 				for (const st of STARS) {
 					const tw = still ? 0.7 : 0.55 + 0.45 * Math.sin(t * 0.0015 + st.p + signal.treble * 2);
@@ -206,14 +210,16 @@ export function createAurora(canvas) {
 		const h = low.height;
 		lg.clearRect(0, 0, w, h);
 		lg.globalCompositeOperation = dark ? 'lighter' : 'source-over';
-		const glow = 0.55 + (soft.energy * 0.6 + signal.swell * 0.5) * I;
-		(STYLE_FNS[s.style] ?? curtains)(w, h, { glow, I, t, soft, signal, pal, mute: dark ? 1 : 0.55 });
+		// The lights are the centerpiece: a clearly visible resting glow, brighter with the music.
+		const glow = 0.85 + (soft.energy * 0.6 + signal.swell * 0.5) * I;
+		(STYLE_FNS[s.style] ?? curtains)(w, h, { glow, I, t, soft, signal, pal, dark, mute: 1 });
 		lg.globalAlpha = 1;
 		lg.globalCompositeOperation = 'source-over';
 
 		g.imageSmoothingEnabled = true;
 		g.imageSmoothingQuality = 'high';
-		g.globalCompositeOperation = dark ? 'lighter' : 'multiply';
+		// Dark: additive glow. Light: painted-on pastel lights (multiply made them muddy).
+		g.globalCompositeOperation = dark ? 'lighter' : 'source-over';
 		g.drawImage(low, 0, 0, W, H);
 		g.globalCompositeOperation = 'source-over';
 		g.globalAlpha = 1;

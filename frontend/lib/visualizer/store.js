@@ -17,8 +17,14 @@ export const useVisualizerStore = create(
 		}),
 		{
 			name: STORAGE_KEY,
-			version: 1,
+			version: 2,
 			storage: createJSONStorage(() => localStorage),
+			// v2 dropped the player-bar sound wave; forget its settings.
+			migrate: (persisted) => {
+				const keep = { ...(persisted ?? {}) };
+				for (const k of Object.keys(keep)) if (k.startsWith('wave') || k === 'lightsOn') delete keep[k];
+				return keep;
+			},
 			partialize: ({ mic, set: _set, reset: _reset, ...rest }) => rest,
 			merge: (persisted, current) => ({ ...current, ...(persisted ?? {}) })
 		}

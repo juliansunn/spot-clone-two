@@ -3,7 +3,7 @@ import * as Popover from '@radix-ui/react-popover';
 import { Mic, MicOff, RotateCcw, SlidersHorizontal } from 'lucide-react';
 import IconButton from '@/components/ui/IconButton';
 import { cn } from '@/lib/cn';
-import { PRESETS, SLIDERS, STYLES, WAVE_COLORS } from '@/lib/visualizer/config';
+import { PRESETS, SLIDERS, STYLES } from '@/lib/visualizer/config';
 import { disableMic, enableMic } from '@/lib/visualizer/control';
 import { prefersReduced } from '@/lib/visualizer/engine';
 import { useVisualizerStore } from '@/lib/visualizer/store';
@@ -108,7 +108,7 @@ function Listening() {
 		return (
 			<div className="grid gap-2">
 				<p className="text-xs leading-relaxed text-muted">
-					Antefy listens through your microphone so the lights and wave move with whatever’s playing, on any speaker. Audio
+					Antefy listens through your microphone so the lights move with whatever’s playing, on any speaker. Audio
 					never leaves this device.
 				</p>
 				<button
@@ -154,10 +154,10 @@ function Panel() {
 			</div>
 
 			<div className="grid gap-3 rounded-xl border border-line bg-surface/60 p-3">
-				<Switch checked={s.enabled} onChange={(v) => set({ enabled: v })} label="Music visualizer">
+				<Switch checked={s.enabled} onChange={(v) => set({ enabled: v })} label="Northern lights">
 					<span className="grid gap-0.5">
-						<span className="text-sm font-semibold">Music visualizer</span>
-						<span className="text-xs text-muted">Off removes the lights and wave and stops listening.</span>
+						<span className="text-sm font-semibold">Northern lights</span>
+						<span className="text-xs text-muted">Off removes the lights and glass and stops listening.</span>
 					</span>
 				</Switch>
 				{s.enabled && <Listening />}
@@ -165,10 +165,8 @@ function Panel() {
 
 			<div className={cn('grid gap-5 transition-opacity', !s.enabled && 'pointer-events-none opacity-40')} inert={!s.enabled}>
 				<section className="grid gap-3.5">
-					<Switch checked={s.lightsOn} onChange={(v) => set({ lightsOn: v })} label="Northern lights">
-						<Heading>Northern lights</Heading>
-					</Switch>
-					<div className={cn('grid gap-3.5', !s.lightsOn && 'pointer-events-none opacity-40')} inert={!s.lightsOn}>
+					<Heading>Style</Heading>
+					<div className="grid gap-3.5">
 						<div className="grid gap-2">
 							<Chips items={STYLES} value={s.style} onChange={(v) => set({ style: v })} label="Aurora style" />
 							<p className="text-xs leading-relaxed text-muted">{style.note}</p>
@@ -230,22 +228,13 @@ function Panel() {
 				</section>
 
 				<section className="grid gap-3.5">
-					<Switch checked={s.waveOn} onChange={(v) => set({ waveOn: v })} label="Sound wave">
-						<Heading>Sound wave</Heading>
-					</Switch>
-					<div className={cn('grid gap-3.5', !s.waveOn && 'pointer-events-none opacity-40')} inert={!s.waveOn}>
-						<Chips items={WAVE_COLORS} value={s.waveColor} onChange={(v) => set({ waveColor: v })} label="Wave color" />
-						<Range name="waveStrength" />
-						<Range name="waveThickness" />
-						<Range name="waveGlow" />
-						<Range name="waveTrail" />
-						<Range name="waveSmooth" />
-					</div>
+					<Heading>Glass</Heading>
+					<Range name="glass" />
 				</section>
 
 				<label className="flex items-center gap-2 text-[13px] font-semibold">
 					<input type="checkbox" checked={reduce} onChange={(e) => set({ reduceMotion: e.target.checked })} className="accent-accent" />
-					Reduce motion (still lights, flat wave)
+					Reduce motion (still lights)
 				</label>
 			</div>
 		</div>

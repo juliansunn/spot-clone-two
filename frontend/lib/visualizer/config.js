@@ -1,6 +1,6 @@
 /**
- * Music visualizer settings: every default, preset and slider range lives here.
- * Users change these from the player bar's visualizer panel; their choices are
+ * Music visualizer (northern lights) settings: every default, preset and slider
+ * range lives here. Users change these from the player bar's visualizer panel; their choices are
  * persisted per browser (see ./store.js). Slider values are 0–100 in the UI and
  * mapped to engine units by the functions in SLIDERS.
  */
@@ -21,12 +21,6 @@ export const PRESETS = [
 	{ id: 'glacier', label: 'Glacier', colors: ['#bae6fd', '#7dd3fc', '#a5b4fc'] }
 ];
 
-export const WAVE_COLORS = [
-	{ id: 'match', label: 'Match lights' },
-	{ id: 'accent', label: 'Antefy green' },
-	{ id: 'mono', label: 'Mono' }
-];
-
 /** UI slider (0–100) → engine value, plus the label shown next to each slider. */
 export const SLIDERS = {
 	brightness: { label: 'Brightness', ends: ['Faint', 'Vivid'], min: 10, map: (v) => v / 100, show: (v) => `${v}%` },
@@ -34,35 +28,30 @@ export const SLIDERS = {
 	speed: { label: 'Drift speed', ends: ['Glacial', 'Fast'], map: (v) => 0.15 + (v / 100) * 1.85, show: (v) => `${(0.15 + (v / 100) * 1.85).toFixed(1)}×` },
 	// Spring stiffness for how the lights follow the bass: high = snappy, low = floaty.
 	bassDelay: { label: 'Bass response', ends: ['Snappy', 'Floaty'], map: (v) => 6 - (v / 100) * 4.6, show: (v) => `${(0.25 + (v / 100) * 0.9).toFixed(2)}s` },
-	waveStrength: { label: 'Vibration strength', ends: ['Whisper', 'Loud'], map: (v) => 0.1 + (v / 100) * 1.1, show: (v) => `${v}%` },
-	waveThickness: { label: 'Line thickness', ends: ['Hairline', 'Bold'], map: (v) => 1 + (v / 100) * 3, show: (v) => `${(1 + (v / 100) * 3).toFixed(1)}px` },
-	waveGlow: { label: 'Glow', ends: ['None', 'Neon'], map: (v) => v / 100, show: (v) => `${v}%` },
-	waveTrail: { label: 'Echo trail', ends: ['None', 'Long'], max: 10, map: (v) => v, show: (v) => (v === 0 ? 'off' : `${v} frames`) },
-	waveSmooth: { label: 'Smoothness', ends: ['Gritty', 'Silky'], map: (v) => 0.3 + (v / 100) * 4, show: (v) => `${v}%` }
+	// Glass panels over the lights: how see-through (surface alpha) and how frosted (backdrop blur).
+	glass: {
+		label: 'Glass',
+		ends: ['Subtle', 'Strong'],
+		map: (v) => ({ alpha: 0.72 - (v / 100) * 0.5, blur: 10 + (v / 100) * 20 }),
+		show: (v) => `${v}%`
+	}
 };
 
 export const DEFAULTS = {
-	enabled: true, // master switch: off = nothing drawn, mic never opened
-	lightsOn: true,
-	waveOn: true,
+	enabled: true, // master switch: off = no lights, opaque panels, mic never opened
 	stars: true,
 	style: 'curtains',
 	colorMode: 'preset', // 'preset' | 'album' | 'custom'
 	presetId: 'arctic',
 	customColors: ['#3ef0a0', '#19c4b4', '#8b5cf6'],
-	waveColor: 'match',
 	reduceMotion: null, // null = follow the OS setting
 	micEnabled: false, // user opted in to listening via the microphone
 	micHintShown: false,
-	brightness: 80,
+	brightness: 90,
 	reactivity: 55,
 	speed: 40,
 	bassDelay: 55,
-	waveStrength: 60,
-	waveThickness: 25,
-	waveGlow: 40,
-	waveTrail: 4,
-	waveSmooth: 35
+	glass: 65
 };
 
 export const STORAGE_KEY = 'antefy-visualizer';
