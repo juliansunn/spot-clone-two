@@ -7,16 +7,14 @@
  * any device: this browser, a laptop, the living-room speaker.
  *
  * Nothing here touches React. The engine calls analyse() once per frame and
- * reads `signal` and waveform() directly.
+ * reads `signal` directly.
  */
 
 let ctx = null;
 let stream = null;
 let source = null;
 let analyser = null;
-let scope = null;
 let freq = null;
-let wave = null;
 let resumeOnGesture = null;
 
 export const signal = { bass: 0, mid: 0, treble: 0, energy: 0, beat: 0, swell: 0, live: false };
@@ -26,7 +24,6 @@ let bassAvg = 0;
 let lastBeat = 0;
 let eFast = 0;
 let eSlow = 0;
-let scopePeak = 0.2;
 
 export const micSupported = () =>
 	typeof window !== 'undefined' && Boolean(navigator.mediaDevices?.getUserMedia) && Boolean(window.AudioContext || window.webkitAudioContext);
@@ -79,20 +76,15 @@ export async function startListening() {
 		analyser = ctx.createAnalyser();
 		analyser.fftSize = 2048;
 		analyser.smoothingTimeConstant = 0.6;
-		scope = ctx.createAnalyser();
-		scope.fftSize = 4096; // ~85ms window, half of it drawn
 		// Pull the graph without making any sound (never route the mic to the speakers).
 		const mute = ctx.createGain();
 		mute.gain.value = 0;
 		analyser.connect(mute);
-		scope.connect(mute);
 		mute.connect(ctx.destination);
 		freq = new Uint8Array(analyser.frequencyBinCount);
-		wave = new Float32Array(scope.fftSize);
 	}
 	source = ctx.createMediaStreamSource(stream);
 	source.connect(analyser);
-	source.connect(scope);
 	ensureRunning();
 	return 'listening';
 }
@@ -158,37 +150,4 @@ export function analyse(now, dt) {
 	eSlow += (e - eSlow) * (1 - Math.exp(-dt * 0.1));
 	const target = Math.max(0, Math.min(1, (eFast / Math.max(eSlow, 0.02) - 0.8) * 1.5));
 	signal.swell += (target - signal.swell) * (1 - Math.exp(-dt * 0.7));
-}
-
-/**
- * The actual waveform, triggered on a rising zero-crossing so it vibrates in
- * place, box-smoothed and normalised to roughly -1..1. Null when not listening.
- */
-export function waveform(points, smooth, dt) {
-	if (!isListening()) return null;
-	scope.getFloatTimeDomainData(wave);
-	const N = wave.length;
-	const span = N / 2;
-	let start = 0;
-	for (let i = 1; i < N - span; i++) {
-		if (wave[i - 1] < 0 && wave[i] >= 0) {
-			start = i;
-			break;
-		}
-	}
-	const out = new Float32Array(points);
-	const step = span / points;
-	const r = Math.max(1, Math.round((step / 2) * smooth));
-	let peakNow = 0;
-	for (let p = 0; p < points; p++) {
-		const c = start + Math.floor(p * step);
-		let s = 0;
-		for (let k = -r; k <= r; k++) s += wave[Math.min(N - 1, Math.max(0, c + k))];
-		out[p] = s / (2 * r + 1);
-		peakNow = Math.max(peakNow, Math.abs(out[p]));
-	}
-	scopePeak = Math.max(peakNow, scopePeak * Math.exp(-dt * 0.5), 0.01);
-	const gate = peakNow < 0.002 ? 0 : 1; // room hiss stays flat
-	for (let p = 0; p < points; p++) out[p] = (out[p] / scopePeak) * gate;
-	return out;
 }

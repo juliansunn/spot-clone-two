@@ -6,7 +6,7 @@ const store = () => useVisualizerStore.getState();
 
 /** Opt in to listening. Call from a click so the browser allows audio to start. */
 export async function enableMic() {
-	store().set({ micEnabled: true, micHintShown: true, mic: 'starting' });
+	store().set({ micEnabled: true, mic: 'starting' });
 	const status = await startListening();
 	store().set({ mic: status });
 	kick();
@@ -19,7 +19,7 @@ export function disableMic() {
 	kick();
 }
 
-/** Turn listening on/off to follow playback (only when the user has opted in). */
+/** Turn listening on/off to follow playback (unless the user switched listening off). */
 export async function syncListening(want) {
 	if (!want) {
 		stopListening();
@@ -27,7 +27,8 @@ export async function syncListening(want) {
 		kick();
 		return;
 	}
-	if (store().mic === 'listening' || store().mic === 'starting') return;
+	// Already on, or blocked/unsupported: retrying only re-shows the same failure (Try again does that).
+	if (['listening', 'starting', 'denied', 'unsupported'].includes(store().mic)) return;
 	store().set({ mic: 'starting' });
 	const status = await startListening();
 	store().set({ mic: status });

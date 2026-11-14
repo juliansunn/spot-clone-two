@@ -3,9 +3,8 @@ import { SLIDERS } from './config';
 import { getVisualizer, useVisualizerStore } from './store';
 
 /**
- * One requestAnimationFrame loop for every visualizer surface. Audio is
- * analysed once per frame, eased through springs, then each registered
- * renderer draws. The loop only runs while the mic is live or something is
+ * One requestAnimationFrame loop for the visualizer. Audio is analysed once
+ * per frame, eased through springs, then each registered renderer draws. The loop only runs while the mic is live or something is
  * still settling, and stops entirely when the visualizer is off.
  */
 
@@ -77,7 +76,7 @@ function loop(t) {
 	last = t;
 	frame(t, dt);
 	const s = getVisualizer();
-	const visible = s.enabled && (s.lightsOn || s.waveOn);
+	const visible = s.enabled;
 	const settling = Math.abs(soft.energy) + Math.abs(soft.ve) + Math.abs(soft.vb) > 0.004 || signal.energy > 0.003;
 	const keepGoing = visible && renderers.size > 0 && (signal.live || settling || paletteMoving());
 	raf = keepGoing ? requestAnimationFrame(loop) : 0;

@@ -13,12 +13,21 @@ export const useVisualizerStore = create(
 			mic: 'off',
 			set: (patch) => set(patch),
 			// Keeps the mic opt-in: resetting looks shouldn't silently stop listening.
-			reset: () => set((s) => ({ ...DEFAULTS, micEnabled: s.micEnabled, micHintShown: true }))
+			reset: () => set((s) => ({ ...DEFAULTS, micEnabled: s.micEnabled }))
 		}),
 		{
 			name: STORAGE_KEY,
-			version: 1,
+			version: 3,
 			storage: createJSONStorage(() => localStorage),
+			migrate: (persisted, version) => {
+				const keep = { ...(persisted ?? {}) };
+				// v2 dropped the player-bar sound wave; forget its settings.
+				for (const k of Object.keys(keep)) if (k.startsWith('wave') || k === 'lightsOn') delete keep[k];
+				// v3 turned listening on by default (it used to be opt-in).
+				if (version < 3) keep.micEnabled = true;
+				delete keep.micHintShown;
+				return keep;
+			},
 			partialize: ({ mic, set: _set, reset: _reset, ...rest }) => rest,
 			merge: (persisted, current) => ({ ...current, ...(persisted ?? {}) })
 		}

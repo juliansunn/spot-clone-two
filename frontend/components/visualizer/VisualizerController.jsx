@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { toast } from 'sonner';
 import { usePlaybackState } from '@/hooks/usePlayback';
 import { useImageColor } from '@/hooks/useImageColor';
+import { SLIDERS } from '@/lib/visualizer/config';
 import { enableMic, syncListening } from '@/lib/visualizer/control';
 import { setPalette } from '@/lib/visualizer/engine';
 import { resolvePalette } from '@/lib/visualizer/palette';
@@ -20,32 +21,37 @@ export default function VisualizerController() {
 	const albumColor = useImageColor(data?.cover, data?.id);
 
 	const enabled = useVisualizerStore((s) => s.enabled);
-	const lightsOn = useVisualizerStore((s) => s.lightsOn);
-	const waveOn = useVisualizerStore((s) => s.waveOn);
+	const glass = useVisualizerStore((s) => s.glass);
 	const micEnabled = useVisualizerStore((s) => s.micEnabled);
-	const micHintShown = useVisualizerStore((s) => s.micHintShown);
 	const colorMode = useVisualizerStore((s) => s.colorMode);
 	const presetId = useVisualizerStore((s) => s.presetId);
 	const customColors = useVisualizerStore((s) => s.customColors);
-	const set = useVisualizerStore((s) => s.set);
 
 	// Palette follows the chosen colors (or the current cover).
 	useEffect(() => {
 		setPalette(resolvePalette({ colorMode, presetId, customColors }, albumColor));
 	}, [colorMode, presetId, customColors, albumColor]);
 
-	// Let layout surfaces go translucent only while the lights are showing.
+	// Layout surfaces turn to glass only while the lights are showing.
 	useEffect(() => {
 		const root = document.documentElement;
-		if (enabled && lightsOn) root.dataset.aurora = 'on';
+		if (enabled) root.dataset.aurora = 'on';
 		else delete root.dataset.aurora;
 		return () => {
 			delete root.dataset.aurora;
 		};
-	}, [enabled, lightsOn]);
+	}, [enabled]);
+
+	// Glass strength → CSS variables (only on change, never per frame).
+	useEffect(() => {
+		const { alpha, blur } = SLIDERS.glass.map(glass);
+		const root = document.documentElement.style;
+		root.setProperty('--glass-alpha', alpha.toFixed(2));
+		root.setProperty('--glass-blur', `${Math.round(blur)}px`);
+	}, [glass]);
 
 	// Listen only while music plays; close the mic a few seconds after pausing.
-	const want = enabled && (lightsOn || waveOn) && micEnabled && isPlaying;
+	const want = enabled && micEnabled && isPlaying;
 	useEffect(() => {
 		if (want) {
 			syncListening(true);
@@ -55,17 +61,17 @@ export default function VisualizerController() {
 		return () => clearTimeout(t);
 	}, [want, isPlaying]);
 
-	// One-time invitation the first time music plays.
+	// If the browser blocked the mic, say why the lights are still (once per page load).
+	const mic = useVisualizerStore((s) => s.mic);
 	useEffect(() => {
-		if (!isPlaying || !enabled || micEnabled || micHintShown) return;
-		set({ micHintShown: true });
-		toast('Make the background move with your music', {
-			id: 'visualizer-mic',
-			description: 'Antefy listens through your microphone, so it works on any speaker. Audio never leaves this device.',
+		if (mic !== 'denied' || !enabled) return;
+		toast('The northern lights can’t hear the music', {
+			id: 'visualizer-mic-denied',
+			description: 'They react through your microphone, and it’s blocked. Allow it for this site in your browser settings. Audio never leaves this device.',
 			duration: 12000,
-			action: { label: 'Turn on', onClick: () => enableMic() }
+			action: { label: 'Try again', onClick: () => enableMic() }
 		});
-	}, [isPlaying, enabled, micEnabled, micHintShown, set]);
+	}, [mic, enabled]);
 
 	return null;
 }
