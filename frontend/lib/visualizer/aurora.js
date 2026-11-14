@@ -53,8 +53,12 @@ export function createAurora(canvas) {
 		low.height = Math.ceil(H / SCALE);
 	}
 
-	// Light mode: deepen the colors a touch so pastel lights still read on a pale sky.
-	const tone = (c, dark) => c.map((v) => (dark ? v : v * 0.8) | 0);
+	// Light mode: push saturation up and deepen slightly so the lights stay vivid on a pale sky.
+	const tone = (c, dark) => {
+		if (dark) return c.map((v) => v | 0);
+		const mean = (c[0] + c[1] + c[2]) / 3;
+		return c.map((v) => Math.max(0, Math.min(255, (mean + (v - mean) * 1.6) * 0.82)) | 0);
+	};
 
 	function buildSprites(pal, dark) {
 		const key = pal.map((c) => c.map((v) => v | 0).join(',')).join('|') + dark;
@@ -189,10 +193,19 @@ export function createAurora(canvas) {
 		// Sky tint: a faint wash of the lights' top color (stronger on a pale sky).
 		const top = tone(pal[2], dark);
 		const sky = g.createLinearGradient(0, 0, 0, H);
-		sky.addColorStop(0, `rgba(${top},${dark ? 0.08 : 0.14})`);
+		sky.addColorStop(0, `rgba(${top},${dark ? 0.08 : 0.24})`);
 		sky.addColorStop(0.7, `rgba(${top},0)`);
 		g.fillStyle = sky;
 		g.fillRect(0, 0, W, H);
+		if (!dark) {
+			// a second wash rising from the bottom, so the whole sky carries color
+			const base = tone(pal[0], dark);
+			const low = g.createLinearGradient(0, H, 0, H * 0.35);
+			low.addColorStop(0, `rgba(${base},0.16)`);
+			low.addColorStop(1, `rgba(${base},0)`);
+			g.fillStyle = low;
+			g.fillRect(0, 0, W, H);
+		}
 		if (dark) {
 			if (s.stars) {
 				for (const st of STARS) {
@@ -212,7 +225,7 @@ export function createAurora(canvas) {
 		lg.globalCompositeOperation = dark ? 'lighter' : 'source-over';
 		// The lights are the centerpiece: a clearly visible resting glow, brighter with the music.
 		const glow = 0.85 + (soft.energy * 0.6 + signal.swell * 0.5) * I;
-		(STYLE_FNS[s.style] ?? curtains)(w, h, { glow, I, t, soft, signal, pal, dark, mute: 1 });
+		(STYLE_FNS[s.style] ?? curtains)(w, h, { glow, I, t, soft, signal, pal, dark, mute: dark ? 1 : 1.35 });
 		lg.globalAlpha = 1;
 		lg.globalCompositeOperation = 'source-over';
 
